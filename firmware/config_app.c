@@ -113,7 +113,7 @@
 #include <avr/pgmspace.h>
 
 #include "kinen.h"
-#include "tempfin.h"
+#include "extruderfin.h"
 #include "config.h"
 #include "config_app.h"
 #include "heater.h"

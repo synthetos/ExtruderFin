@@ -1,11 +1,11 @@
 ###############################################################################
-# Makefile for the project tempfin1
+# Makefile for the project extruderfin
 ###############################################################################
 
 ## General Flags
-PROJECT = tempfin1
+PROJECT = extruderfin
 MCU = atmega328p
-TARGET = tempfin1.elf
+TARGET = extruderfin.elf
 CC = avr-gcc
 
 CPP = avr-g++
@@ -15,7 +15,7 @@ COMMON = -mmcu=$(MCU)
 
 ## Compile options common for all C compilation units.
 CFLAGS = $(COMMON)
-CFLAGS += -Wall -gdwarf-2 -std=gnu99      -DF_CPU=16000000UL -Os -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
+CFLAGS += -Wall -gdwarf-2 -std=gnu99 -DF_CPU=16000000UL -Os -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 CFLAGS += -MD -MP -MT $(*F).o -MF dep/$(@F).d 
 
 ## Assembly specific flags
@@ -25,7 +25,7 @@ ASMFLAGS += -x assembler-with-cpp -Wa,-gdwarf2
 
 ## Linker flags
 LDFLAGS = $(COMMON)
-LDFLAGS += -Wl,-u,vfprintf  -lprintf_flt  -lm -Wl,-Map=tempfin1.map
+LDFLAGS +=  -Wl,-Map=extruderfin.map
 
 
 ## Intel Hex file production flags
@@ -37,59 +37,64 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Libraries
-LIBS = -lprintf_flt -lm 
+LIBS = -lm 
 
 ## Objects that must be built in order to link
-OBJECTS = util.o kinen.o report.o main.o xio.o xio_usart.o system.o xio_spi.o heater.o sensor.o config.o json_parser.o xio_file.o config_textmode.o config_app.o 
+OBJECTS = util.o config.o config_app.o config_textmode.o heater.o json_parser.o kinen.o main.o report.o sensor.o system.o xio_usart.o xio.o xio_file.o xio_signals.o xio_spi.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
 
 ## Build
-all: $(TARGET) tempfin1.hex tempfin1.eep tempfin1.lss## Compile
+all: $(TARGET) extruderfin.hex extruderfin.eep extruderfin.lss size
+
+## Compile
 util.o: ../util.c
-	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
-
-kinen.o: ../kinen.c
-	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
-
-report.o: ../report.c
-	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
-
-main.o: ../main.c
-	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
-
-xio.o: ../xio/xio.c
-	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
-
-xio_usart.o: ../xio/xio_usart.c
-	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
-
-system.o: ../system.c
-	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
-
-xio_spi.o: ../xio/xio_spi.c
-	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
-
-heater.o: ../heater.c
-	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
-
-sensor.o: ../sensor.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 config.o: ../config.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
-json_parser.o: ../json_parser.c
-	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
-
-xio_file.o: ../xio/xio_file.c
+config_app.o: ../config_app.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 config_textmode.o: ../config_textmode.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
-config_app.o: ../config_app.c
+heater.o: ../heater.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+json_parser.o: ../json_parser.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+kinen.o: ../kinen.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+main.o: ../main.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+report.o: ../report.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+sensor.o: ../sensor.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+system.o: ../system.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+xio_usart.o: ../xio/xio_usart.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+xio.o: ../xio/xio.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+xio_file.o: ../xio/xio_file.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+xio_signals.o: ../xio/xio_signals.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+xio_spi.o: ../xio/xio_spi.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link
@@ -105,10 +110,14 @@ $(TARGET): $(OBJECTS)
 %.lss: $(TARGET)
 	avr-objdump -h -S $< > $@
 
+size: ${TARGET}
+	@echo
+	@avr-size -C --mcu=${MCU} ${TARGET}
+
 ## Clean target
 .PHONY: clean
 clean:
-	-rm -rf $(OBJECTS) tempfin1.elf dep/* tempfin1.hex tempfin1.eep tempfin1.lss tempfin1.map
+	-rm -rf $(OBJECTS) extruderfin.elf dep/* extruderfin.hex extruderfin.eep extruderfin.lss extruderfin.map
 
 
 ## Other dependencies

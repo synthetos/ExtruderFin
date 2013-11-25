@@ -1,0 +1,14 @@
+*.o
+*.d
+*.elf
+*.hex
+*.pyc
+*.map
+*.eep
+*.lss
+*.map
+*.srec
+*.aws
+*.atsuo
+.DS_Store
+TcfTransactionLog.csv

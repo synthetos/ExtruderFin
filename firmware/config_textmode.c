@@ -34,7 +34,7 @@
 #include <avr/pgmspace.h>
 
 #include "kinen.h"			// config reaches into almost everything
-#include "tempfin.h"
+#include "extruderfin.h"
 #include "config.h"
 #include "config_app.h"
 #include "json_parser.h"

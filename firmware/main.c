@@ -33,7 +33,7 @@
 #include <avr/interrupt.h>
 
 #include "kinen.h"
-#include "tempfin.h"
+#include "extruderfin.h"
 #include "system.h"
 #include "heater.h"
 #include "sensor.h"
