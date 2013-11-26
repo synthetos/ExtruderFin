@@ -25,16 +25,17 @@
  * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include <stdio.h>
-#include <stddef.h>
-#include <stdbool.h>
-#include <avr/pgmspace.h> 
-#include <avr/interrupt.h>
+//#include <stdio.h>
+//#include <stddef.h>
+//#include <stdbool.h>
+//#include <avr/pgmspace.h> 
+//#include <avr/interrupt.h>
 //#include <avr/io.h>
 //#include <math.h>
 
+#include "extruderfin.h"
 #include "controller.h"
-#include "system.h"
+#include "hardware.h"
 #include "sensor.h"
 #include "heater.h"
 

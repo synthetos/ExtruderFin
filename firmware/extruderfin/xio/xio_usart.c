@@ -25,10 +25,10 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
  * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-#include <stdio.h>					// precursor for xio.h
-#include <stdbool.h>				// true and false
-#include <avr/interrupt.h>
-#include "xio.h"					// nested includes for all devices and types
+//#include <stdio.h>					// precursor for xio.h
+//#include <stdbool.h>				// true and false
+//#include <avr/interrupt.h>
+#include "../xio.h"					// nested includes for all devices and types
 
 // allocate and initialize USART structs
 xioUsartRX_t usart0_rx = { USART_RX_BUFFER_SIZE-1,1,1 };

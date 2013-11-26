@@ -27,10 +27,10 @@
  * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include <stdio.h>				// precursor for xio.h
-#include <stdbool.h>			// true and false
-#include <avr/pgmspace.h>		// precursor for xio.h
-#include "xio.h"				// includes for all devices are in here
+//#include <stdio.h>				// precursor for xio.h
+//#include <stdbool.h>			// true and false
+//#include <avr/pgmspace.h>		// precursor for xio.h
+#include "../xio.h"				// includes for all devices are in here
 
 /******************************************************************************
  * FILE DEVICE CONFIGURATION

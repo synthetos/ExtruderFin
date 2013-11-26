@@ -26,21 +26,22 @@
  */
 /*	See config_data.h for an overview of the config system and it's use.
  */
+/*
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include <avr/pgmspace.h>
-
+*/
 #include "extruderfin.h"
 #include "controller.h"
 #include "config.h"
 #include "json_parser.h"
 #include "report.h"
 #include "util.h"
-#include "system.h"
-#include "xio/xio.h"
+#include "hardware.h"
+#include "xio.h"
 
 #ifdef __ENABLE_TEXTMODE
 

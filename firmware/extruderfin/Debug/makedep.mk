@@ -20,11 +20,11 @@ report.c
 
 sensor.c
 
-system.c
+hardware.c
 
 util.c
 
-xio\xio.c
+xio.c
 
 xio\xio_file.c
 

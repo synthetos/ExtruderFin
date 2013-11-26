@@ -69,10 +69,10 @@
  *		transfers. Presumably the master would stop polling once it receives an ETX 
  *		from the slave.
  */
-#include <stdio.h>					// precursor for xio.h
-#include <stdbool.h>				// true and false
-#include <avr/interrupt.h>
-#include "xio.h"					// nested includes for all devices and types
+//#include <stdio.h>					// precursor for xio.h
+//#include <stdbool.h>				// true and false
+//#include <avr/interrupt.h>
+#include "../xio.h"					// nested includes for all devices and types
 
 // allocate and initialize SPI structs
 xioSpiRX_t spi0_rx = { SPI_RX_BUFFER_SIZE-1,1,1 };

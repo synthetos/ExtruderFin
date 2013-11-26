@@ -94,7 +94,12 @@
 #ifndef xio_h
 #define xio_h
 
-#include "../system.h"
+#include <stdio.h>
+#include <stdbool.h>
+#include <avr/interrupt.h>
+#include <avr/pgmspace.h>		// defines PROGMEM and PSTR
+
+#include "hardware.h"
 
 // see other xio_.h includes below the structures and typdefs
 
@@ -174,9 +179,9 @@ typedef void (*x_flow_t)(xioDev_t *d);
  *	Sub-Includes and static allocations
  *******************************************************************************/
 // all sub-includes here so only xio.h is needed externally
-#include "xio_spi.h"
-#include "xio_usart.h"
-#include "xio_file.h"
+#include "xio/xio_spi.h"
+#include "xio/xio_usart.h"
+#include "xio/xio_file.h"
 
 xioDev_t *ds[XIO_DEV_COUNT];			// array of device structure pointers 
 extern struct controllerSingleton tg;	// needed by init for default source

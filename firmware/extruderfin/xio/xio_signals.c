@@ -31,11 +31,11 @@
  *
  */
 
-#include <stdio.h>						// precursor for xio.h
-#include <stdbool.h>					// true and false
-#include <avr/pgmspace.h>				// precursor for xio.h
+//#include <stdio.h>						// precursor for xio.h
+//#include <stdbool.h>					// true and false
+//#include <avr/pgmspace.h>				// precursor for xio.h
 
-#include "xio.h"
+#include "../xio.h"
 
 /*
  * sig_init()		 - init signals

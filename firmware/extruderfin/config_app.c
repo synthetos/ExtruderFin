@@ -109,8 +109,8 @@
 //#include <stdlib.h>
 //#include <string.h>
 //#include <stdio.h>
-#include <stdbool.h>
-#include <avr/pgmspace.h>
+//#include <stdbool.h>
+//#include <avr/pgmspace.h>
 
 #include "extruderfin.h"
 #include "controller.h"

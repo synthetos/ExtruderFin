@@ -82,9 +82,9 @@
  * The stdio compatible functions use pointers to the stdio FILE structs.
  */
 
-#include <stdbool.h>
-#include <stdio.h>					// precursor for xio.h
-#include <avr/pgmspace.h>			// precursor for xio.h
+//#include <stdbool.h>
+//#include <stdio.h>					// precursor for xio.h
+//#include <avr/pgmspace.h>			// precursor for xio.h
 #include "xio.h"					// all device sub-system includes are nested here
 
 /***********************************************************************************

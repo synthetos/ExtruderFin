@@ -28,7 +28,7 @@
  *	 http://www.synthetos.com/wiki/index.php?title=Projects:TinyG-Developer-Info
  *	 http://www.synthetos.com/wiki/index.php?title=Projects:TinyG-JSON
  */
-
+/*
 #include <ctype.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -36,14 +36,14 @@
 #include <string.h>					// needed for memcpy, memset
 #include <stdio.h>					// precursor for xio.h
 #include <avr/pgmspace.h>			// precursor for xio.h
-
+*/
 #include "extruderfin.h"
 #include "controller.h"
 #include "config.h"					// JSON sits on top of the config system
 #include "json_parser.h"
 //#include "report.h"
 #include "util.h"
-#include "xio/xio.h"				// for char definitions
+#include "xio.h"					// for char definitions
 
 // local scope stuff
 
