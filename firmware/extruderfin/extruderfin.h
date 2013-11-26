@@ -24,8 +24,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
  * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-/* Special thanks to Adam Mayer and the Replicator project for heater guidance
- */
 #ifndef EXTRUDERFIN_H_ONCE
 #define EXTRUDERFIN_H_ONCE
 
@@ -42,15 +40,10 @@
 
 /****** REVISIONS ******/
 
-#define BUILD_NUMBER 		008.02			// Early stages of bringing this back up
-#define VERSION_NUMBER		0.1				// firmware major version
-#define HARDWARE_VERSION	0.1				// board revision number
-
-//#define TINYG_FIRMWARE_BUILD   		401.18	// There-and-back experiments
-//#define TINYG_FIRMWARE_VERSION		0.97	// firmware major version
-//#define TINYG_HARDWARE_PLATFORM		1		// hardware platform indicator (1 = Xmega series)
-//#define TINYG_HARDWARE_VERSION		8		// hardware platform revision number (defaults to)
-//#define TINYG_HARDWARE_VERSION_MAX (TINYG_HARDWARE_VERSION)
+#define FIRMWARE_BUILD 		008.03			// More initial codebase update work
+#define FIRMWARE_VERSION	0.1				// firmware major version
+#define HARDWARE_PLATFORM	1				// board style 
+#define HARDWARE_VERSION	1				// board revision number
 
 /****** COMPILE-TIME SETTINGS ******/
 

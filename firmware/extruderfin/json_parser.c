@@ -336,8 +336,8 @@ uint16_t json_serialize(cmdObj_t *cmd, char *out_buf)
  */
 void json_print_object(cmdObj_t *cmd)
 {
-	json_serialize(cmd, kc.buf);
-	fprintf(stderr, "%s", kc.buf);
+	json_serialize(cmd, cs.buf);
+	fprintf(stderr, "%s", cs.buf);
 }
 
 /*

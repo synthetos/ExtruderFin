@@ -100,7 +100,7 @@ void cmd_persist(cmdObj_t *cmd)
 void cfg_init()
 {
 	cmdObj_t *cmd = cmd_reset_list();
-	kc.comm_mode = JSON_MODE;				// initial value until EEPROM is read
+	cs.comm_mode = JSON_MODE;				// initial value until EEPROM is read
 //	kc.nvm_base_addr = NVM_BASE_ADDR;
 //	kc.nvm_profile_base = cfg.nvm_base_addr;
 	cmd->value = true;
@@ -225,7 +225,7 @@ stat_t _get_grp(cmdObj_t *cmd)
 
 stat_t _set_grp(cmdObj_t *cmd)
 {
-	if (kc.comm_mode == TEXT_MODE) return (STAT_UNRECOGNIZED_COMMAND);
+	if (cs.comm_mode == TEXT_MODE) return (STAT_UNRECOGNIZED_COMMAND);
 	for (uint8_t i=0; i<CMD_MAX_OBJECTS; i++) {
 		if ((cmd = cmd->nx) == NULL) break;
 		if (cmd->type == TYPE_EMPTY) break;
@@ -516,7 +516,7 @@ void cmd_print_list(uint8_t status, uint8_t text_flags, uint8_t json_flags)
 
 void cmd_print_list(uint8_t status, uint8_t text_flags, uint8_t json_flags)
 {
-	if (kc.comm_mode == JSON_MODE) {
+	if (cs.comm_mode == JSON_MODE) {
 		switch (json_flags) {
 			case JSON_NO_PRINT: { break; } 
 			case JSON_OBJECT_FORMAT: { json_print_object(cmd_body); break; }

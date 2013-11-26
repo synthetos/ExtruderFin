@@ -178,9 +178,10 @@ const char fmt_hv[] PROGMEM = "[hv]  hardware version%16.2f\n";
 
 const cfgItem_t cfgArray[] PROGMEM = {
 	// grp  token flags get_func, set_func  target for get/set,		   default value
-	{ "sys","fb", _f07, _get_dbl, _set_dbl, (double *)&cfg.fw_build,   BUILD_NUMBER }, // MUST BE FIRST!
-	{ "sys","fv", _f07, _get_dbl, _set_dbl, (double *)&cfg.fw_version, VERSION_NUMBER },
-	{ "sys","hv", _f07, _get_dbl, _set_dbl, (double *)&cfg.hw_version, HARDWARE_VERSION },
+	{ "sys","fb", _f07, _get_dbl, _set_dbl, (double *)&cs.fw_build,   FIRMWARE_BUILD }, // MUST BE FIRST!
+	{ "sys","fv", _f07, _get_dbl, _set_dbl, (double *)&cs.fw_version, FIRMWARE_VERSION },
+	{ "sys","hp", _f07, _get_dbl, _set_dbl, (double *)&cs.hw_platform,HARDWARE_PLATFORM },
+	{ "sys","hv", _f07, _get_dbl, _set_dbl, (double *)&cs.hw_version, HARDWARE_VERSION },
 
 	// Heater object
 	{ "h1", "h1st",  _f00, _get_ui8, _set_ui8,(double *)&heater.state, HEATER_OFF },
@@ -210,10 +211,10 @@ const cfgItem_t cfgArray[] PROGMEM = {
 
 	// Group lookups - must follow the single-valued entries for proper sub-string matching
 	// *** Must agree with CMD_COUNT_GROUPS below ****
-	{ "","sys",_f00, _get_grp, _set_grp,(double *)&kc.null,0 },	// system group
-	{ "","h1", _f00, _get_grp, _set_grp,(double *)&kc.null,0 },	// heater group
-	{ "","s1", _f00, _get_grp, _set_grp,(double *)&kc.null,0 },	// sensor group
-	{ "","p1", _f00, _get_grp, _set_grp,(double *)&kc.null,0 }		// PID group
+	{ "","sys",_f00, _get_grp, _set_grp,(double *)&cs.null,0 },	// system group
+	{ "","h1", _f00, _get_grp, _set_grp,(double *)&cs.null,0 },	// heater group
+	{ "","s1", _f00, _get_grp, _set_grp,(double *)&cs.null,0 },	// sensor group
+	{ "","p1", _f00, _get_grp, _set_grp,(double *)&cs.null,0 }		// PID group
 //																				   ^  watch the final (missing) comma!
 	// Uber-group (groups of groups, for text-mode displays only)
 	// *** Must agree with CMD_COUNT_UBER_GROUPS below ****

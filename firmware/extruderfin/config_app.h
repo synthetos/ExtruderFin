@@ -106,9 +106,9 @@
  * Define the cfg structures(s) used by the application
  */
 typedef struct cfgParameters {
-	double fw_build;				// tinyg firmware build number
-	double fw_version;				// tinyg firmware version number
-	double hw_version;				// tinyg hardware compatibility
+//	double fw_build;				// tinyg firmware build number
+//	double fw_version;				// tinyg firmware version number
+//	double hw_version;				// tinyg hardware compatibility
 
 } cfgParameters_t;
 cfgParameters_t cfg; 				// declared in the header to make it global

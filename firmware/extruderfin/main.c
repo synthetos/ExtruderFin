@@ -25,14 +25,9 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
  * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-/*
-#include <stdio.h>
-#include <ctype.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <avr/interrupt.h>
-*/
-#include "extruderfin.h"
+
+#include "extruderfin.h"			// #1 There are some dependencies
+//#include "config.h"				// #2
 #include "controller.h"
 #include "hardware.h"
 #include "heater.h"
@@ -43,28 +38,91 @@
 #include "util.h"
 #include "xio.h"
 
-// local functions
+#ifdef __cplusplus
+extern "C"{
+#endif // __cplusplus
 
-static void _controller(void);
-static uint8_t _dispatch(void);
+void _init() __attribute__ ((weak));
+void _init() {;}
+
+#ifdef __cplusplus
+}
+#endif // __cplusplus
+
+static void _application_init(void);
 static void _unit_tests(void);
+
+static void _controller_run(void);
+static uint8_t _dispatch(void);
+//static void _unit_tests(void);
 
 // Had to move the struct definitions and declarations to .h file for reporting purposes
 
 /****************************************************************************
- * main
- *
- *	Device and Kinen initialization
- *	Main loop handler
- */
+ **** CODE ******************************************************************
+ ****************************************************************************/
+
+void init( void )
+{
+	#ifdef __ARM
+	SystemInit();
+
+	// Disable watchdog
+	WDT->WDT_MR = WDT_MR_WDDIS;
+
+	// Initialize C library
+	__libc_init_array();
+	#endif
+}
+
 int main(void)
 {
+	// system initialization
+//	init();						// do this first
+
+	// application initialization
+	_application_init();
+	_unit_tests();					// run any unit tests that are enabled
+//	run_canned_startup();			// run any pre-loaded commands
+//	canned_startup();
+	
+	// main loop
+	for (;;) {
+		controller_run( );			// single pass through the controller
+	}
+	return 0;
+/*
+	// application level inits
+//	heater_init();				// setup the heater module and subordinate functions
+//	sensor_init();
+//	sei(); 						// enable interrupts
+//	rpt_initialized();			// send initalization string
+
+//	_unit_tests();				// run any unit tests that are enabled
+
+	while (true) {				// main loop
+		_controller();
+	}
+	return (false);				// never returns
+*/
+}
+
+static void _application_init(void)
+{
+	// There are a lot of dependencies in the order of these inits.
+	// Don't change the ordering unless you understand this.
+
 	cli();
-								// system-level inits
+
+	// hardware and low-level drivers
 	sys_init();					// do this first
-	xio_init();					// do this second
-	kinen_init();				// do this third
-	cfg_init();
+//	hardware_init();				// system hardware setup 			- must be first
+
+//	rtc_init();						// real time counter
+
+//	xio_init();					// do this second
+	xio_init();						// xmega io subsystem
+//	switch_init();					// switches
 
 	adc_init(ADC_CHANNEL);		// init system devices
 	pwm_init();
@@ -76,48 +134,25 @@ int main(void)
 	sensor_init();
 	sei(); 						// enable interrupts
 	rpt_initialized();			// send initalization string
-
-//	_unit_tests();				// run any unit tests that are enabled
-	canned_startup();
-
-	while (true) {				// main loop
-		_controller();
-	}
-	return (false);				// never returns
-}
-
 /*
- *	_controller()
- *	_dispatch()
- *
- *	The controller/dispatch loop is a set of pre-registered callbacks that (in effect)
- *	provide rudimentry multi-threading. Functions are organized from highest priority 
- *	to lowest priority. Each called function must return a status code (see kinen.h). 
- *	If SC_EAGAIN (02) is returned the loop restarts at the beginning of the list. 
- *	For any other status code exceution continues down the list.
- */
-#define	RUN(func) if (func == STAT_EAGAIN) return; 
-static void _controller()
-{
-	RUN(tick_callback());		// regular interval timer clock handler (ticks)
-	RUN(_dispatch());			// read and execute next incoming command
+	// application sub-systems
+	controller_init(STD_IN, STD_OUT, STD_ERR);// must be first app init; reqs xio_init()
+	config_init();					// config records from eeprom 		- must be next app init
+	network_init();					// reset std devices if required	- must follow config_init()
+	planner_init();					// motion planning subsystem
+	canonical_machine_init();		// canonical machine				- must follow config_init()
+
+	// now bring up the interrupts and get started
+	PMIC_SetVectorLocationToApplication();// as opposed to boot ROM
+	PMIC_EnableHighLevel();			// all levels are used, so don't bother to abstract them
+	PMIC_EnableMediumLevel();
+	PMIC_EnableLowLevel();
+	sei();							 // enable global interrupts
+	rpt_print_system_ready_message();// (LAST) announce system is ready
+*/
 }
 
-static uint8_t _dispatch()
-{
-	ritorno (xio_gets(kc.src, kc.buf, sizeof(kc.buf)));// read line or return if not completed
-	json_parser(kc.buf);
-	return (STAT_OK);
 
-//	if ((status = xio_gets(kc.src, kc.buf, sizeof(kc.buf))) != SC_OK) {
-//		if (status == SC_EOF) {					// EOF can come from file devices only
-//			fprintf_P(stderr, PSTR("End of command file\n"));
-//			tg_reset_source();					// reset to default source
-//		}
-//		// Note that TG_EAGAIN, TG_NOOP etc. will just flow through
-//		return (status);
-//	}
-}
 
 /******************************************************************************
  * STARTUP TESTS

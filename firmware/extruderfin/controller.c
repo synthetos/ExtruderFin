@@ -1,6 +1,6 @@
 /*
- * kinen_core.c - Kinen Motion Control System main file
- * Part of Kinen Project
+ * controller.c - extruderfin controller and top level parser
+ * This file is part of the TinyG project
  *
  * Copyright (c) 2012 - 2013 Alden S. Hart Jr.
  *
@@ -24,18 +24,90 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
  * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-//#include <stdio.h>
-//#include <stdbool.h>
-
 #include "extruderfin.h"
 #include "controller.h"
 
+/***********************************************************************************
+ **** STRUCTURE ALLOCATIONS *********************************************************
+ ***********************************************************************************/
+
+controller_t cs;		// controller state structure
+
+/***********************************************************************************
+ **** STATICS AND LOCALS ***********************************************************
+ ***********************************************************************************/
+
+static void _controller_HSM(void);
+//static stat_t _shutdown_idler(void);
+//static stat_t _normal_idler(void);
+//static stat_t _limit_switch_handler(void);
+//static stat_t _system_assertions(void);
+//static stat_t _sync_to_planner(void);
+//static stat_t _sync_to_tx_buffer(void);
+static stat_t _command_dispatch(void);
+
+// prep for export to other modules:
+//stat_t hardware_hard_reset_handler(void);
+//stat_t hardware_bootloader_handler(void);
+
+/***********************************************************************************
+ **** CODE *************************************************************************
+ ***********************************************************************************/
 /*
- * kinen_init() - set up Kinen subsystems; master or slave
- *
- *	Would like some kind of auto-detect here. For now it's just commenting
+ * controller_init()
  */
-void kinen_init(void)
+void controller_init(uint8_t std_in, uint8_t std_out, uint8_t std_err)
 {
-	return;
+	cs.magic_start = MAGICNUM;
+	cs.magic_end = MAGICNUM;
+	cs.fw_build = FIRMWARE_BUILD;
+	cs.fw_version = FIRMWARE_VERSION;
+	cs.hw_platform = HARDWARE_PLATFORM;				// NB: HW version is set from EEPROM
+
+	cs.linelen = 0;									// initialize index for read_line()
+	cs.state = CONTROLLER_STARTUP;					// ready to run startup lines
+	cs.hard_reset_requested = false;
+	cs.bootloader_requested = false;
+
+	xio_set_stdin(std_in);
+	xio_set_stdout(std_out);
+	xio_set_stderr(std_err);
+	cs.active_src = std_in;
+	cs.default_src = std_in;
+//	tg_set_primary_source(cs.default_src);
+}
+
+/*
+ *	_controller()
+ *	_dispatch()
+ *
+ *	The controller/dispatch loop is a set of pre-registered callbacks that (in effect)
+ *	provide rudimentry multi-threading. Functions are organized from highest priority 
+ *	to lowest priority. Each called function must return a status code (see kinen.h). 
+ *	If SC_EAGAIN (02) is returned the loop restarts at the beginning of the list. 
+ *	For any other status code exceution continues down the list.
+ */
+#define	RUN(func) if (func == STAT_EAGAIN) return; 
+
+void controller_run()
+{
+	RUN(tick_callback());			// regular interval timer clock handler (ticks)
+	RUN(_command_dispatch());		// read and execute next incoming command
+}
+
+//static uint8_t _dispatch()
+static stat_t _command_dispatch(void)
+{
+	ritorno (xio_gets(cs.active_src, cs.buf, sizeof(cs.buf)));// read line or return if not completed
+	json_parser(cs.buf);
+	return (STAT_OK);
+
+//	if ((status = xio_gets(cs.active_src, cs.buf, sizeof(cs.buf))) != SC_OK) {
+//		if (status == SC_EOF) {					// EOF can come from file devices only
+//			fprintf_P(stderr, PSTR("End of command file\n"));
+//			tg_reset_source();					// reset to default source
+//		}
+//		// Note that TG_EAGAIN, TG_NOOP etc. will just flow through
+//		return (status);
+//	}
 }
