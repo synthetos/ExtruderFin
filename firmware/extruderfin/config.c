@@ -36,7 +36,6 @@
 #include "extruderfin.h"
 #include "controller.h"
 #include "config.h"
-#include "config_app.h"		// application-specific config stuff - follows config.h
 #include "json_parser.h"
 #include "util.h"
 #include "xio/xio.h"

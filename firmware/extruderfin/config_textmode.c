@@ -36,7 +36,6 @@
 #include "extruderfin.h"
 #include "controller.h"
 #include "config.h"
-#include "config_app.h"
 #include "json_parser.h"
 #include "report.h"
 #include "util.h"

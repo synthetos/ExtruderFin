@@ -115,7 +115,6 @@
 #include "extruderfin.h"
 #include "controller.h"
 #include "config.h"
-#include "config_app.h"
 #include "heater.h"
 #include "sensor.h"
 

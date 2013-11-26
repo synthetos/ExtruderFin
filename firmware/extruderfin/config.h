@@ -65,8 +65,16 @@
  *	CMD_BODY_LEN needs to allow for one parent JSON object and enough children
  *	to complete the largest possible operation - usually the status report.
  */
-#ifndef config_h
-#define config_h
+#ifndef CONFIG_H_ONCE
+#define CONFIG_H_ONCE
+
+/***** PLEASE NOTE *****
+#include "config_app.h"	// is present at the end of this file 
+*/
+
+#ifdef __cplusplus
+extern "C"{
+#endif
 
 /***********************************************************************************
  **** COMPILER SWITCHES ************************************************************
@@ -295,10 +303,16 @@ void cmd_print_text_multiline_formatted(void);
 void cfg_dump_NVM(const uint16_t start_record, const uint16_t end_record, char *label);
 #endif
 
+
+/*********************************************************************************************
+ **** PLEASE NOTICE THAT CONFIG_APP.H IS HERE ************************************************
+ *********************************************************************************************/
+#include "config_app.h"
+
 /*** Unit tests ***/
 
 /* unit test setup */
-//#define __UNIT_TEST_CONFIG			// uncomment to enable config unit tests
+//#define __UNIT_TEST_CONFIG		// uncomment to enable config unit tests
 #ifdef __UNIT_TEST_CONFIG
 void cfg_unit_tests(void);
 #define	CONFIG_UNITS cfg_unit_tests();
@@ -306,4 +320,8 @@ void cfg_unit_tests(void);
 #define	CONFIG_UNITS
 #endif // __UNIT_TEST_CONFIG
 
+#ifdef __cplusplus
+}
 #endif
+
+#endif // End of include guard: CONFIG_H_ONCE
