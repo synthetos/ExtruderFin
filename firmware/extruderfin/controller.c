@@ -25,7 +25,10 @@
  * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 #include "extruderfin.h"
+#include "config.h"
 #include "controller.h"
+#include "json_parser.h"
+#include "xio.h"
 
 /***********************************************************************************
  **** STRUCTURE ALLOCATIONS *********************************************************
@@ -87,12 +90,19 @@ void controller_init(uint8_t std_in, uint8_t std_out, uint8_t std_err)
  *	If SC_EAGAIN (02) is returned the loop restarts at the beginning of the list. 
  *	For any other status code exceution continues down the list.
  */
-#define	RUN(func) if (func == STAT_EAGAIN) return; 
 
 void controller_run()
 {
-	RUN(tick_callback());			// regular interval timer clock handler (ticks)
-	RUN(_command_dispatch());		// read and execute next incoming command
+	while (true) {
+		_controller_HSM();
+	}
+}
+
+#define	DISPATCH(func) if (func == STAT_EAGAIN) return;
+static void _controller_HSM()
+{
+//	DISPATCH(tick_callback());			// regular interval timer clock handler (ticks)
+	DISPATCH(_command_dispatch());		// read and execute next incoming command
 }
 
 //static uint8_t _dispatch()

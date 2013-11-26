@@ -40,15 +40,13 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 LIBS = -lm 
 
 ## Objects that must be built in order to link
-OBJECTS = util.o config.o config_app.o config_textmode.o heater.o json_parser.o main.o report.o sensor.o system.o xio_usart.o xio.o xio_file.o xio_signals.o xio_spi.o controller.o 
+OBJECTS = util.o config.o config_app.o config_textmode.o heater.o json_parser.o main.o report.o sensor.o xio_usart.o xio_file.o xio_signals.o xio_spi.o controller.o hardware.o xio.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
 
 ## Build
-all: $(TARGET) extruderfin.hex extruderfin.eep extruderfin.lss size
-
-## Compile
+all: $(TARGET) extruderfin.hex extruderfin.eep extruderfin.lss## Compile
 util.o: ../util.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
@@ -76,13 +74,7 @@ report.o: ../report.c
 sensor.o: ../sensor.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
-system.o: ../system.c
-	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
-
 xio_usart.o: ../xio/xio_usart.c
-	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
-
-xio.o: ../xio/xio.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 xio_file.o: ../xio/xio_file.c
@@ -97,6 +89,12 @@ xio_spi.o: ../xio/xio_spi.c
 controller.o: ../controller.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
+hardware.o: ../hardware.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+xio.o: ../xio.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
 ##Link
 $(TARGET): $(OBJECTS)
 	 $(CC) $(LDFLAGS) $(OBJECTS) $(LINKONLYOBJECTS) $(LIBDIRS) $(LIBS) -o $(TARGET)
@@ -109,10 +107,6 @@ $(TARGET): $(OBJECTS)
 
 %.lss: $(TARGET)
 	avr-objdump -h -S $< > $@
-
-size: ${TARGET}
-	@echo
-	@avr-size -C --mcu=${MCU} ${TARGET}
 
 ## Clean target
 .PHONY: clean
