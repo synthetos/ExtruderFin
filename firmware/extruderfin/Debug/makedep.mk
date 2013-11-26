@@ -10,8 +10,6 @@ config_textmode.c
 
 controller.c
 
-extruderfin.cpp
-
 heater.c
 
 json_parser.c
@@ -29,8 +27,6 @@ util.c
 xio\xio.c
 
 xio\xio_file.c
-
-xio\xio_pgm.c
 
 xio\xio_signals.c
 

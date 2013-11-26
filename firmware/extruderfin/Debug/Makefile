@@ -41,7 +41,6 @@ C_SRCS +=  \
 ../config_app.c \
 ../config_textmode.c \
 ../controller.c \
-../extruderfin.cpp \
 ../heater.c \
 ../json_parser.c \
 ../main.c \
@@ -51,7 +50,6 @@ C_SRCS +=  \
 ../util.c \
 ../xio/xio.c \
 ../xio/xio_file.c \
-../xio/xio_pgm.c \
 ../xio/xio_signals.c \
 ../xio/xio_spi.c \
 ../xio/xio_usart.c
@@ -68,7 +66,6 @@ config.o \
 config_app.o \
 config_textmode.o \
 controller.o \
-extruderfin.o \
 heater.o \
 json_parser.o \
 main.o \
@@ -78,7 +75,6 @@ system.o \
 util.o \
 xio/xio.o \
 xio/xio_file.o \
-xio/xio_pgm.o \
 xio/xio_signals.o \
 xio/xio_spi.o \
 xio/xio_usart.o
@@ -88,7 +84,6 @@ config.o \
 config_app.o \
 config_textmode.o \
 controller.o \
-extruderfin.o \
 heater.o \
 json_parser.o \
 main.o \
@@ -98,7 +93,6 @@ system.o \
 util.o \
 xio/xio.o \
 xio/xio_file.o \
-xio/xio_pgm.o \
 xio/xio_signals.o \
 xio/xio_spi.o \
 xio/xio_usart.o
@@ -108,7 +102,6 @@ config.d \
 config_app.d \
 config_textmode.d \
 controller.d \
-extruderfin.d \
 heater.d \
 json_parser.d \
 main.d \
@@ -118,7 +111,6 @@ system.d \
 util.d \
 xio/xio.d \
 xio/xio_file.d \
-xio/xio_pgm.d \
 xio/xio_signals.d \
 xio/xio_spi.d \
 xio/xio_usart.d
@@ -128,7 +120,6 @@ config.d \
 config_app.d \
 config_textmode.d \
 controller.d \
-extruderfin.d \
 heater.d \
 json_parser.d \
 main.d \
@@ -138,7 +129,6 @@ system.d \
 util.d \
 xio/xio.d \
 xio/xio_file.d \
-xio/xio_pgm.d \
 xio/xio_signals.d \
 xio/xio_spi.d \
 xio/xio_usart.d
@@ -187,21 +177,10 @@ LIB_DEP+=
 
 
 
-
-
-
-
 ./%.o: .././%.c
 	@echo Building file: $<
 	@echo Invoking: AVR8/GNU C Compiler : 3.4.2
 	$(QUOTE)C:\Program Files\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.2.1002\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -funsigned-char -funsigned-bitfields -DDEBUG -DF_CPU=32000000UL  -Os -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<"
-	@echo Finished building: $<
-	
-
-./%.o: .././%.cpp
-	@echo Building file: $<
-	@echo Invoking: AVR8/GNU C Compiler : 3.4.2
-	$(QUOTE)C:\Program Files\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.2.1002\avr8-gnu-toolchain\bin\avr-g++.exe$(QUOTE) -funsigned-char -funsigned-bitfields -DDEBUG  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -c -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<"
 	@echo Finished building: $<
 	
 
