@@ -33,8 +33,8 @@
 #include <stdbool.h>
 #include <avr/pgmspace.h>
 
-#include "kinen.h"			// config reaches into almost everything
 #include "extruderfin.h"
+#include "controller.h"
 #include "config.h"
 #include "config_app.h"		// application-specific config stuff - follows config.h
 #include "json_parser.h"

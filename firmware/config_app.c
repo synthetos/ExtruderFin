@@ -112,8 +112,8 @@
 #include <stdbool.h>
 #include <avr/pgmspace.h>
 
-#include "kinen.h"
 #include "extruderfin.h"
+#include "controller.h"
 #include "config.h"
 #include "config_app.h"
 #include "heater.h"

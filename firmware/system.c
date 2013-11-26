@@ -33,7 +33,7 @@
 //#include <avr/io.h>
 //#include <math.h>
 
-#include "kinen.h"
+#include "controller.h"
 #include "system.h"
 #include "sensor.h"
 #include "heater.h"

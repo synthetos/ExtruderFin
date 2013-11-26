@@ -33,7 +33,7 @@
 #include <math.h>
 #include <avr/pgmspace.h>
 
-#include "kinen.h"
+#include "controller.h"
 #include "system.h"
 #include "heater.h"
 #include "sensor.h"

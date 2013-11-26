@@ -29,7 +29,7 @@
 #ifndef extruderfin_h
 #define extruderfin_h
 
-#define BUILD_NUMBER 		008.01			// Changed project over from tempfin to extruderfin
+#define BUILD_NUMBER 		008.02			// Early stages of bringing this back up
 #define VERSION_NUMBER		0.1				// firmware major version
 #define HARDWARE_VERSION	0.1				// board revision number
 

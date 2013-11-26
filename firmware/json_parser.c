@@ -37,8 +37,8 @@
 #include <stdio.h>					// precursor for xio.h
 #include <avr/pgmspace.h>			// precursor for xio.h
 
-#include "kinen.h"
 #include "extruderfin.h"
+#include "controller.h"
 #include "config.h"					// JSON sits on top of the config system
 #include "json_parser.h"
 //#include "report.h"

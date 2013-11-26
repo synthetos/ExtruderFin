@@ -32,8 +32,8 @@
 #include <stdbool.h>
 #include <avr/interrupt.h>
 
-#include "kinen.h"
 #include "extruderfin.h"
+#include "controller.h"
 #include "system.h"
 #include "heater.h"
 #include "sensor.h"
@@ -66,14 +66,14 @@ int main(void)
 	kinen_init();				// do this third
 	cfg_init();
 
-//	adc_init(ADC_CHANNEL);		// init system devices
-//	pwm_init();
-//	tick_init();
-//	led_init();
+	adc_init(ADC_CHANNEL);		// init system devices
+	pwm_init();
+	tick_init();
+	led_init();
 
 	// application level inits
-//	heater_init();				// setup the heater module and subordinate functions
-//	sensor_init();
+	heater_init();				// setup the heater module and subordinate functions
+	sensor_init();
 	sei(); 						// enable interrupts
 	rpt_initialized();			// send initalization string
 
