@@ -1,6 +1,6 @@
 /*
- * system.c - general hardware device and support functions
- * Part of Kinen project
+ * hardware.c - general hardware support functions
+ * This file is part of the TinyG project
  *
  * Copyright (c) 2012 - 2013 Alden S. Hart Jr.
  *
@@ -25,13 +25,9 @@
  * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-//#include <stdio.h>
-//#include <stddef.h>
-//#include <stdbool.h>
-//#include <avr/pgmspace.h> 
-//#include <avr/interrupt.h>
-//#include <avr/io.h>
-//#include <math.h>
+#ifdef __AVR
+#include <avr/wdt.h>			// used for software reset
+#endif
 
 #include "extruderfin.h"
 #include "controller.h"
@@ -39,9 +35,15 @@
 #include "sensor.h"
 #include "heater.h"
 
-/**** sys_init() - lowest level hardware init ****/
+#ifdef __cplusplus
+extern "C"{
+#endif
 
-void sys_init() 
+/*
+ * hardware_init() - lowest level hardware init
+ */
+
+void hardware_init() 
 {
 	PRR = 0xFF;					// turn off all peripherals. Each device needs to enble itself
 
@@ -64,7 +66,7 @@ void sys_init()
  * adc_init() - initialize ADC. See tinyg_tc.h for settings used
  * adc_read() - returns a single ADC reading (raw). See __sensor_sample notes for more
  *
- *	There's a weird bug where somethimes the first conversion returns zero. 
+ *	There's a weird bug where sometimes the first conversion returns zero. 
  *	I need to fund out why this is happening and stop it.
  *	In the mean time there is a do-while loop in the read function.
  */
@@ -263,3 +265,7 @@ void led_toggle(void)
 		led_off();
 	}
 }
+
+#ifdef __cplusplus
+}
+#endif

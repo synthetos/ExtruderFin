@@ -103,7 +103,7 @@ device_t device;				// Device is always a singleton (there is only one device)
  * FUNCTION PROTOTYPES
  ******************************************************************************/
 
-void sys_init(void);					// master hardware init
+void hardware_init(void);		// master hardware init
 
 void adc_init(uint8_t channel);
 uint16_t adc_read(void);

@@ -1,7 +1,6 @@
 /*
- * main.c - Kinen temperature controller example
- *
- * Part of Kinen project
+ * main.c - extruderfin main file
+ * This file is part of the TinyG project.
  *
  * Copyright (c) 2012 - 2013 Alden S. Hart Jr.
  *
@@ -26,16 +25,13 @@
  * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include "extruderfin.h"			// #1 There are some dependencies
+#include "extruderfin.h"		// #1 There are some dependencies
 #include "config.h"				// #2
 #include "controller.h"
 #include "hardware.h"
 #include "heater.h"
 #include "sensor.h"
 #include "report.h"
-#include "config.h"
-#include "json_parser.h"
-#include "util.h"
 #include "xio.h"
 
 #ifdef __cplusplus
@@ -51,6 +47,7 @@ void _init() {;}
 
 static void _application_init(void);
 static void _unit_tests(void);
+static void run_canned_startup(void);
 
 //static void _controller_run(void);
 //static uint8_t _dispatch(void);
@@ -83,28 +80,13 @@ int main(void)
 	// application initialization
 	_application_init();
 	_unit_tests();					// run any unit tests that are enabled
-//	run_canned_startup();			// run any pre-loaded commands
-//	canned_startup();
+	run_canned_startup();			// run any pre-loaded commands
 	
 	// main loop
 	for (;;) {
 		controller_run( );			// single pass through the controller
 	}
 	return 0;
-/*
-	// application level inits
-//	heater_init();				// setup the heater module and subordinate functions
-//	sensor_init();
-//	sei(); 						// enable interrupts
-//	rpt_initialized();			// send initalization string
-
-//	_unit_tests();				// run any unit tests that are enabled
-
-	while (true) {				// main loop
-		_controller();
-	}
-	return (false);				// never returns
-*/
 }
 
 static void _application_init(void)
@@ -115,62 +97,41 @@ static void _application_init(void)
 	cli();
 
 	// hardware and low-level drivers
-	sys_init();					// do this first
-//	hardware_init();				// system hardware setup 			- must be first
+	hardware_init();				// system hardware setup 			- must be first
 
-//	rtc_init();						// real time counter
-
-//	xio_init();					// do this second
+//	rtc_init();						// realtime counter
 	xio_init();						// xmega io subsystem
-//	switch_init();					// switches
-
-	adc_init(ADC_CHANNEL);		// init system devices
+	adc_init(ADC_CHANNEL);			// init system devices
 	pwm_init();
 	tick_init();
 	led_init();
 
 	// application level inits
-	heater_init();				// setup the heater module and subordinate functions
+	heater_init();					// setup the heater module and subordinate functions
 	sensor_init();
-	sei(); 						// enable interrupts
-	rpt_initialized();			// send initalization string
-/*
-	// application sub-systems
-	controller_init(STD_IN, STD_OUT, STD_ERR);// must be first app init; reqs xio_init()
-	config_init();					// config records from eeprom 		- must be next app init
-	network_init();					// reset std devices if required	- must follow config_init()
-	planner_init();					// motion planning subsystem
-	canonical_machine_init();		// canonical machine				- must follow config_init()
 
-	// now bring up the interrupts and get started
-	PMIC_SetVectorLocationToApplication();// as opposed to boot ROM
-	PMIC_EnableHighLevel();			// all levels are used, so don't bother to abstract them
-	PMIC_EnableMediumLevel();
-	PMIC_EnableLowLevel();
-	sei();							 // enable global interrupts
-	rpt_print_system_ready_message();// (LAST) announce system is ready
-*/
+	// let 'er rip
+	sei(); 							// enable interrupts
+	rpt_initialized();				// (LAST) announce system is ready
 }
 
-
-
-/******************************************************************************
- * STARTUP TESTS
- ******************************************************************************/
-
 /*
- * canned_startup() - run a string on startup
+ * run_canned_startup() - run a string on startup
  *
  *	Pre-load the USB RX (input) buffer with some test strings that will be called 
  *	on startup. Be mindful of the char limit on the read buffer (RX_BUFFER_SIZE).
  *	It's best to create a test file for really complicated things.
  */
-void canned_startup()	// uncomment __CANNED_STARTUP in tempfin1.h if you need this run
+void run_canned_startup()	// uncomment __CANNED_STARTUP in tempfin1.h if you need this run
 {
 #ifdef __CANNED_STARTUP
 	xio_queue_RX_string(XIO_DEV_USART, "{\"fv\":\"\"}\n");
 #endif
 }
+
+/******************************************************************************
+ **** STATUIS MESSAGES ********************************************************
+ ******************************************************************************/
 
 
 /**** Status Messages ***************************************************************
@@ -248,7 +209,7 @@ static const char stat_56[] PROGMEM = "56";
 static const char stat_57[] PROGMEM = "57";
 static const char stat_58[] PROGMEM = "58";
 static const char stat_59[] PROGMEM = "59";
-
+/*
 static const char stat_60[] PROGMEM = "Move less than minimum length";
 static const char stat_61[] PROGMEM = "Move less than minimum time";
 static const char stat_62[] PROGMEM = "Gcode block skipped";
@@ -301,20 +262,20 @@ static const char stat_107[] PROGMEM = "Stepper assertion failure";
 static const char stat_108[] PROGMEM = "Extended IO assertion failure";
 static const char stat_109[] PROGMEM = "st_prep_line() move time is infinite";
 static const char stat_110[] PROGMEM = "st_prep_line() move time is NAN";
-
+*/
 static const char *const stat_msg[] PROGMEM = {
 	stat_00, stat_01, stat_02, stat_03, stat_04, stat_05, stat_06, stat_07, stat_08, stat_09,
 	stat_10, stat_11, stat_12, stat_13, stat_14, stat_15, stat_16, stat_17, stat_18, stat_19,
 	stat_20, stat_21, stat_22, stat_23, stat_24, stat_25, stat_26, stat_27, stat_28, stat_29,
 	stat_30, stat_31, stat_32, stat_33, stat_34, stat_35, stat_36, stat_37, stat_38, stat_39,
 	stat_40, stat_41, stat_42, stat_43, stat_44, stat_45, stat_46, stat_47, stat_48, stat_49,
-	stat_50, stat_51, stat_52, stat_53, stat_54, stat_55, stat_56, stat_57, stat_58, stat_59,
-	stat_60, stat_61, stat_62, stat_63, stat_64, stat_65, stat_66, stat_67, stat_68, stat_69,
-	stat_70, stat_71, stat_72, stat_73, stat_74, stat_75, stat_76, stat_77, stat_78, stat_79,
-	stat_80, stat_81, stat_82, stat_83, stat_84, stat_85, stat_86, stat_87, stat_88, stat_89,
-	stat_90, stat_91, stat_92, stat_93, stat_94, stat_95, stat_96, stat_97, stat_98, stat_99,
-	stat_100, stat_101, stat_102, stat_103, stat_104, stat_105, stat_106, stat_107, stat_108, stat_109, 
-	stat_110
+	stat_50, stat_51, stat_52, stat_53, stat_54, stat_55, stat_56, stat_57, stat_58, stat_59	// removed comma!
+//	stat_60, stat_61, stat_62, stat_63, stat_64, stat_65, stat_66, stat_67, stat_68, stat_69,
+//	stat_70, stat_71, stat_72, stat_73, stat_74, stat_75, stat_76, stat_77, stat_78, stat_79,
+//	stat_80, stat_81, stat_82, stat_83, stat_84, stat_85, stat_86, stat_87, stat_88, stat_89,
+//	stat_90, stat_91, stat_92, stat_93, stat_94, stat_95, stat_96, stat_97, stat_98, stat_99,
+//	stat_100, stat_101, stat_102, stat_103, stat_104, stat_105, stat_106, stat_107, stat_108, stat_109, 
+//	stat_110
 };
 
 char *get_status_message(stat_t status)

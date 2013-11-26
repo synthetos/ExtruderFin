@@ -40,7 +40,7 @@
 
 /****** REVISIONS ******/
 
-#define FIRMWARE_BUILD 		008.04			// Another initial codebase update work
+#define FIRMWARE_BUILD 		008.05			// More initial codebase update work
 #define FIRMWARE_VERSION	0.1				// firmware major version
 #define HARDWARE_PLATFORM	1				// board style 
 #define HARDWARE_VERSION	1				// board revision number
@@ -187,7 +187,7 @@ char *get_status_message(stat_t status);
 #define	STAT_ERROR_38 38
 #define	STAT_ERROR_39 39
 
-// Input errors (400's, if you will)
+// Generic data errors (400's, if you will)
 #define	STAT_UNRECOGNIZED_COMMAND 40		// parser didn't recognize the command
 #define	STAT_EXPECTED_COMMAND_LETTER 41		// malformed line to parser
 #define	STAT_BAD_NUMBER_FORMAT 42			// number format error
@@ -208,8 +208,8 @@ char *get_status_message(stat_t status);
 #define	STAT_ERROR_57 57
 #define	STAT_ERROR_58 58
 #define	STAT_ERROR_59 59
-
-// Gcode and machining errors
+/*
+// Application specific errors
 #define	STAT_MINIMUM_LENGTH_MOVE_ERROR 60	// move is less than minimum length
 #define	STAT_MINIMUM_TIME_MOVE_ERROR 61		// move is less than minimum time
 #define	STAT_GCODE_BLOCK_SKIPPED 62			// block is too short - was skipped
@@ -263,7 +263,7 @@ char *get_status_message(stat_t status);
 #define	STAT_XIO_ASSERTION_FAILURE 108
 #define	STAT_PREP_LINE_MOVE_TIME_IS_INFINITE 109
 #define	STAT_PREP_LINE_MOVE_TIME_IS_NAN 110
-
+*/
 /******************************************************************************
  * DEFINE UNIT TESTS
  ******************************************************************************/
