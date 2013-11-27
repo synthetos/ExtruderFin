@@ -30,8 +30,10 @@
 #endif
 
 #include "extruderfin.h"
+#include "config.h"
 #include "controller.h"
 #include "hardware.h"
+#include "text_parser.h"
 #include "sensor.h"
 #include "heater.h"
 
@@ -110,7 +112,7 @@ void pwm_init(void)
 	TIMSK1 = 0; 						// disable PWM interrupts
 	OCR2A = 0;							// clear PWM frequency (TOP value)
 	OCR2B = 0;							// clear PWM duty cycle as % of TOP value
-	device.pwm_freq = 0;
+	hw.pwm_freq = 0;
 }
 
 void pwm_on(double freq, double duty)
@@ -132,13 +134,13 @@ void pwm_off(void)
  */
 uint8_t pwm_set_freq(double freq)
 {
-	device.pwm_freq = F_CPU / PWM_PRESCALE / freq;
-	if (device.pwm_freq < PWM_MIN_RES) { 
+	hw.pwm_freq = F_CPU / PWM_PRESCALE / freq;
+	if (hw.pwm_freq < PWM_MIN_RES) { 
 		OCR2A = PWM_MIN_RES;
-	} else if (device.pwm_freq >= PWM_MAX_RES) { 
+	} else if (hw.pwm_freq >= PWM_MAX_RES) { 
 		OCR2A = PWM_MAX_RES;
 	} else { 
-		OCR2A = (uint8_t)device.pwm_freq;
+		OCR2A = (uint8_t)hw.pwm_freq;
 	}
 	return (STAT_OK);
 }
@@ -164,7 +166,7 @@ uint8_t pwm_set_duty(double duty)
 	} else {
 		OCR2B = (uint8_t)(OCR2A * (1-(duty/100)));
 	}
-	OCR2A = (uint8_t)device.pwm_freq;
+	OCR2A = (uint8_t)hw.pwm_freq;
 	return (STAT_OK);
 }
 
@@ -179,38 +181,42 @@ uint8_t pwm_set_duty(double duty)
  */
 void tick_init(void)
 {
-	PRR &= ~PRTIM0_bm;				// Enable Timer0 in the power reduction register (system.h)
+	PRR &= ~PRTIM0_bm;				// Enable Timer0 in the power reduction register (hardware.h)
 	TCCR0A = TICK_MODE;				// mode_settings
 	TCCR0B = TICK_PRESCALER;		// 1024 ~= 7800 Hz
 	OCR0A = TICK_COUNT;
 	TIMSK0 = (1<<OCIE0A);			// enable compare interrupts
-	device.tick_10ms_count = 10;
-	device.tick_100ms_count = 10;
-	device.tick_1sec_count = 10;	
+
+	hw.sys_ticks = 0;
+	
+	hw.tick_10ms_count = 10;
+	hw.tick_100ms_count = 10;
+	hw.tick_1sec_count = 10;	
 }
 
 ISR(TIMER0_COMPA_vect)
 {
-	device.tick_flag = true;
+	hw.sys_ticks++;
+	hw.tick_flag = true;
 }
 
 uint8_t tick_callback(void)
 {
-	if (device.tick_flag == false) { return (STAT_NOOP);}
+	if (hw.tick_flag == false) { return (STAT_NOOP);}
 
-	device.tick_flag = false;
+	hw.tick_flag = false;
 	tick_1ms();
 
-	if (--device.tick_10ms_count != 0) { return (STAT_OK);}
-	device.tick_10ms_count = 10;
+	if (--hw.tick_10ms_count != 0) { return (STAT_OK);}
+	hw.tick_10ms_count = 10;
 	tick_10ms();
 
-	if (--device.tick_100ms_count != 0) { return (STAT_OK);}
-	device.tick_100ms_count = 10;
+	if (--hw.tick_100ms_count != 0) { return (STAT_OK);}
+	hw.tick_100ms_count = 10;
 	tick_100ms();
 
-	if (--device.tick_1sec_count != 0) { return (STAT_OK);}
-	device.tick_1sec_count = 10;
+	if (--hw.tick_1sec_count != 0) { return (STAT_OK);}
+	hw.tick_1sec_count = 10;
 	tick_1sec();
 
 	return (STAT_OK);
@@ -234,6 +240,28 @@ void tick_1sec(void)			// 1 second callout
 {
 //	led_toggle();
 }
+
+/*
+ * SysTickTimer_getValue() - this is a hack to get around some compatibility problems
+ */
+
+#ifdef __AVR
+uint32_t SysTickTimer_getValue()
+{
+	return (hw.sys_ticks);	// system ticks by 1 ms
+}
+#endif // __AVR
+
+#ifdef __ARM
+uint32_t SysTickTimer_getValue()
+{
+	return (SysTickTimer.getValue());
+}
+#endif // __ARM
+
+#ifdef __cplusplus
+}
+#endif
 
 /**** LED Functions ****
  * led_init()
@@ -266,6 +294,70 @@ void led_toggle(void)
 	}
 }
 
+
+/***** END OF SYSTEM FUNCTIONS *****/
+
+
+/***********************************************************************************
+ * CONFIGURATION AND INTERFACE FUNCTIONS
+ * Functions to get and set variables from the cfgArray table
+ ***********************************************************************************/
+
+/*
+ * hw_get_id() - get device ID (signature)
+ */
+/*
+stat_t hw_get_id(cmdObj_t *cmd) 
+{
+	char_t tmp[SYS_ID_LEN];
+	_get_id(tmp);
+	cmd->objtype = TYPE_STRING;
+	ritorno(cmd_copy_string(cmd, tmp));
+	return (STAT_OK);
+}
+*/
+/*
+ * hw_run_boot() - invoke boot form the cfgArray
+ */
+stat_t hw_run_boot(cmdObj_t *cmd)
+{
+//	hw_request_bootloader();
+	return(STAT_OK);
+}
+
+/*
+ * hw_set_hv() - set hardware version number
+ */
+stat_t hw_set_hv(cmdObj_t *cmd) 
+{
+	if (cmd->value > HARDWARE_VERSION_MAX) { return (STAT_INPUT_VALUE_UNSUPPORTED);}
+	set_flt(cmd);					// record the hardware version
+//	_port_bindings(cmd->value);		// reset port bindings
+//	switch_init();					// re-initialize the GPIO ports
+//+++++	gpio_init();				// re-initialize the GPIO ports
+	return (STAT_OK);
+}
+
+/***********************************************************************************
+ * TEXT MODE SUPPORT
+ * Functions to print variables from the cfgArray table
+ ***********************************************************************************/
+
+#ifdef __TEXT_MODE
+
+static const char fmt_fb[] PROGMEM = "[fb]  firmware build%18.2f\n";
+static const char fmt_fv[] PROGMEM = "[fv]  firmware version%16.2f\n";
+static const char fmt_hp[] PROGMEM = "[hp]  hardware platform%15.2f\n";
+static const char fmt_hv[] PROGMEM = "[hv]  hardware version%16.2f\n";
+static const char fmt_id[] PROGMEM = "[id]  TinyG ID%30s\n";
+
+void hw_print_fb(cmdObj_t *cmd) { text_print_flt(cmd, fmt_fb);}
+void hw_print_fv(cmdObj_t *cmd) { text_print_flt(cmd, fmt_fv);}
+void hw_print_hp(cmdObj_t *cmd) { text_print_flt(cmd, fmt_hp);}
+void hw_print_hv(cmdObj_t *cmd) { text_print_flt(cmd, fmt_hv);}
+void hw_print_id(cmdObj_t *cmd) { text_print_str(cmd, fmt_id);}
+
+#endif //__TEXT_MODE 
 #ifdef __cplusplus
 }
 #endif

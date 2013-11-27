@@ -108,9 +108,9 @@ static void _controller_HSM()
 //static uint8_t _dispatch()
 static stat_t _command_dispatch(void)
 {
-	ritorno (xio_gets(cs.active_src, cs.buf, sizeof(cs.buf)));// read line or return if not completed
-	json_parser(cs.buf);
-	return (STAT_OK);
+//	ritorno (xio_gets(cs.active_src, cs.buf, sizeof(cs.buf)));// read line or return if not completed
+//	json_parser(cs.buf);
+//	return (STAT_OK);
 
 //	if ((status = xio_gets(cs.active_src, cs.buf, sizeof(cs.buf))) != SC_OK) {
 //		if (status == SC_EOF) {					// EOF can come from file devices only
@@ -120,4 +120,64 @@ static stat_t _command_dispatch(void)
 //		// Note that TG_EAGAIN, TG_NOOP etc. will just flow through
 //		return (status);
 //	}
+
+	stat_t status;
+
+	// read input line or return if not a completed line
+	// xio_gets() is a non-blocking workalike of fgets()
+	while (true) {
+		if ((status = xio_gets(cs.active_src, cs.in_buf, sizeof(cs.in_buf))) == STAT_OK) {
+			cs.bufp = cs.in_buf;
+			break;
+		}
+		// handle end-of-file from file devices
+//		if (status == STAT_EOF) {						// EOF can come from file devices only
+//			if (cfg.comm_mode == TEXT_MODE) {
+//				fprintf_P(stderr, PSTR("End of command file\n"));
+//			} else {
+//				rpt_exception(STAT_EOF);				// not really an exception
+//			}
+//			tg_reset_source();							// reset to default source
+//		}
+//		return (status);								// Note: STAT_EAGAIN, errors, etc. will drop through
+	}
+	cs.linelen = strlen(cs.in_buf)+1;					// linelen only tracks primary input
+	strncpy(cs.saved_buf, cs.bufp, SAVED_BUFFER_LEN-1);	// save input buffer for reporting
+
+	// dispatch the new text line
+	switch (toupper(*cs.bufp)) {						// first char
+
+//		case '!': { cm_request_feedhold(); break; }		// include for AVR diagnostics and ARM serial
+//		case '%': { cm_request_queue_flush(); break; }
+//		case '~': { cm_request_cycle_start(); break; }
+
+		case NUL: { 									// blank line (just a CR)
+			if (cfg.comm_mode != JSON_MODE) {
+				text_response(STAT_OK, cs.saved_buf);
+			}
+			break;
+		}
+		case '$': case '?': case 'H': { 				// Text mode input
+			cfg.comm_mode = TEXT_MODE;
+			text_response(text_parser(cs.bufp), cs.saved_buf);
+			break;
+		}
+		case '{': { 									// JSON input
+			cfg.comm_mode = JSON_MODE;
+			json_parser(cs.bufp);
+			break;
+		}
+/*
+		default: {										// anything else must be Gcode
+			if (cfg.comm_mode == JSON_MODE) {			// run it as JSON...
+				strncpy(cs.out_buf, cs.bufp, INPUT_BUFFER_LEN -8);	// -8 is for extra JSON chars (use out_buf as temp)
+				sprintf((char *)cs.bufp,"{\"gc\":\"%s\"}\n", (char *)cs.out_buf);
+				json_parser(cs.bufp);
+				} else {									//...or run it as text
+				text_response(gc_gcode_parser(cs.bufp), cs.saved_buf);
+			}
+		}
+*/
+	}
+	return (STAT_OK);
 }

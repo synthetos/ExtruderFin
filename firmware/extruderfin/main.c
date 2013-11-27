@@ -98,21 +98,25 @@ static void _application_init(void)
 
 	// hardware and low-level drivers
 	hardware_init();				// system hardware setup 			- must be first
-
 //	rtc_init();						// realtime counter
 	xio_init();						// xmega io subsystem
-	adc_init(ADC_CHANNEL);			// init system devices
+
+	// hardware devices
+	adc_init(ADC_CHANNEL);
 	pwm_init();
 	tick_init();
 	led_init();
 
-	// application level inits
+	// application sub-systems
+	controller_init(STD_IN, STD_OUT, STD_ERR);// must be first app init; reqs xio_init()
+	config_init();					// config records from eeprom
 	heater_init();					// setup the heater module and subordinate functions
 	sensor_init();
 
 	// let 'er rip
 	sei(); 							// enable interrupts
 	rpt_initialized();				// (LAST) announce system is ready
+//	rpt_print_system_ready_message();// (LAST) announce system is ready
 }
 
 /*

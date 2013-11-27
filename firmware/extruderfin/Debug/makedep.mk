@@ -6,8 +6,6 @@ config.c
 
 config_app.c
 
-config_textmode.c
-
 controller.c
 
 heater.c
@@ -21,6 +19,8 @@ report.c
 sensor.c
 
 hardware.c
+
+text_parser.c
 
 util.c
 

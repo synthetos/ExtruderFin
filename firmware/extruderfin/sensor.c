@@ -25,17 +25,9 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
  * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-/*
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <string.h>				// for memset
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include <avr/pgmspace.h>
-#include <math.h>
-*/
-#include "extruderfin.h"
+
+#include "extruderfin.h"	// #1
+#include "config.h"			// #2
 #include "controller.h"
 #include "hardware.h"
 #include "sensor.h"

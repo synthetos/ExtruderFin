@@ -1,8 +1,8 @@
 /*
  * json_parser.c - JSON parser for Kinen systems.
- * Part of Kinen project
+ * This file is part of the TinyG project
  *
- * Copyright (c) 2010 - 2013 Alden S. Hart Jr.
+ * Copyright (c) 2011 - 2013 Alden S. Hart Jr.
  *
  * This file ("the software") is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2 as published by the
@@ -25,25 +25,82 @@
  * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef json_parser_h
-#define json_parser_h
+#ifndef _JSON_PARSER_H_ONCE
+#define _JSON_PARSER_H_ONCE
+
+#ifdef __cplusplus
+extern "C"{
+#endif
 
 /* JSON array definitions / revisions */
 // for now there is only one JSON array in use - the footer
 // if you add these make sure there are no collisions w/present or past numbers
 
 #define FOOTER_REVISION 1
-#define JSON_OUTPUT_STRING_MAX (TEXT_BUFFER_LEN)
-//#define JSON_MAX_DEPTH 4
+#define JSON_OUTPUT_STRING_MAX (OUTPUT_BUFFER_LEN)
 
-/*
- * Global Scope Functions
- */
+enum jsonVerbosity {
+	JV_SILENT = 0,					// no response is provided for any command
+	JV_FOOTER,						// responses contain  footer only; no command echo, gcode blocks or messages
+	JV_CONFIGS,						// echo configs; gcode blocks are not echoed; messages are not echoed
+	JV_MESSAGES,					// echo configs; gcode messages only (if present); no block echo or line numbers
+	JV_LINENUM,						// echo configs; gcode blocks return messages and line numbers as present
+	JV_VERBOSE						// echos all configs and gcode blocks, line numbers and messages
+};
+
+enum jsonFormats {					// json output print modes
+	JSON_NO_PRINT = 0,				// don't print anything if you find yourself in JSON mode
+	JSON_OBJECT_FORMAT,				// print just the body as a json object
+	JSON_RESPONSE_FORMAT			// print the header/body/footer as a response object
+};
+
+typedef struct jsSingleton {
+
+	/*** config values (PUBLIC) ***/
+	uint8_t json_verbosity;			// see enum in this file for settings
+	uint8_t json_footer_depth;		// 0=footer is peer to response 'r', 1=child of response 'r'
+	//	uint8_t json_footer_style;		// select footer style
+
+	uint8_t echo_json_footer;		// flags for JSON responses serialization
+	uint8_t echo_json_messages;
+	uint8_t echo_json_configs;
+	uint8_t echo_json_linenum;
+	uint8_t echo_json_gcode_block;
+
+	/*** runtime values (PRIVATE) ***/
+
+} jsSingleton_t;
+
+/**** Externs - See report.c for allocation ****/
+
+extern jsSingleton_t js;
+
+/**** Function Prototypes ****/
 
 void json_parser(char *str);
-uint16_t json_serialize(cmdObj_t *cmd, char *out_buf);
+//uint16_t json_serialize(cmdObj_t *cmd, char *out_buf);
+uint16_t json_serialize(cmdObj_t *cmd, char_t *out_buf, uint16_t size);
+
 void json_print_object(cmdObj_t *cmd);
 void json_print_response(uint8_t status);
+void json_print_list(stat_t status, uint8_t flags);
+
+stat_t json_set_jv(cmdObj_t *cmd);
+
+#ifdef __TEXT_MODE
+
+	void js_print_ej(cmdObj_t *cmd);
+	void js_print_jv(cmdObj_t *cmd);
+	void js_print_fs(cmdObj_t *cmd);
+
+#else
+
+	#define js_print_ej tx_print_stub
+	#define js_print_jv tx_print_stub
+	#define js_print_fs tx_print_stub
+
+#endif // __TEXT_MODE
+
 
 /* unit test setup */
 
@@ -55,4 +112,8 @@ void js_unit_tests(void);
 #define	JSON_UNITS
 #endif // __UNIT_TEST_JSON
 
+#ifdef __cplusplus
+}
 #endif
+
+#endif // End of include guard: JSON_PARSER_H_ONCE

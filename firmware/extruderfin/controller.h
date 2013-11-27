@@ -34,14 +34,18 @@ extern "C"{
 
 
 //#define INPUT_BUFFER_LEN 128
-#define TEXT_BUFFER_LEN 128
+//#define TEXT_BUFFER_LEN 128
 
-typedef struct controllerSingleton {		// main kinen control struct
-//	double version;					// kinen version number
-//	double build;					// kinen build number
-//	double null;					// dumping ground for items with no target
-//	uint8_t default_src;			// default source device
+#define INPUT_BUFFER_LEN 128			// text buffer size (255 max)
+#define SAVED_BUFFER_LEN 64				// saved buffer size (for reporting only)
+#define OUTPUT_BUFFER_LEN 255			// text buffer size
+#define APPLICATION_MESSAGE_LEN 64		// application message string storage allocation
+//#define STATUS_MESSAGE_LEN __			// see tinyg.h for status message string storage allocation
 
+#define LED_NORMAL_TIMER 1000			// blink rate for normal operation (in ms)
+#define LED_ALARM_TIMER 100				// blink rate for alarm state (in ms)
+
+typedef struct controllerSingleton {	// main controller struct
 	magic_t magic_start;				// magic number to test memory integrity
 	uint8_t state;						// controller state
 	float null;							// dumping ground for items with no target
@@ -59,24 +63,20 @@ typedef struct controllerSingleton {		// main kinen control struct
 	uint16_t linelen;					// length of currently processing line
 	uint16_t read_index;				// length of line being read
 
-	uint8_t comm_mode;				// communications mode 1=JSON
-	uint16_t nvm_base_addr;			// NVM base address
-	uint16_t nvm_profile_base;		// NVM base address of current profile
+	// system state variables
+//	uint8_t linelen;					// length of currently processing line
+//	uint8_t led_state;					// 0=off, 1=on
+//	int32_t led_counter;				// a convenience for flashing an LED
 
-//	uint8_t linelen;				// length of currently processing line
-//	uint8_t led_state;				// 0=off, 1=on
-//	int32_t led_counter;			// a convenience for flashing an LED
-//	char in_buf[INPUT_BUFFER_LEN];	// input text buffer
-//	char out_buf[OUTPUT_BUFFER_LEN];// output text buffer
 	uint8_t hard_reset_requested;		// flag to perform a hard reset
 	uint8_t bootloader_requested;		// flag to enter the bootloader
 
 	// controller serial buffers
 	char_t *bufp;						// pointer to primary or secondary in buffer
-	char buf[TEXT_BUFFER_LEN];		// input/output text buffer
-//	char_t in_buf[INPUT_BUFFER_LEN];	// primary input buffer
-//	char_t out_buf[OUTPUT_BUFFER_LEN];	// output buffer
-//	char_t saved_buf[SAVED_BUFFER_LEN];	// save the input buffer
+//	char buf[TEXT_BUFFER_LEN];			// input/output text buffer
+	char_t in_buf[INPUT_BUFFER_LEN];	// primary input buffer
+	char_t out_buf[OUTPUT_BUFFER_LEN];	// output buffer
+	char_t saved_buf[SAVED_BUFFER_LEN];	// save the input buffer
 	magic_t magic_end;
 	
 } controller_t;

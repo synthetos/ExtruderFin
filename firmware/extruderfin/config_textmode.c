@@ -146,7 +146,7 @@ char *_get_format(const index_t i, char *format)
  * _print_nul() - print nothing
  * _print_ui8() - print uint8_t value w/no units or unit conversion
  * _print_int() - print integer value w/no units or unit conversion
- * _print_dbl() - print double value w/no units or unit conversion
+ * _print_flt() - print double value w/no units or unit conversion
  * _print_str() - print string value
  */
 void _print_nul(cmdObj_t *cmd) {}

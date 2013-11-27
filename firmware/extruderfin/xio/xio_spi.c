@@ -2,7 +2,7 @@
  * xio_spi.c	- General purpose SPI device driver for xmega family
  * 				- works with avr-gcc stdio library
  *
- * Part of Kinen project
+ * Part of TinyG project
  *
  * Copyright (c) 2012 - 2013 Alden S. Hart Jr.
  *
@@ -69,10 +69,7 @@
  *		transfers. Presumably the master would stop polling once it receives an ETX 
  *		from the slave.
  */
-//#include <stdio.h>					// precursor for xio.h
-//#include <stdbool.h>				// true and false
-//#include <avr/interrupt.h>
-#include "../xio.h"					// nested includes for all devices and types
+#include "../xio.h"						// nested includes for all devices and types
 
 // allocate and initialize SPI structs
 xioSpiRX_t spi0_rx = { SPI_RX_BUFFER_SIZE-1,1,1 };
@@ -114,7 +111,7 @@ FILE *xio_open_spi(const uint8_t dev, const char *addr, const flags_t flags)
 	xio_reset_device(d, flags);
 
 	// setup the SPI hardware device
-	PRR &= ~PRSPI_bm;				// Enable SPI in power reduction register (system.h)
+	PRR &= ~PRSPI_bm;				// Enable SPI in power reduction register (hardware.h)
 	SPCR |= SPI_MODE;
 	DDRB |= SPI_OUTBITS;
 

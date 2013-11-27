@@ -1,8 +1,8 @@
 /*
  * util.h - a random assortment of useful functions
- * Part of Kinen project
+ * This file is part of the TinyG project
  *
- * Copyright (c) 2010 - 2013 Alden S. Hart Jr.
+ * Copyright (c) 2010 - 2013 Alden S. Hart, Jr.
  *
  * This file ("the software") is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2 as published by the
@@ -23,23 +23,60 @@
  * SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
  * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */  
+ */
+/* util.c/.h contains a dog's breakfast of supporting functions that are 
+ * not specific to tinyg: including:
+ *
+ *	  - math and min/max utilities and extensions 
+ *	  - vector manipulation utilities
+ *	  - support for debugging routines
+ */
 
-#ifndef util_h
-#define util_h
+#ifndef UTIL_H_ONCE
+#define UTIL_H_ONCE
+
+#ifdef __ARM
+//#include <stdint.h>
+//#include "sam.h"
+#include "MotateTimers.h"
+using Motate::delay;
+using Motate::SysTickTimer;
+#endif
+
+#ifdef __cplusplus
+extern "C"{
+#endif
 
 /****** Global Scope Variables and Functions ******/
 
-//double min3(double x1, double x2, double x3);
-//double min4(double x1, double x2, double x3, double x4);
-//double max3(double x1, double x2, double x3);
-//double max4(double x1, double x2, double x3, double x4);
-//uint8_t isnumber(char c);
-//uint8_t read_double(char *buf, uint8_t *i, double *double_ptr);
-//uint16_t compute_checksum(char const *string, const uint16_t length);
+//*** math utilities ***
+
 double std_dev(double a[], uint8_t n, double *mean);
 
-/***** Math Support *****/
+float min3(float x1, float x2, float x3);
+float min4(float x1, float x2, float x3, float x4);
+float max3(float x1, float x2, float x3);
+float max4(float x1, float x2, float x3, float x4);
+//float std_dev(float a[], uint8_t n, float *mean);
+
+//*** string utilities ***
+
+//#ifdef __ARM
+//uint8_t * strcpy_U( uint8_t * dst, const uint8_t * src );
+//#endif
+
+uint8_t isnumber(char_t c);
+char_t *escape_string(char_t *dst, char_t *src);
+char_t *pstr2str(const char_t *pgm_string);
+uint16_t compute_checksum(char_t const *string, const uint16_t length);
+
+//*** other utilities ***
+
+//**** Math Support *****
+
+#ifndef square
+#define square(x) ((x)*(x))		/* UNSAFE */
+#endif
 
 // side-effect safe forms of min and max
 #ifndef max
@@ -51,9 +88,9 @@ double std_dev(double a[], uint8_t n, double *mean);
 
 #ifndef min
 #define min(a,b) \
-   ({ __typeof__ (a) termA = (a); \
-      __typeof__ (b) termB = (b); \
-      termA<termB ? termA:termB; })
+	({ __typeof__ (a) term1 = (a); \
+	   __typeof__ (b) term2 = (b); \
+	   term1<term2 ? term1:term2; })
 #endif
 
 #ifndef avg
@@ -61,13 +98,15 @@ double std_dev(double a[], uint8_t n, double *mean);
 #endif
 
 #ifndef EPSILON
-#define EPSILON 0.00001						// rounding error for floats
+//#define EPSILON		((float)0.00001)		// allowable rounding error for floats
+#define EPSILON 	((float)0.000001)		// allowable rounding error for floats
 #endif
-#ifndef fp_FALSE
-#define fp_FALSE(a) (a < EPSILON)			// float is interpreted as FALSE (equals zero)
+
+#ifndef fp_EQ
+#define fp_EQ(a,b) (fabs(a-b) < EPSILON)	// requires math.h to be included in each file used
 #endif
-#ifndef fp_TRUE
-#define fp_TRUE(a) (a > EPSILON)			// float is interpreted as TRUE (not equal to zero)
+#ifndef fp_NE
+#define fp_NE(a,b) (fabs(a-b) > EPSILON)	// requires math.h to be included in each file used
 #endif
 #ifndef fp_ZERO
 #define fp_ZERO(a) (fabs(a) < EPSILON)		// requires math.h to be included in each file used
@@ -75,11 +114,11 @@ double std_dev(double a[], uint8_t n, double *mean);
 #ifndef fp_NOT_ZERO
 #define fp_NOT_ZERO(a) (fabs(a) > EPSILON)	// requires math.h to be included in each file used
 #endif
-#ifndef fp_EQ
-#define fp_EQ(a,b) (fabs(a-b) < EPSILON)	// requires math.h to be included in each file used
+#ifndef fp_FALSE
+#define fp_FALSE(a) (a < EPSILON)			// float is interpreted as FALSE (equals zero)
 #endif
-#ifndef fp_NE
-#define fp_NE(a,b) (fabs(a-b) > EPSILON)	// requires math.h to be included in each file used
+#ifndef fp_TRUE
+#define fp_TRUE(a) (a > EPSILON)			// float is interpreted as TRUE (not equal to zero)
 #endif
 
 // Constants
@@ -87,12 +126,18 @@ double std_dev(double a[], uint8_t n, double *mean);
 #define MAX_ULONG (4294967295)
 #define MM_PER_INCH (25.4)
 #define INCH_PER_MM (1/25.4)
-#define MICROSECONDS_PER_MINUTE ((double)60000000)
-#define uSec(a) ((double)(a * MICROSECONDS_PER_MINUTE))
+#define MICROSECONDS_PER_MINUTE ((float)60000000)
+#define uSec(a) ((float)(a * MICROSECONDS_PER_MINUTE))
 
 #define RADIAN (57.2957795)
 //		M_PI is pi as defined in math.h
 //		M_SQRT2 is radical2 as defined in math.h
+#ifndef M_SQRT3
 #define M_SQRT3 (1.73205080756888)
+#endif
 
-#endif	// util_h
+#ifdef __cplusplus
+}
+#endif
+
+#endif	// End of include guard: UTIL_H_ONCE

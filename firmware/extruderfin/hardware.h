@@ -1,6 +1,6 @@
 /*
- * system.h - system hardware device configuration values 
- * Part of Kinen project
+ * hardware.h - system hardware device configuration values 
+ * Part of TinyG project
  *
  * Copyright (c) 2012 - 2013 Alden S. Hart Jr.
  *
@@ -24,24 +24,24 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
  * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-#ifndef system_h
-#define system_h
+#ifndef HARDWARE_H_ONCE
+#define HARDWARE_H_ONCE
 
-/******************************************************************************
- * PARAMETERS AND SETTINGS
- ******************************************************************************/
+/*************************
+ * Global System Defines *
+ *************************/
 
-/*** Clock settings ***/
 #undef F_CPU							// set for delays
 #define F_CPU 16000000UL				// should always precede <avr/delay.h>
 
 // Clock Crystal Config. Pick one:
 //#define __CLOCK_INTERNAL_8MHZ TRUE	// use internal oscillator
-//#define __CLOCK_EXTERNAL_8MHZ	TRUE	// uses PLL to provide 32 MHz system clock
-#define __CLOCK_EXTERNAL_16MHZ TRUE		// uses PLL to provide 32 MHz system clock
+//#define __CLOCK_EXTERNAL_8MHZ	TRUE
+#define __CLOCK_EXTERNAL_16MHZ TRUE		// technically this is overclocking a 3.3v 328
 
 /*** Power reduction register mappings ***/
-// you shouldn't need to change this
+// you shouldn't need to change these
+
 #define PRADC_bm 			(1<<PRADC)
 #define PRUSART0_bm			(1<<PRUSART0)
 #define PRSPI_bm 			(1<<PRSPI)
@@ -73,7 +73,7 @@
 #define ADC_CHANNEL 		0				// ADC channel 0 / single-ended in this application (write to ADMUX)
 #define ADC_REFS			0b01000000		// AVcc external 5v reference (write to ADMUX)
 #define ADC_ENABLE			(1<<ADEN)		// write this to ADCSRA to enable the ADC
-#define ADC_START_CONVERSION (1<<ADSC)	// write to ADCSRA to start conversion
+#define ADC_START_CONVERSION (1<<ADSC)		// write to ADCSRA to start conversion
 #define ADC_PRESCALE 		6				// 6=64x which is ~125KHz at 8Mhz clock
 #define ADC_PRECISION 		1024			// change this if you go to 8 bit precision
 #define ADC_VREF 			5.00			// change this if the circuit changes. 3v would be about optimal
@@ -90,14 +90,22 @@
  * STRUCTURES 
  ******************************************************************************/
 
-typedef struct DeviceStruct {	// hardware devices that are part of the chip
-	uint8_t tick_flag;			// true = the timer interrupt fired
-	uint8_t tick_10ms_count;	// 10ms down counter
-	uint8_t tick_100ms_count;	// 100ms down counter
-	uint8_t tick_1sec_count;	// 1 second down counter
-	double pwm_freq;			// save it for stopping and starting PWM
-} device_t;
-device_t device;				// Device is always a singleton (there is only one device)
+typedef struct hwSingleton {				// hardware devices that are part of the chip
+	uint32_t sys_ticks;						// counts up every 1ms tick 
+	uint8_t tick_flag;						// true = the timer interrupt fired
+	uint8_t tick_10ms_count;				// 10ms down counter
+	uint8_t tick_100ms_count;				// 100ms down counter
+	uint8_t tick_1sec_count;				// 1 second down counter
+
+	double pwm_freq;						// save it for stopping and starting PWM
+	
+	// Non-volatile RAM
+	uint16_t nvm_base_addr;					// NVM base address
+	uint16_t nvm_profile_base;				// NVM base address of current profile
+
+} hwSingleton_t;
+
+hwSingleton_t hw;						// HW is ALWAYS a singleton. You can't just "make more"
 
 /******************************************************************************
  * FUNCTION PROTOTYPES
@@ -115,6 +123,7 @@ uint8_t pwm_set_freq(double freq);
 uint8_t pwm_set_duty(double duty);
 
 void tick_init(void);
+uint32_t SysTickTimer_getValue(void);
 uint8_t tick_callback(void);
 void tick_1ms(void);
 void tick_10ms(void);
@@ -126,4 +135,25 @@ void led_on(void);
 void led_off(void);
 void led_toggle(void);
 
-#endif
+stat_t hw_set_hv(cmdObj_t *cmd);
+stat_t hw_get_id(cmdObj_t *cmd);
+
+#ifdef __TEXT_MODE
+
+	void hw_print_fb(cmdObj_t *cmd);
+	void hw_print_fv(cmdObj_t *cmd);
+	void hw_print_hp(cmdObj_t *cmd);
+	void hw_print_hv(cmdObj_t *cmd);
+	void hw_print_id(cmdObj_t *cmd);
+
+#else
+
+	#define hw_print_fb tx_print_stub
+	#define hw_print_fv tx_print_stub
+	#define hw_print_hp tx_print_stub
+	#define hw_print_hv tx_print_stub
+	#define hw_print_id tx_print_stub
+
+#endif // __TEXT_MODE
+
+#endif	// HARDWARE_H_ONCE

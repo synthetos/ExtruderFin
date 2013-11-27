@@ -39,7 +39,6 @@ SUBDIRS :=  \
 C_SRCS +=  \
 ../config.c \
 ../config_app.c \
-../config_textmode.c \
 ../controller.c \
 ../heater.c \
 ../json_parser.c \
@@ -47,6 +46,7 @@ C_SRCS +=  \
 ../report.c \
 ../sensor.c \
 ../hardware.c \
+../text_parser.c \
 ../util.c \
 ../xio.c \
 ../xio/xio_file.c \
@@ -64,7 +64,6 @@ ASM_SRCS +=
 OBJS +=  \
 config.o \
 config_app.o \
-config_textmode.o \
 controller.o \
 heater.o \
 json_parser.o \
@@ -72,6 +71,7 @@ main.o \
 report.o \
 sensor.o \
 hardware.o \
+text_parser.o \
 util.o \
 xio.o \
 xio/xio_file.o \
@@ -83,7 +83,6 @@ xio/xio_usart.o
 OBJS_AS_ARGS +=  \
 config.o \
 config_app.o \
-config_textmode.o \
 controller.o \
 heater.o \
 json_parser.o \
@@ -91,6 +90,7 @@ main.o \
 report.o \
 sensor.o \
 hardware.o \
+text_parser.o \
 util.o \
 xio.o \
 xio/xio_file.o \
@@ -102,7 +102,6 @@ xio/xio_usart.o
 C_DEPS +=  \
 config.d \
 config_app.d \
-config_textmode.d \
 controller.d \
 heater.d \
 json_parser.d \
@@ -110,6 +109,7 @@ main.d \
 report.d \
 sensor.d \
 hardware.d \
+text_parser.d \
 util.d \
 xio.d \
 xio/xio_file.d \
@@ -121,7 +121,6 @@ xio/xio_usart.d
 C_DEPS_AS_ARGS +=  \
 config.d \
 config_app.d \
-config_textmode.d \
 controller.d \
 heater.d \
 json_parser.d \
@@ -129,6 +128,7 @@ main.d \
 report.d \
 sensor.d \
 hardware.d \
+text_parser.d \
 util.d \
 xio.d \
 xio/xio_file.d \

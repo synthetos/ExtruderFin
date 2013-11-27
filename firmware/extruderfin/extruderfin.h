@@ -40,17 +40,25 @@
 
 /****** REVISIONS ******/
 
-#define FIRMWARE_BUILD 		008.05			// More initial codebase update work
-#define FIRMWARE_VERSION	0.1				// firmware major version
-#define HARDWARE_PLATFORM	1				// board style 
-#define HARDWARE_VERSION	1				// board revision number
+#define FIRMWARE_BUILD 			008.05		// More initial codebase update work
+#define FIRMWARE_VERSION		0.1			// firmware major version
+#define HARDWARE_PLATFORM		1			// board style 
+#define HARDWARE_VERSION		1			// board revision number
+#define HARDWARE_VERSION_MAX	HARDWARE_VERSION
 
 /****** COMPILE-TIME SETTINGS ******/
+// Comment out what you don't need to skinny down the FLASH / RAM footprint
 
 #define __TEXT_MODE							// comment out to disable text mode support (saves ~9Kb)
+#define __ENABLE_TEXTMODE
 #define __HELP_SCREENS						// comment out to disable help screens 		(saves ~3.5Kb)
 #define __CANNED_TESTS 						// comment out to remove $tests 			(saves ~12Kb)
 #define __TEST_99 							// comment out to remove diagnostic test 99
+
+#define __ENABLE_PERSISTENCE
+#define __ENABLE_USART_DEVICE
+#define __ENABLE_SPI_DEVICE
+#define __ENABLE_PGM_FILE_DEVICE
 
 /****** DEVELOPMENT SETTINGS ******/
 
@@ -98,9 +106,9 @@ typedef char char_t;			// ARM/C++ version uses uint8_t as char_t
 #define GET_UNITS(a) 	   strncpy_P(shared_buf,(const char *)pgm_read_word(&msg_units[cm_get_units_mode(a)]),SHARED_BUF_LEN)
 
 // IO settings
-#define STD_IN 	XIO_DEV_USB		// default IO settings
-#define STD_OUT	XIO_DEV_USB
-#define STD_ERR	XIO_DEV_USB
+#define STD_IN 	XIO_DEV_USART	// default IO settings
+#define STD_OUT	XIO_DEV_USART
+#define STD_ERR	XIO_DEV_USART
 
 // String compatibility
 #define strtof strtod			// strtof is not in the AVR lib

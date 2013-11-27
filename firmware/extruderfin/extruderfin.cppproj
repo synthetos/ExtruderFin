@@ -27,14 +27,14 @@
     <eraseonlaunchrule>0</eraseonlaunchrule>
     <AsfFrameworkConfig>
       <framework-data>
-  <options />
-  <configurations />
-  <files />
-  <documentation help="" />
-  <dependencies>
-    <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.3.0" />
-  </dependencies>
-</framework-data>
+        <options />
+        <configurations />
+        <files />
+        <documentation help="" />
+        <dependencies>
+          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.3.0" />
+        </dependencies>
+      </framework-data>
     </AsfFrameworkConfig>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -132,9 +132,6 @@
     <Compile Include="config_app.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="config_textmode.c">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="controller.c">
       <SubType>compile</SubType>
     </Compile>
@@ -175,6 +172,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="hardware.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="text_parser.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="text_parser.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="util.c">
