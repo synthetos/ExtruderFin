@@ -36,9 +36,9 @@ extern "C"{
 //#define INPUT_BUFFER_LEN 128
 //#define TEXT_BUFFER_LEN 128
 
-#define INPUT_BUFFER_LEN 128			// text buffer size (255 max)
+#define INPUT_BUFFER_LEN 80			// text buffer size (255 max)
 #define SAVED_BUFFER_LEN 64				// saved buffer size (for reporting only)
-#define OUTPUT_BUFFER_LEN 255			// text buffer size
+#define OUTPUT_BUFFER_LEN 128			// text buffer size
 #define APPLICATION_MESSAGE_LEN 64		// application message string storage allocation
 //#define STATUS_MESSAGE_LEN __			// see tinyg.h for status message string storage allocation
 

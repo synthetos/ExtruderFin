@@ -1,6 +1,5 @@
 /*
  * heater.c - Kinen temperature controller - heater file
- *
  * Part of Kinen project
  *
  * Copyright (c) 2012 - 2013 Alden S. Hart Jr.

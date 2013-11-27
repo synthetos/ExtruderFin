@@ -28,7 +28,10 @@
 #include "config.h"
 #include "controller.h"
 #include "json_parser.h"
+#include "text_parser.h"
 #include "xio.h"
+
+#include <util/delay.h>
 
 /***********************************************************************************
  **** STRUCTURE ALLOCATIONS *********************************************************
@@ -41,17 +44,15 @@ controller_t cs;		// controller state structure
  ***********************************************************************************/
 
 static void _controller_HSM(void);
+static stat_t _command_dispatch(void);
+static stat_t _spew_ASCII(void);
+
 //static stat_t _shutdown_idler(void);
 //static stat_t _normal_idler(void);
 //static stat_t _limit_switch_handler(void);
 //static stat_t _system_assertions(void);
 //static stat_t _sync_to_planner(void);
 //static stat_t _sync_to_tx_buffer(void);
-static stat_t _command_dispatch(void);
-
-// prep for export to other modules:
-//stat_t hardware_hard_reset_handler(void);
-//stat_t hardware_bootloader_handler(void);
 
 /***********************************************************************************
  **** CODE *************************************************************************
@@ -80,15 +81,21 @@ void controller_init(uint8_t std_in, uint8_t std_out, uint8_t std_err)
 //	tg_set_primary_source(cs.default_src);
 }
 
-/*
- *	_controller()
- *	_dispatch()
+/* 
+ * controller_run() - MAIN LOOP - top-level controller
  *
- *	The controller/dispatch loop is a set of pre-registered callbacks that (in effect)
- *	provide rudimentry multi-threading. Functions are organized from highest priority 
- *	to lowest priority. Each called function must return a status code (see kinen.h). 
- *	If SC_EAGAIN (02) is returned the loop restarts at the beginning of the list. 
- *	For any other status code exceution continues down the list.
+ * The order of the dispatched tasks is very important. Tasks are ordered by increasing 
+ * dependency (blocking hierarchy). Tasks that are dependent on completion of lower-level 
+ * tasks must be later in the list than the task(s) they are dependent upon. 
+ *
+ * Tasks must be written as continuations as they will be called repeatedly, and are 
+ * called even if they are not currently active. 
+ *
+ * The DISPATCH macro calls the function and returns to the controller parent if not 
+ * finished (STAT_EAGAIN), preventing later routines from running (they remain blocked). 
+ * Any other condition - OK or ERR - drops through and runs the next routine in the list.
+ *
+ * A routine that had no action (i.e. is OFF or idle) should return STAT_NOOP.
  */
 
 void controller_run()
@@ -102,7 +109,15 @@ void controller_run()
 static void _controller_HSM()
 {
 //	DISPATCH(tick_callback());			// regular interval timer clock handler (ticks)
+	DISPATCH(_spew_ASCII());			// read and execute next incoming command
 	DISPATCH(_command_dispatch());		// read and execute next incoming command
+}
+
+static stat_t _spew_ASCII(void)
+{
+	printf("0123456789abcdefghijklmnopqrstuvwxyz\n");
+	_delay_ms (100);
+	return (STAT_EAGAIN);
 }
 
 //static uint8_t _dispatch()

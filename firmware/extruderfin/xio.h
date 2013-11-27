@@ -301,7 +301,7 @@ enum xioCodes {
  * SETUP XIO UNIT TESTS
  ******************************************************************************/
 
-#define __XIO_UNIT_TESTS	// uncomment this to compile nd run XIO unit tests
+//#define __XIO_UNIT_TESTS	// uncomment this to compile and run XIO unit tests
 #ifdef __XIO_UNIT_TESTS
 void xio_unit_tests(void);
 #define	XIO_UNIT_TESTS xio_unit_tests();

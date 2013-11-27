@@ -57,7 +57,7 @@ void sensor_init()
 	sensor.reading_variance_max = SENSOR_READING_VARIANCE_MAX;
 	sensor.disconnect_temperature = SENSOR_DISCONNECTED_TEMPERATURE;
 	sensor.no_power_temperature = SENSOR_NO_POWER_TEMPERATURE;
-	// note: there are no bits to set to outputs in this initialization
+// note: there are no bits to set to outputs in this initialization
 }
 
 void sensor_on()
@@ -183,8 +183,3 @@ static inline double _sensor_sample(uint8_t adc_channel)
 	return (((double)adc_read() * SENSOR_SLOPE) + SENSOR_OFFSET);
 #endif
 }
-
-
-
-
-

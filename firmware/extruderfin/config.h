@@ -101,7 +101,6 @@ typedef uint8_t index_t;			// use this if there are < 256 indexed objects
 #define NVM_VALUE_LEN 4				// NVM value length (float, fixed length)
 #define NVM_BASE_ADDR 0x0000		// base address of usable NVM
 
-
 enum tgCommunicationsMode {
 	TEXT_MODE = 0,					// text command line mode
 	JSON_MODE,						// strict JSON construction
@@ -172,7 +171,6 @@ typedef struct cfgItem {
 	char token[CMD_TOKEN_LEN+1];		// token - stripped of group prefix (w/NUL termination)
 	uint8_t flags;						// operations flags - see defines below
 	int8_t precision;					// decimal precision for display (JSON)
-//  const char *format;					// pointer to formatted print string
 	fptrPrint print;					// print binding: aka void (*print)(cmdObj_t *cmd);
 	fptrCmd get;						// GET binding aka uint8_t (*get)(cmdObj_t *cmd)
 	fptrCmd set;						// SET binding aka uint8_t (*set)(cmdObj_t *cmd)
@@ -201,18 +199,10 @@ void cmd_print(cmdObj_t *cmd);			// main entry point for print value
 void cmd_persist(cmdObj_t *cmd);		// main entry point for persistence
 
 // helpers
-//uint8_t cmd_get_type(cmdObj_t *cmd);
-//stat_t cmd_persist_offsets(uint8_t flag);
-
 index_t	cmd_index_max(void);
 uint8_t cmd_index_is_single(index_t index);
 uint8_t cmd_index_is_group(index_t index);
 uint8_t cmd_index_lt_groups(index_t index);
-
-//uint8_t cmd_get_type(cmdObj_t *cmd);
-//uint8_t cmd_set_jv(cmdObj_t *cmd);
-//uint8_t cmd_set_tv(cmdObj_t *cmd);
-//uint8_t cmd_persist_offsets(uint8_t flag);
 
 // generic internal functions
 stat_t set_nul(cmdObj_t *cmd);		// set nothing (no operation)
@@ -247,31 +237,14 @@ cmdObj_t *cmd_add_object(const char_t *token);
 cmdObj_t *cmd_add_integer(const char_t *token, const uint32_t value);
 cmdObj_t *cmd_add_float(const char_t *token, const float value);
 cmdObj_t *cmd_add_string(const char_t *token, const char_t *string);
-cmdObj_t *cmd_add_string_P(const char *token, const char *string);
+//cmdObj_t *cmd_add_string_P(const char *token, const char *string);
 cmdObj_t *cmd_add_message(const char *string);
-cmdObj_t *cmd_add_message_P(const char *string);
+//cmdObj_t *cmd_add_message_P(const char *string);
 void cmd_print_list(uint8_t status, uint8_t text_flags, uint8_t json_flags);
 
 void cmd_persist(cmdObj_t *cmd);		// main entry point for persistence
 stat_t cmd_read_NVM_value(cmdObj_t *cmd);
 stat_t cmd_write_NVM_value(cmdObj_t *cmd);
-
-/*
-// TEXTMODE SUPPORT
-#ifdef __ENABLE_TEXTMODE
-void cmd_print(cmdObj_t *cmd);			// main entry point for formatted print
-stat_t cmd_text_parser(char *str);
-char *_get_format(const index_t i, char *format);
-void _print_nul(cmdObj_t *cmd);		// print nothing (no operation)
-void _print_ui8(cmdObj_t *cmd);		// print unit8_t value
-void _print_int(cmdObj_t *cmd);		// print uint32_t integer value
-void _print_flt(cmdObj_t *cmd);		// print float value
-void _print_str(cmdObj_t *cmd);		// print a string value
-void cmd_print_text_inline_pairs(void);
-void cmd_print_text_inline_values(void);
-void cmd_print_text_multiline_formatted(void);
-#endif
-*/
 
 #ifdef __DEBUG
 void cfg_dump_NVM(const uint16_t start_record, const uint16_t end_record, char *label);

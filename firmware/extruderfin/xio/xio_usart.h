@@ -32,8 +32,10 @@
  * USART DEVICE CONFIGS AND STRUCTURES
  ******************************************************************************/
 
-#define USART_BAUD_RATE		115200
-#define USART_BAUD_DOUBLER	0									// 0=turns baud doubler off
+#define USART_BAUD_RATE		19200	// actually turns into 9600. +++fixme
+//#define USART_BAUD_RATE		9600
+//#define USART_BAUD_RATE		115200
+#define USART_BAUD_DOUBLER	0		// 0=turns baud doubler off
 #define USART_ENABLE_FLAGS	( 1<<RXCIE0 | 1<<TXEN0 | 1<<RXEN0)  // enable recv interrupt, TX and RX
 #define USART_XIO_FLAGS 	(XIO_BLOCK |  XIO_ECHO | XIO_XOFF | XIO_LINEMODE )
 

@@ -1,6 +1,6 @@
 /*
  * config_app.h - application-specific part of configuration data
- * Part of Kinen project
+ * Part of extruderfin project
  *
  * Copyright (c) 2010 - 2013 Alden S. Hart Jr.
  *
@@ -24,7 +24,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
  * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-/* This file contains application speoific data for the config system:
+/* This file contains application specific data for the config system:
  *	-,application-specific functions and function prototypes 
  *	- application-specific message and print format strings
  *	- application-specific config array
@@ -111,7 +111,6 @@
 #include "controller.h"
 #include "text_parser.h"
 #include "hardware.h"
-
 #include "heater.h"
 #include "sensor.h"
 
@@ -122,27 +121,6 @@ extern "C"{
 /*** structures ***/
 
 cfgParameters_t cfg; 				// application specific configuration parameters
-
-/***********************************************************************************
- **** PROGRAM MEMORY STRINGS AND STRING ARRAYS *************************************
- ***********************************************************************************/
-/* PROGMEM strings for print formatting
- * NOTE: DO NOT USE TABS IN FORMAT STRINGS
- */
-#ifdef __ENABLE_TEXTMODE
-
-const char fmt_nul[] PROGMEM = "";
-const char fmt_ui8[] PROGMEM = "%d\n";	// generic format for ui8s
-const char fmt_flt[] PROGMEM = "%f\n";	// generic format for doubles
-const char fmt_str[] PROGMEM = "%s\n";	// generic format for string message (with no formatting)
-
-// System group and ungrouped formatting strings
-const char fmt_fv[] PROGMEM = "[fv]  firmware version%16.2f\n";
-const char fmt_fb[] PROGMEM = "[fb]  firmware build%18.2f\n";
-const char fmt_hv[] PROGMEM = "[hv]  hardware version%16.2f\n";
-//const char fmt_id[] PROGMEM = "[id]  TinyG ID%30s\n";
-
-#endif // __ENABLE_TEXTMODE
 
 /***********************************************************************************
  **** CONFIG TABLE  ****************************************************************
@@ -222,7 +200,6 @@ const cfgItem_t cfgArray[] PROGMEM = {
 
 /* <DO NOT MESS WITH THESE DEFINES> */
 #define CMD_INDEX_MAX (sizeof cfgArray / sizeof(cfgItem_t))
-//#define CMD_INDEX_END_SINGLES		(CMD_INDEX_MAX - CMD_COUNT_UBER_GROUPS - CMD_COUNT_GROUPS - CMD_STATUS_REPORT_LEN)
 #define CMD_INDEX_END_SINGLES		(CMD_INDEX_MAX - CMD_COUNT_UBER_GROUPS - CMD_COUNT_GROUPS)
 #define CMD_INDEX_START_GROUPS		(CMD_INDEX_MAX - CMD_COUNT_UBER_GROUPS - CMD_COUNT_GROUPS)
 #define CMD_INDEX_START_UBER_GROUPS (CMD_INDEX_MAX - CMD_COUNT_UBER_GROUPS)
@@ -232,32 +209,6 @@ index_t	cmd_index_max() { return ( CMD_INDEX_MAX );}
 uint8_t cmd_index_is_single(index_t index) { return ((index <= CMD_INDEX_END_SINGLES) ? true : false);}
 uint8_t cmd_index_is_group(index_t index) { return (((index >= CMD_INDEX_START_GROUPS) && (index < CMD_INDEX_START_UBER_GROUPS)) ? true : false);}
 uint8_t cmd_index_lt_groups(index_t index) { return ((index <= CMD_INDEX_START_GROUPS) ? true : false);}
-
-/*
-#define CMD_INDEX_MAX (sizeof cfgArray / sizeof(cfgItem_t))
-//#define CMD_INDEX_END_SINGLES		(CMD_INDEX_MAX - CMD_COUNT_UBER_GROUPS - CMD_COUNT_GROUPS - CMD_STATUS_REPORT_LEN)
-#define CMD_INDEX_END_SINGLES		(CMD_INDEX_MAX - CMD_COUNT_UBER_GROUPS - CMD_COUNT_GROUPS)
-#define CMD_INDEX_START_GROUPS		(CMD_INDEX_MAX - CMD_COUNT_UBER_GROUPS - CMD_COUNT_GROUPS)
-#define CMD_INDEX_START_UBER_GROUPS (CMD_INDEX_MAX - CMD_COUNT_UBER_GROUPS)
-
-//index_t cmd_get_max_index() { return (CMD_INDEX_MAX);}
-uint8_t cmd_index_lt_max(index_t index) { return ((index < CMD_INDEX_MAX) ? true : false);}
-uint8_t cmd_index_is_single(index_t index) { return ((index <= CMD_INDEX_END_SINGLES) ? true : false);}
-uint8_t cmd_index_is_group(index_t index) { return (((index >= CMD_INDEX_START_GROUPS) && (index < CMD_INDEX_START_UBER_GROUPS)) ? true : false);}
-uint8_t cmd_index_lt_groups(index_t index) { return ((index <= CMD_INDEX_START_GROUPS) ? true : false);}
-*/
-
-/***********************************************************************************
- **** FUNCTIONS AND PROTOTYPES *****************************************************
- ***********************************************************************************/
-/*
-static uint8_t _get_htmp(cmdObj_t *cmd)
-{
-	cmd->value = heater.temperature;
-	cmd->type = TYPE_FLOAT;
-	return (SC_OK);
-}
-*/
 
 #ifdef __cplusplus
 }

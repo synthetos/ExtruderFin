@@ -40,7 +40,7 @@
 
 /****** REVISIONS ******/
 
-#define FIRMWARE_BUILD 			008.05		// More initial codebase update work
+#define FIRMWARE_BUILD 			008.06		// Initial debugging in-circuit. Runs ASCII test pattern
 #define FIRMWARE_VERSION		0.1			// firmware major version
 #define HARDWARE_PLATFORM		1			// board style 
 #define HARDWARE_VERSION		1			// board revision number
@@ -49,8 +49,7 @@
 /****** COMPILE-TIME SETTINGS ******/
 // Comment out what you don't need to skinny down the FLASH / RAM footprint
 
-#define __TEXT_MODE							// comment out to disable text mode support (saves ~9Kb)
-#define __ENABLE_TEXTMODE
+//#define __TEXT_MODE							// comment out to disable text mode support (saves ~9Kb)
 #define __HELP_SCREENS						// comment out to disable help screens 		(saves ~3.5Kb)
 #define __CANNED_TESTS 						// comment out to remove $tests 			(saves ~12Kb)
 #define __TEST_99 							// comment out to remove diagnostic test 99

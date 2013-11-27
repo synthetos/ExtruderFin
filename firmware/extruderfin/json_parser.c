@@ -112,7 +112,6 @@ static stat_t _json_parser_kernal(char_t *str)
 		}
 		// propagate the group from previous NV pair (if relevant)
 		if (group[0] != NUL) {
-//			strncpy(cmd->group, group, CMD_GROUP_LEN);		// copy the parent's group to this child
 			strcpy(cmd->group, group);						// copy the parent's group to this child
 		}
 		// validate the token and get the index
@@ -120,7 +119,6 @@ static stat_t _json_parser_kernal(char_t *str)
 			return (STAT_UNRECOGNIZED_COMMAND);
 		}
 		if ((cmd_index_is_group(cmd->index)) && (cmd_group_is_prefixed(cmd->token))) {
-//			strncpy(group, cmd->token, CMD_GROUP_LEN);		// record the group ID
 			strcpy(group, cmd->token);						// record the group ID
 		}
 		if ((cmd = cmd->nx) == NULL) return (STAT_JSON_TOO_MANY_PAIRS);// Not supposed to encounter a NULL
@@ -212,9 +210,6 @@ static stat_t _get_nv_pair_strict(cmdObj_t *cmd, char_t **pstr, int8_t *depth)
 	
 	// numbers
 	} else if (isdigit(**pstr) || (**pstr == '-')) {// value is a number
-//		cmd->value = strtof(*pstr, &tmp);		// tmp is the end pointer
-//		double d = strtod(*pstr, &tmp);			// tmp is the end pointer
-//		cmd->value = d;
 		cmd->value = (float)strtod(*pstr, &tmp);// tmp is the end pointer
 
 		if(tmp == *pstr) { return (STAT_BAD_NUMBER_FORMAT);}

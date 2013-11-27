@@ -30,6 +30,11 @@
 void rpt_initialized(void);
 void rpt_readout(void);
 
+void rpt_exception(uint8_t status);
+void rpt_print_loading_configs_message(void);
+void rpt_print_initializing_message(void);
+void rpt_print_system_ready_message(void);
+
 #endif
 
 

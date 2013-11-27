@@ -162,8 +162,8 @@ void text_response(const stat_t status, char_t *buf)
 	} else {
 		fprintf_P(stderr, prompt_err, get_status_message(status), buf);
 	}
-	cmdObj_t *cmd = cmd_body+1;
 
+//	cmdObj_t *cmd = cmd_body+1;
 //	if (cmd_get_type(cmd) == CMD_TYPE_MESSAGE) {
 //		fprintf(stderr, (char *)*cmd->stringp);
 //	}
@@ -189,7 +189,7 @@ void text_print_list(stat_t status, uint8_t flags)
 
 void text_print_inline_pairs(cmdObj_t *cmd)
 {
-	uint32_t *v = (uint32_t*)&cmd->value;
+//	uint32_t *v = (uint32_t*)&cmd->value;
 	for (uint8_t i=0; i<CMD_BODY_LEN-1; i++) {
 		switch (cmd->objtype) {
 			case TYPE_PARENT: 	{ if ((cmd = cmd->nx) == NULL) return; continue;} // NULL means parent with no child
@@ -206,7 +206,7 @@ void text_print_inline_pairs(cmdObj_t *cmd)
 
 void text_print_inline_values(cmdObj_t *cmd)
 {
-	uint32_t *v = (uint32_t*)&cmd->value;
+//	uint32_t *v = (uint32_t*)&cmd->value;
 	for (uint8_t i=0; i<CMD_BODY_LEN-1; i++) {
 		switch (cmd->objtype) {
 			case TYPE_PARENT: 	{ if ((cmd = cmd->nx) == NULL) return; continue;} // NULL means parent with no child

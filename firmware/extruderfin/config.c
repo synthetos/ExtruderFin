@@ -49,11 +49,6 @@ extern "C"{
 cmdStr_t cmdStr;
 cmdObj_t cmd_list[CMD_LIST_LEN];	// JSON header element
 
-//extern const cfgItem_t cfgArray[];	// found in contig_app.c
-//typedef char PROGMEM *prog_char_ptr;		// access to PROGMEM arrays of PROGMEM strings
-//static uint8_t _set_defa(cmdObj_t *cmd);	// reset config to default values
-//static void _do_group_list(cmdObj_t *cmd, char list[][CMD_TOKEN_LEN+1]); // helper to print multiple groups in a list
-
 /***********************************************************************************
  **** CODE *************************************************************************
  ***********************************************************************************

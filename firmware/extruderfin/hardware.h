@@ -32,12 +32,13 @@
  *************************/
 
 #undef F_CPU							// set for delays
-#define F_CPU 16000000UL				// should always precede <avr/delay.h>
+//#define F_CPU 16000000UL				// should always precede <avr/delay.h>
+#define F_CPU 8000000UL					// should always precede <avr/delay.h>
 
 // Clock Crystal Config. Pick one:
-//#define __CLOCK_INTERNAL_8MHZ TRUE	// use internal oscillator
+#define __CLOCK_INTERNAL_8MHZ TRUE		// use internal oscillator
 //#define __CLOCK_EXTERNAL_8MHZ	TRUE
-#define __CLOCK_EXTERNAL_16MHZ TRUE		// technically this is overclocking a 3.3v 328
+//#define __CLOCK_EXTERNAL_16MHZ TRUE	// technically this is overclocking a 3.3v 328
 
 /*** Power reduction register mappings ***/
 // you shouldn't need to change these

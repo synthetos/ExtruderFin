@@ -49,33 +49,23 @@ static void _application_init(void);
 static void _unit_tests(void);
 static void run_canned_startup(void);
 
-//static void _controller_run(void);
-//static uint8_t _dispatch(void);
-//static void _unit_tests(void);
-
-// Had to move the struct definitions and declarations to .h file for reporting purposes
-
 /****************************************************************************
  **** CODE ******************************************************************
  ****************************************************************************/
 
 void init( void )
 {
-	#ifdef __ARM
+  #ifdef __ARM
 	SystemInit();
-
-	// Disable watchdog
-	WDT->WDT_MR = WDT_MR_WDDIS;
-
-	// Initialize C library
-	__libc_init_array();
-	#endif
+	WDT->WDT_MR = WDT_MR_WDDIS;	// Disable watchdog
+	__libc_init_array();		// Initialize C library
+  #endif
 }
 
 int main(void)
 {
 	// system initialization
-//	init();						// do this first
+	init();						// do this first
 
 	// application initialization
 	_application_init();
@@ -98,7 +88,6 @@ static void _application_init(void)
 
 	// hardware and low-level drivers
 	hardware_init();				// system hardware setup 			- must be first
-//	rtc_init();						// realtime counter
 	xio_init();						// xmega io subsystem
 
 	// hardware devices
@@ -116,7 +105,7 @@ static void _application_init(void)
 	// let 'er rip
 	sei(); 							// enable interrupts
 	rpt_initialized();				// (LAST) announce system is ready
-//	rpt_print_system_ready_message();// (LAST) announce system is ready
+	rpt_print_system_ready_message();// (LAST) announce system is ready
 }
 
 /*
@@ -273,7 +262,7 @@ static const char *const stat_msg[] PROGMEM = {
 	stat_20, stat_21, stat_22, stat_23, stat_24, stat_25, stat_26, stat_27, stat_28, stat_29,
 	stat_30, stat_31, stat_32, stat_33, stat_34, stat_35, stat_36, stat_37, stat_38, stat_39,
 	stat_40, stat_41, stat_42, stat_43, stat_44, stat_45, stat_46, stat_47, stat_48, stat_49,
-	stat_50, stat_51, stat_52, stat_53, stat_54, stat_55, stat_56, stat_57, stat_58, stat_59	// removed comma!
+	stat_50, stat_51, stat_52, stat_53, stat_54, stat_55, stat_56, stat_57, stat_58, stat_59 // removed comma!
 //	stat_60, stat_61, stat_62, stat_63, stat_64, stat_65, stat_66, stat_67, stat_68, stat_69,
 //	stat_70, stat_71, stat_72, stat_73, stat_74, stat_75, stat_76, stat_77, stat_78, stat_79,
 //	stat_80, stat_81, stat_82, stat_83, stat_84, stat_85, stat_86, stat_87, stat_88, stat_89,
@@ -298,9 +287,8 @@ static void _unit_tests(void)
 }
 
 
-#ifdef __TF1_UNIT_TESTS
+#ifdef __EXTRUDER_UNIT_TESTS
 
-/*
 #define SETPOINT 200
 
 static void _pid_test(void);
@@ -376,7 +364,5 @@ static void _pwm_test()
 
 // exception cases
 }
-*/
 
-#endif // __UNIT_TESTS
-
+#endif // __EXTRUDER_UNIT_TESTS

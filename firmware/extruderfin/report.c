@@ -25,18 +25,14 @@
  * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <stdbool.h>
-//#include <string.h>
-//#include <avr/pgmspace.h>
-
 #include "extruderfin.h"
+#include "config.h"
 #include "report.h"
+#include "json_parser.h"
+#include "text_parser.h"
 #include "sensor.h"
 #include "heater.h"
-//#include "tempfin.h"
-//#include "xio/xio.h"
+#include "util.h"
 
 /*** Strings and string arrays in program memory ***/
 static const char initialized[] PROGMEM = "\nDevice Initialized\n"; 
@@ -53,6 +49,59 @@ static const char msg_hstate1[] PROGMEM = "  Shutdown";
 static const char msg_hstate2[] PROGMEM = "  Heating";
 static const char msg_hstate3[] PROGMEM = "  REGULATED";
 static PGM_P const msg_hstate[] PROGMEM = { msg_hstate0, msg_hstate1, msg_hstate2, msg_hstate3 };
+
+
+/**** Exception Messages ************************************************************
+ * rpt_exception() - generate an exception message - always in JSON format
+ * rpt_er()		   - send a bogus exception report for testing purposes (it's not real)
+ *
+ * WARNING: Do not call this function from MED or HI interrupts (LO is OK) or there is 
+ *			a potential for deadlock in the TX buffer.
+ */
+void rpt_exception(uint8_t status)
+{
+	printf_P(PSTR("{\"er\":{\"fb\":%0.2f,\"st\":%d,\"msg\":\"%s\"}}\n"),
+		FIRMWARE_BUILD, status, get_status_message(status));
+}
+
+/**** Application Messages *********************************************************
+ * rpt_print_initializing_message()	   - initializing configs from hard-coded profile
+ * rpt_print_loading_configs_message() - loading configs from EEPROM
+ * rpt_print_system_ready_message()    - system ready message
+ *
+ *	These messages are always in JSON format to allow UIs to sync
+ */
+
+void _startup_helper(stat_t status, const char_t *msg )
+{
+#ifndef __SUPPRESS_STARTUP_MESSAGES
+	js.json_footer_depth = 0;
+	cmd_reset_list();
+	cmd_add_object((const char_t *)"fv");		// firmware version
+	cmd_add_object((const char_t *)"fb");		// firmware build
+	cmd_add_object((const char_t *)"hp");		// hardware platform
+	cmd_add_object((const char_t *)"hv");		// hardware version
+//	cmd_add_object((const char_t *)"id");		// hardware ID
+	cmd_add_string((const char_t *)"msg", pstr2str(msg));	// startup message
+	json_print_response(status);
+#endif
+}
+
+void rpt_print_initializing_message(void)
+{
+//	_startup_helper(STAT_INITIALIZING, PSTR(INIT_MESSAGE));
+}
+
+void rpt_print_loading_configs_message(void)
+{
+//	_startup_helper(STAT_INITIALIZING, PSTR("Loading configs from EEPROM"));
+}
+
+void rpt_print_system_ready_message(void)
+{
+//	_startup_helper(STAT_OK, PSTR("SYSTEM READY"));
+//	if (cfg.comm_mode == TEXT_MODE) { text_response(STAT_OK, (char_t *)"");}// prompt
+}
 
 /*** Display routines ***/
 void rpt_initialized()
