@@ -47,7 +47,6 @@ controller_t cs;		// controller state structure
 
 static void _controller_HSM(void);
 static stat_t _command_dispatch(void);
-static stat_t _spew_ASCII(void);
 
 //static stat_t _shutdown_idler(void);
 //static stat_t _normal_idler(void);
@@ -66,15 +65,20 @@ void controller_init(uint8_t std_in, uint8_t std_out, uint8_t std_err)
 {
 	cs.magic_start = MAGICNUM;
 	cs.magic_end = MAGICNUM;
+
+	// identification attributes	
 	cs.fw_build = FIRMWARE_BUILD;
 	cs.fw_version = FIRMWARE_VERSION;
 	cs.hw_platform = HARDWARE_PLATFORM;				// NB: HW version is set from EEPROM
+	cs.hw_version = HARDWARE_VERSION;
 
+	// controller variables
 	cs.linelen = 0;									// initialize index for read_line()
 	cs.state = CONTROLLER_STARTUP;					// ready to run startup lines
 	cs.hard_reset_requested = false;
 	cs.bootloader_requested = false;
 
+	// serial IO settings
 	xio_set_stdin(std_in);
 	xio_set_stdout(std_out);
 	xio_set_stderr(std_err);
@@ -83,6 +87,14 @@ void controller_init(uint8_t std_in, uint8_t std_out, uint8_t std_err)
 //	tg_set_primary_source(cs.default_src);
 }
 
+/*
+static stat_t _spew_ASCII(void)
+{
+	printf("0123456789abcdefghijklmnopqrstuvwxyz\n");
+	_delay_ms (100);
+	return (STAT_EAGAIN);
+}
+*/
 /* 
  * controller_run() - MAIN LOOP - top-level controller
  *
@@ -112,35 +124,21 @@ static void _controller_HSM()
 {
 //	DISPATCH(tick_callback());			// regular interval timer clock handler (ticks)
 //	DISPATCH(_spew_ASCII());			// read and execute next incoming command
-	DISPATCH(sensor_callback());
+//	DISPATCH(sensor_callback());
 //	DISPATCH(heater_callback());
 	DISPATCH(_command_dispatch());		// read and execute next incoming command
-}
-
-static stat_t _spew_ASCII(void)
-{
-	printf("0123456789abcdefghijklmnopqrstuvwxyz\n");
-	_delay_ms (100);
-	return (STAT_EAGAIN);
 }
 
 //static uint8_t _dispatch()
 static stat_t _command_dispatch(void)
 {
-//	ritorno (xio_gets(cs.active_src, cs.buf, sizeof(cs.buf)));// read line or return if not completed
-//	json_parser(cs.buf);
-//	return (STAT_OK);
-
-//	if ((status = xio_gets(cs.active_src, cs.buf, sizeof(cs.buf))) != SC_OK) {
-//		if (status == SC_EOF) {					// EOF can come from file devices only
-//			fprintf_P(stderr, PSTR("End of command file\n"));
-//			tg_reset_source();					// reset to default source
-//		}
-//		// Note that TG_EAGAIN, TG_NOOP etc. will just flow through
-//		return (status);
-//	}
-
 	stat_t status;
+
+//	char c;
+//	if ((c = xio_getc()) != _FDEV_ERR) {
+//		xio_putc(c);
+//	}
+//	return (STAT_OK);
 
 	// read input line or return if not a completed line
 	// xio_gets() is a non-blocking workalike of fgets()
@@ -149,7 +147,7 @@ static stat_t _command_dispatch(void)
 			cs.bufp = cs.in_buf;
 			break;
 		}
-		// handle end-of-file from file devices
+	// handle end-of-file from file devices
 //		if (status == STAT_EOF) {						// EOF can come from file devices only
 //			if (cfg.comm_mode == TEXT_MODE) {
 //				fprintf_P(stderr, PSTR("End of command file\n"));
@@ -161,7 +159,7 @@ static stat_t _command_dispatch(void)
 //		return (status);								// Note: STAT_EAGAIN, errors, etc. will drop through
 	}
 	cs.linelen = strlen(cs.in_buf)+1;					// linelen only tracks primary input
-	strncpy(cs.saved_buf, cs.bufp, SAVED_BUFFER_LEN-1);	// save input buffer for reporting
+//	strncpy(cs.saved_buf, cs.bufp, SAVED_BUFFER_LEN-1);	// save input buffer for reporting
 
 	// dispatch the new text line
 	switch (toupper(*cs.bufp)) {						// first char
@@ -172,13 +170,13 @@ static stat_t _command_dispatch(void)
 
 		case NUL: { 									// blank line (just a CR)
 			if (cfg.comm_mode != JSON_MODE) {
-				text_response(STAT_OK, cs.saved_buf);
+				text_response(STAT_OK);
 			}
 			break;
 		}
 		case '$': case '?': case 'H': { 				// Text mode input
 			cfg.comm_mode = TEXT_MODE;
-			text_response(text_parser(cs.bufp), cs.saved_buf);
+			text_response(text_parser(cs.bufp));
 			break;
 		}
 		case '{': { 									// JSON input
@@ -186,17 +184,6 @@ static stat_t _command_dispatch(void)
 			json_parser(cs.bufp);
 			break;
 		}
-/*
-		default: {										// anything else must be Gcode
-			if (cfg.comm_mode == JSON_MODE) {			// run it as JSON...
-				strncpy(cs.out_buf, cs.bufp, INPUT_BUFFER_LEN -8);	// -8 is for extra JSON chars (use out_buf as temp)
-				sprintf((char *)cs.bufp,"{\"gc\":\"%s\"}\n", (char *)cs.out_buf);
-				json_parser(cs.bufp);
-				} else {									//...or run it as text
-				text_response(gc_gcode_parser(cs.bufp), cs.saved_buf);
-			}
-		}
-*/
 	}
 	return (STAT_OK);
 }

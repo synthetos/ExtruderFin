@@ -30,7 +30,7 @@
 #include "controller.h"
 #include "text_parser.h"
 #include "json_parser.h"
-//#include "report.h"
+#include "report.h"
 //#include "help.h"
 #include "xio.h"					// for ASCII char definitions
 
@@ -42,12 +42,18 @@ txtSingleton_t txt;					// declare the singleton for either __TEXT_MODE setting
 
 #ifndef __TEXT_MODE
 
+void text_init() {}
 stat_t text_parser_stub(char_t *str) {return (STAT_OK);}
 void text_response_stub(const stat_t status, char_t *buf) {}
 void text_print_list_stub (stat_t status, uint8_t flags) {}
 void tx_print_stub(cmdObj_t *cmd) {}
 
 #else // __TEXT_MODE
+
+void text_init()
+{
+	txt.text_verbosity = TV_VERBOSE;
+}
 
 static stat_t _text_parser_kernal(char_t *str, cmdObj_t *cmd);
 
@@ -68,10 +74,11 @@ stat_t text_parser(char_t *str)
 	stat_t status = STAT_OK;
 
 	// trap special displays
-//	if (str[0] == '?') {					// handle status report case
-//		sr_run_text_status_report();
-//		return (STAT_OK);
-//	}
+	if (str[0] == '?') {					// handle status report case
+//		rpt_print_status();
+		printf("respond\n");
+		return (STAT_OK);
+	}
 
 //	if (str[0] == 'H') {					// print help screens
 //		help_general((cmdObj_t *)NULL);
@@ -150,17 +157,16 @@ static stat_t _text_parser_kernal(char_t *str, cmdObj_t *cmd)
 static const char prompt_ok[] PROGMEM = "ok> ";
 static const char prompt_err[] PROGMEM = "err: %s: %s ";
 
-void text_response(const stat_t status, char_t *buf)
+//void text_response(const stat_t status, char_t *buf)
+void text_response(const stat_t status)
 {
 	if (txt.text_verbosity == TV_SILENT) return;	// skip all this
-
-//	char units[] = "inch";
-//	if (cm_get_units_mode(MODEL) != INCHES) { strcpy(units, "mm"); } // (no need to length check the copy)
 
 	if ((status == STAT_OK) || (status == STAT_EAGAIN) || (status == STAT_NOOP)) {
 		fprintf_P(stderr, prompt_ok);
 	} else {
-		fprintf_P(stderr, prompt_err, get_status_message(status), buf);
+//		fprintf_P(stderr, prompt_err, get_status_message(status), buf);
+		fprintf_P(stderr, prompt_err, get_status_message(status));
 	}
 
 //	cmdObj_t *cmd = cmd_body+1;

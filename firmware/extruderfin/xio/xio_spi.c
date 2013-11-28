@@ -77,10 +77,10 @@ xioSpiTX_t spi0_tx = { SPI_TX_BUFFER_SIZE-1,1,1 };
 xioDev_t spi0 = {
 		XIO_DEV_SPI,
 		xio_open_spi,
-		xio_ctrl_device,				// use device generic function
-		xio_gets_device,				// " "
-		xio_getc_device,				// " "
-		xio_putc_device,				// " "
+		xio_ctrl_generic,				// use device generic function
+		xio_gets_generic,				// " "
+		xio_getc_generic,				// " "
+		xio_putc_generic,				// " "
 		xio_null,
 		(xioBuf_t *)&spi0_rx,
 		(xioBuf_t *)&spi0_tx,			// unecessary to initialize from here on...
@@ -108,7 +108,7 @@ xioDev_t *xio_init_spi(uint8_t dev)
 FILE *xio_open_spi(const uint8_t dev, const char *addr, const flags_t flags)
 {
 	xioDev_t *d = ds[dev];			// convenience device struct pointer
-	xio_reset_device(d, flags);
+	xio_reset_generic(d, flags);
 
 	// setup the SPI hardware device
 	PRR &= ~PRSPI_bm;				// Enable SPI in power reduction register (hardware.h)

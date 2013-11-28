@@ -32,7 +32,7 @@
  * USART DEVICE CONFIGS AND STRUCTURES
  ******************************************************************************/
 
-#define USART_BAUD_RATE		19200	// actually turns into 9600. +++fixme
+#define USART_BAUD_RATE		19200	// actually turns into 9600. +++++fixme
 //#define USART_BAUD_RATE		9600
 //#define USART_BAUD_RATE		115200
 #define USART_BAUD_DOUBLER	0		// 0=turns baud doubler off
@@ -40,8 +40,8 @@
 #define USART_XIO_FLAGS 	(XIO_BLOCK |  XIO_ECHO | XIO_XOFF | XIO_LINEMODE )
 
 // Buffer structs must be the same as xioBuf except that the buf array size is defined.
-#define USART_RX_BUFFER_SIZE 32
-#define USART_TX_BUFFER_SIZE 32
+#define USART_RX_BUFFER_SIZE 80
+#define USART_TX_BUFFER_SIZE 128
 
 typedef struct xioUsartRX {
 	buffer_t size;						// initialize to USART_RX_BUFFER_SIZE-1

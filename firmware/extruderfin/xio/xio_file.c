@@ -41,7 +41,7 @@ xioFile_t file_x0;				// extended file struct
 xioDev_t file0 = {
 		XIO_DEV_PGM,
 		xio_open_pgm,
-		xio_ctrl_device,
+		xio_ctrl_generic,
 		xio_gets_pgm,
 		xio_getc_pgm,
 		xio_putc_pgm,
@@ -77,7 +77,7 @@ xioDev_t *xio_init_file(uint8_t dev)
 FILE *xio_open_pgm(const uint8_t dev, const char *addr, const flags_t flags)
 {
 	xioDev_t *d = ds[dev];			// convenience device struct pointer
-	xio_reset_device(d, flags);
+	xio_reset_generic(d, flags);
 //	((xioFile_t *)(d->x))->filebase_P = (PROGMEM const char *)addr;	// might want to range check this
 //	((xioFile_t *)(d->x))->max_offset = PGM_ADDR_MAX;
 	PGMx->filebase_P = (PROGMEM const char *)addr;	// might want to range check this

@@ -107,7 +107,7 @@ FILE *xio_open(uint8_t dev, const char *addr, flags_t flags) { return (ds[dev]->
 int xio_gets(const uint8_t dev, char *buf, const int size) { return (ds[dev]->x_gets(ds[dev], buf, size));}
 int xio_getc(const uint8_t dev) { return (ds[dev]->x_getc(&(ds[dev]->stream)));}
 int xio_putc(const uint8_t dev, const char c) { return (ds[dev]->x_putc(c, &(ds[dev]->stream)));}
-int xio_ctrl(const uint8_t dev, const flags_t flags) { return (xio_ctrl_device(ds[dev], flags));}
+int xio_ctrl(const uint8_t dev, const flags_t flags) { return (xio_ctrl_generic(ds[dev], flags));}
 int xio_set_baud(const uint8_t dev, const uint8_t baud) { xio_set_baud_usart(ds[dev], baud); return (XIO_OK);}
 void xio_set_stdin(const uint8_t dev)  { stdin  = &(ds[dev]->stream);}
 void xio_set_stdout(const uint8_t dev) { stdout = &(ds[dev]->stream);}
@@ -115,8 +115,8 @@ void xio_set_stderr(const uint8_t dev) { stderr = &(ds[dev]->stream);}
 
 /***********************************************************************************
  * xio_init() 			- initialize entire xio sub-system
- * xio_reset_device()	- common function used by opens()
- * xio_ctrl_device() 	- set control-flags
+ * xio_reset_generic()	- common function used by opens()
+ * xio_ctrl_generic() 	- set control-flags
  * xio_null() 			- xio null function
  */
 void xio_init()
@@ -136,7 +136,7 @@ void xio_init()
 	xio_set_stderr(XIO_DEV_SPI);
 }
 
-void xio_reset_device(xioDev_t *d,  const flags_t flags)
+void xio_reset_generic(xioDev_t *d,  const flags_t flags)
 {
 	if (d->rx != NULL) {			// don't write on a wild pointer
 		d->rx->wr = 1;				// can't use location 0 in circular buffer
@@ -150,7 +150,7 @@ void xio_reset_device(xioDev_t *d,  const flags_t flags)
 	d->flag_eol = 0;
 	d->flag_eof = 0;
 
-	xio_ctrl_device(d, flags);		// setup control flags
+	xio_ctrl_generic(d, flags);		// setup control flags
 
 	// setup stdio stream structure
 	fdev_setup_stream(&d->stream, d->x_putc, d->x_getc, _FDEV_SETUP_RW);
@@ -162,7 +162,7 @@ void xio_null(xioDev_t *d) { return;}
 #define SETFLAG(t,f) if ((flags & t) != 0) { d->f = true; }
 #define CLRFLAG(t,f) if ((flags & t) != 0) { d->f = false; }
 
-int xio_ctrl_device(xioDev_t *d, const flags_t flags)
+int xio_ctrl_generic(xioDev_t *d, const flags_t flags)
 {
 	SETFLAG(XIO_BLOCK,		flag_block);
 	CLRFLAG(XIO_NOBLOCK,	flag_block);
@@ -186,21 +186,21 @@ int xio_ctrl_device(xioDev_t *d, const flags_t flags)
 
 /* 
  * Generic getc() putc() - these are typically subclassed at the type level
- *	xio_getc_device() - get a character from the device 
- *	xio_putc_device() - write a character to the device 
+ *	xio_getc_generic() - get a character from the device 
+ *	xio_putc_generic() - write a character to the device 
  */
-int xio_getc_device(FILE *stream)
+int xio_getc_generic(FILE *stream)
 {
 	return (xio_read_buffer(((xioDev_t *)stream->udata)->rx));
 }
 
-int xio_putc_device(const char c, FILE *stream)
+int xio_putc_generic(const char c, FILE *stream)
 {
 	return (xio_write_buffer(((xioDev_t *)stream->udata)->tx, c));
 }
 
 /* 
- *	xio_gets_device() - read a complete line (message) from a device
+ *	xio_gets_generic() - read a complete line (message) from a device
  *
  *	Reads from the local RX buffer until it's empty. Retains line context 
  *	across calls - so it can be called multiple times. Reads as many characters 
@@ -216,7 +216,7 @@ int xio_putc_device(const char c, FILE *stream)
  *	Note: LINEMODE flag in device struct is ignored. It's ALWAYS LINEMODE here.
  *	Note: CRs are not recognized as NL chars - master must send LF to terminate a line
  */
-int xio_gets_device(xioDev_t *d, char *buf, const int size)
+int xio_gets_generic(xioDev_t *d, char *buf, const int size)
 {
 	int c_out;
 

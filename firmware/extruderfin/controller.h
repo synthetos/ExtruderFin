@@ -32,15 +32,9 @@
 extern "C"{
 #endif
 
-
-//#define INPUT_BUFFER_LEN 128
-//#define TEXT_BUFFER_LEN 128
-
-#define INPUT_BUFFER_LEN 80			// text buffer size (255 max)
-#define SAVED_BUFFER_LEN 64				// saved buffer size (for reporting only)
+#define INPUT_BUFFER_LEN 80				// text buffer size (255 max)
 #define OUTPUT_BUFFER_LEN 128			// text buffer size
-#define APPLICATION_MESSAGE_LEN 64		// application message string storage allocation
-//#define STATUS_MESSAGE_LEN __			// see tinyg.h for status message string storage allocation
+// See also: USART_RX_BUFFER_SIZE and USART_TX_BUFFER_SIZE in xio.usart.h
 
 #define LED_NORMAL_TIMER 1000			// blink rate for normal operation (in ms)
 #define LED_ALARM_TIMER 100				// blink rate for alarm state (in ms)
@@ -73,10 +67,8 @@ typedef struct controllerSingleton {	// main controller struct
 
 	// controller serial buffers
 	char_t *bufp;						// pointer to primary or secondary in buffer
-//	char buf[TEXT_BUFFER_LEN];			// input/output text buffer
 	char_t in_buf[INPUT_BUFFER_LEN];	// primary input buffer
 	char_t out_buf[OUTPUT_BUFFER_LEN];	// output buffer
-	char_t saved_buf[SAVED_BUFFER_LEN];	// save the input buffer
 	magic_t magic_end;
 	
 } controller_t;

@@ -99,17 +99,12 @@ void rpt_print_loading_configs_message(void)
 
 void rpt_print_system_ready_message(void)
 {
-//	_startup_helper(STAT_OK, PSTR("SYSTEM READY"));
+	_startup_helper(STAT_OK, PSTR("SYSTEM READY"));
+//	printf_P(PSTR("\nDevice Initialized %1.0f\n"),42);
 //	if (cfg.comm_mode == TEXT_MODE) { text_response(STAT_OK, (char_t *)"");}// prompt
 }
 
-/*** Display routines ***/
-void rpt_initialized()
-{
-	printf_P(PSTR("\nDevice Initialized %1.0f\n"),42);
-}
-
-void rpt_readout()
+void rpt_print_status()
 {
 	printf_P(PSTR("Temp:%1.3f  "), 		sensor.temperature);
 	printf_P(PSTR("PWM:%1.3f  "),		pid.output);

@@ -29,6 +29,8 @@
 #include "config.h"				// #2
 #include "controller.h"
 #include "hardware.h"
+#include "json_parser.h"
+#include "text_parser.h"
 #include "heater.h"
 #include "sensor.h"
 #include "report.h"
@@ -87,8 +89,10 @@ static void _application_init(void)
 	cli();
 
 	// hardware and low-level drivers
-	hardware_init();				// system hardware setup 			- must be first
+	hardware_init();				// system hardware setup - must be first
 	xio_init();						// xmega io subsystem
+	json_init();
+	text_init();
 
 	// hardware devices
 	systick_init();					// systick 1ms counter
@@ -104,7 +108,7 @@ static void _application_init(void)
 
 	// let 'er rip
 	sei(); 							// enable interrupts
-	rpt_initialized();				// (LAST) announce system is ready
+	printf("READY\n");
 	rpt_print_system_ready_message();// (LAST) announce system is ready
 }
 

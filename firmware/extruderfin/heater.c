@@ -97,7 +97,7 @@ stat_t heater_callback()
 
 	heater.next_systick = SysTickTimer_getValue() + HEATER_SYSTICK_INTERVAL;
 
-	rpt_readout();
+	rpt_print_status();
 
 	// get current temperature from the sensor
 	heater.temperature = sensor_get_temperature();

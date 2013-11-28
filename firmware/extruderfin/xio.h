@@ -95,10 +95,10 @@
 #define xio_h
 
 // prefer to use the native dependencies instead of the same packaged in extruderfin.h, hardware.h
-#include <stdio.h>
-#include <stdbool.h>
-#include <avr/interrupt.h>
-#include <avr/pgmspace.h>
+//#include <stdio.h>
+//#include <stdbool.h>
+//#include <avr/interrupt.h>
+//#include <avr/pgmspace.h>
 //... but for this project it needs to be done this way: 
 #include "extruderfin.h"
 #include "config.h"
@@ -206,16 +206,14 @@ void xio_set_stderr(const uint8_t dev);
 
 // private functions (excuse me sir, this is a private function)
 void xio_init(void);
-void xio_reset_device(xioDev_t *d, const flags_t flags);
-int xio_ctrl_device(xioDev_t *d, const flags_t flags);
+void xio_reset_generic(xioDev_t *d, const flags_t flags);
+int xio_ctrl_generic(xioDev_t *d, const flags_t flags);
 void xio_null(xioDev_t *d);				// NULL callback (used for flow control)
 
-int xio_getc_device(FILE *stream);
-int xio_putc_device(const char c, FILE *stream);
-int xio_gets_device(xioDev_t *d, char *buf, const int size);
+int xio_getc_generic(FILE *stream);
+int xio_putc_generic(const char c, FILE *stream);
+int xio_gets_generic(xioDev_t *d, char *buf, const int size);
 
-//int xio_read_buffer(xioBuf_t *b);
-//int xio_write_buffer(xioBuf_t *b, char c);
 int8_t xio_read_buffer(xioBuf_t *b);
 int8_t xio_write_buffer(xioBuf_t *b, char c);
 void xio_queue_RX_string(const uint8_t dev, const char *buf);
@@ -225,11 +223,11 @@ void xio_queue_RX_string(const uint8_t dev, const char *buf);
  *************************************************************************/
 
 /* XIO return codes
- * These codes are the "inner nest" for the TG_ return codes. 
- * The first N TG codes correspond directly to these codes.
- * This eases using XIO by itself (without tinyg) and simplifes using
- * tinyg codes with no mapping when used together. This comes at the cost 
- * of making sure these lists are aligned. TG_should be based on this list.
+ * These codes are the "inner nest" for the STAT_ return codes. 
+ * The first set of STAT codes correspond directly to these codes.
+ * This eases using XIO by itself (without an app) and simplifies using
+ * STAT codes with no mapping when used together. This comes at the cost 
+ * of making sure these lists are aligned. STAT_ should be based on this list.
  */
 enum xioCodes {
 	XIO_OK = 0,				// OK - ALWAYS ZERO

@@ -36,8 +36,8 @@ xioUsartTX_t usart0_tx = { USART_TX_BUFFER_SIZE-1,1,1 };
 xioDev_t usart0 = {
 		XIO_DEV_USART,
 		xio_open_usart,
-		xio_ctrl_device,
-		xio_gets_device,
+		xio_ctrl_generic,
+		xio_gets_generic,
 		xio_getc_usart,
 		xio_putc_usart,
 		xio_null,
@@ -68,7 +68,7 @@ xioDev_t *xio_init_usart(uint8_t dev)
 FILE *xio_open_usart(const uint8_t dev, const char *addr, const flags_t flags)
 {
 	xioDev_t *d = ds[dev];			// convenience device struct pointer
-	xio_reset_device(d, flags);
+	xio_reset_generic(d, flags);
 
 	// setup the hardware
 	PRR &= ~PRUSART0_bm;			// Enable the USART in the power reduction register (system.h)

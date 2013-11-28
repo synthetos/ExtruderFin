@@ -48,6 +48,11 @@ static stat_t _json_parser_kernal(char *str);
 static stat_t _get_nv_pair_strict(cmdObj_t *cmd, char **pstr, int8_t *depth);
 static uint8_t _normalize_json_string(char *str, uint16_t size);
 
+void json_init()
+{
+	js.json_verbosity = JV_VERBOSE;
+	js.json_footer_depth = 0;			// new style
+}
 
 /****************************************************************************
  * json_parser() - exposed part of JSON parser
@@ -428,7 +433,7 @@ void json_print_response(uint8_t status)
 	cmdObj_t *cmd = cmd_body;
 	if (status == STAT_JSON_SYNTAX_ERROR) {
 		cmd_reset_list();
-		cmd_add_string((const char_t *)"err", escape_string(cs.in_buf, cs.saved_buf));
+//++++		cmd_add_string((const char_t *)"err", escape_string(cs.in_buf, cs.saved_buf));
 	}
 
 	// Footer processing
