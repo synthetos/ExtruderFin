@@ -134,19 +134,15 @@ static stat_t _command_dispatch(void)
 {
 	stat_t status;
 
-//	char c;
-//	if ((c = xio_getc()) != _FDEV_ERR) {
-//		xio_putc(c);
-//	}
-//	return (STAT_OK);
-
 	// read input line or return if not a completed line
 	// xio_gets() is a non-blocking workalike of fgets()
 	while (true) {
 		if ((status = xio_gets(cs.active_src, cs.in_buf, sizeof(cs.in_buf))) == STAT_OK) {
+//		if ((status = xio_gets(XIO_DEV_USART, cs.in_buf, sizeof(cs.in_buf))) == STAT_OK) {
 			cs.bufp = cs.in_buf;
 			break;
 		}
+
 	// handle end-of-file from file devices
 //		if (status == STAT_EOF) {						// EOF can come from file devices only
 //			if (cfg.comm_mode == TEXT_MODE) {
@@ -156,10 +152,12 @@ static stat_t _command_dispatch(void)
 //			}
 //			tg_reset_source();							// reset to default source
 //		}
-//		return (status);								// Note: STAT_EAGAIN, errors, etc. will drop through
+		return (status);								// Note: STAT_EAGAIN, errors, etc. will drop through
 	}
 	cs.linelen = strlen(cs.in_buf)+1;					// linelen only tracks primary input
 //	strncpy(cs.saved_buf, cs.bufp, SAVED_BUFFER_LEN-1);	// save input buffer for reporting
+
+	printf("%s\n",cs.in_buf);
 
 	// dispatch the new text line
 	switch (toupper(*cs.bufp)) {						// first char

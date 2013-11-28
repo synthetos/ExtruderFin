@@ -202,23 +202,23 @@ int xio_putc_generic(const char c, FILE *stream)
 /* 
  *	xio_gets_generic() - read a complete line (message) from a device
  *
- *	Reads from the local RX buffer until it's empty. Retains line context 
- *	across calls - so it can be called multiple times. Reads as many characters 
- *	as it can until any of the following is true:
+ *	Reads from the local RX buffer until it's empty. Retains line context across calls - 
+ *	so it can be called multiple times. Reads as many characters as it can until any 
+ *	of the following is true:
  *
- *	  - Encounters newline indicating a complete line. Terminate the buffer
- *		but do not write the newlinw into the buffer. Reset line flag. Return XIO_OK.
+ *	  - Encounters newline indicating a complete line. Terminates the buffer
+ *		but do not write the newline into the buffer. Resets line flag. Returns XIO_OK.
  *
- *	  - Encounters an empty buffer. Leave in_line. Return XIO_EAGAIN.
+ *	  - Encounters an empty buffer. Leave in_line. Returns XIO_EAGAIN.
  *
- *	  - A successful read would cause output buffer overflow. Return XIO_BUFFER_FULL
+ *	  - A successful read would cause output buffer overflow. Returns XIO_BUFFER_FULL
  *
  *	Note: LINEMODE flag in device struct is ignored. It's ALWAYS LINEMODE here.
- *	Note: CRs are not recognized as NL chars - master must send LF to terminate a line
+ *	Note: Will accept either CRs or LFs as NL chars.
  */
 int xio_gets_generic(xioDev_t *d, char *buf, const int size)
 {
-	int c_out;
+	int c;
 
 	// first time thru initializations
 	if (d->flag_in_line == false) {
@@ -232,14 +232,13 @@ int xio_gets_generic(xioDev_t *d, char *buf, const int size)
 			d->buf[d->size] = NUL;				// string termination preserves latest char
 			return (XIO_BUFFER_FULL);
 		}
-		if ((c_out = xio_read_buffer(d->rx)) == _FDEV_ERR) { return (XIO_EAGAIN);}
-		if (c_out == LF) {
-//			d->buf[(d->len)++] = LF;			// ++++++++++++++++ for diagnostics only
+		if ((c = xio_read_buffer(d->rx)) == _FDEV_ERR) { return (XIO_EAGAIN);}
+		if ((c == LF) || (c == CR)) {
 			d->buf[(d->len)++] = NUL;
 			d->flag_in_line = false;			// clear in-line state (reset)
 			return (XIO_OK);					// return for end-of-line
 		}
-		d->buf[d->len++] = c_out;				// write character to buffer
+		d->buf[d->len++] = c;					// write character to buffer
 	}
 }
 

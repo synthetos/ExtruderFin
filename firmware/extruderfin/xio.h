@@ -54,19 +54,15 @@
  *
  *	The RAM footprint is dominated by the RX/TX buffer sizes selected, but looks like 
  *	about 500 bytes (+/-) is sufficient. Note that each buffer can be sized independently 
- *	and does not need to be a binary multiple. Also note that the newer 
- *
- *	By way of comparison the grbl serial.c / print.c for the USART (no SPI) is about 1K of 
- *	program space. It does not use formatted printing. RAM is also dominated by buffer sizing.
+ *	and does not need to be a binary multiple.
  */
 /* --- Circular Buffer Notes (RX/TX buffers) ---
  *
- * 	The circular buffers used by low-level character IO functions are an attempt 
- *	to optimize for execution speed. The circular buffers are unsigned char arrays 
- *	that fill down from the top element and wrap back to the top when index zero 
- *	is reached. This allows the assembly code to use pre-decrement operations, Z bit 
- *	tests, and eliminates modulus, masks, subtractions and other less efficient 
- *	bounds checking. 
+ * 	The circular buffers used by low-level character IO functions are an attempt to
+ *	optimize for execution speed. The circular buffers are unsigned char arrays that fill 
+ *	down from the top element and wrap back to the top when index zero is reached. This 
+ *	allows the assembly code to use pre-decrement operations, Z bit tests, and eliminates 
+ *	modulus, masks, subtractions and other less efficient bounds checking. 
  *
  *	Buffers are limited to 254 usable locations. One location is lost to read/write
  *	pointer collision detection and one is lost to the zero position
