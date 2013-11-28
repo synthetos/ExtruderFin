@@ -35,6 +35,7 @@
 
 /**** Heater default parameters ***/
 
+#define HEATER_SYSTICK_INTERVAL		100		// sample timer in ms
 #define HEATER_TICK_SECONDS 		0.1		// 100 ms
 #define HEATER_HYSTERESIS 			10		// number of successive readings before declaring heater at-temp or out of regulation
 #define HEATER_AMBIENT_TEMPERATURE	40		// detect heater not heating if readings stay below this temp
@@ -90,6 +91,7 @@ enum tcPIDState {							// PID state machine
 
 
 typedef struct HeaterStruct {
+	uint32_t next_systick;
 	uint8_t state;				// heater state
 	uint8_t code;				// heater code (more information about heater state)
 	uint8_t	toggle;
@@ -133,7 +135,7 @@ PID_t pid;						// allocate one PID channel...
 void heater_init(void);
 void heater_on(double setpoint);
 void heater_off(uint8_t state, uint8_t code);
-void heater_callback(void);
+stat_t heater_callback(void);
 
 void pid_init();
 void pid_reset();

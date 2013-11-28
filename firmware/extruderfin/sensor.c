@@ -99,16 +99,20 @@ double sensor_get_temperature()
  *	loop. Each sampling interval must be requested explicitly by calling 
  *	sensor_start_sample(). It does not free-run.
  */
-void sensor_callback()
+stat_t sensor_callback()
 {
 	// cases where you don't execute the callback:
-	if ((sensor.state == SENSOR_OFF) || (sensor.code != SENSOR_TAKING_READING)) {
-		return;
-	}
+	if (sensor.state == SENSOR_OFF)	return (STAT_NOOP);
+	if (sensor.code != SENSOR_TAKING_READING) return (STAT_NOOP);
+	if (sensor.next_systick < SysTickTimer_getValue())
+
+	sensor.next_systick = SysTickTimer_getValue() + SENSOR_SYSTICK_INTERVAL;
 
 	// get a sample and return if still in the reading period
 	sensor.sample[sensor.sample_idx] = _sensor_sample(ADC_CHANNEL);
-	if ((++sensor.sample_idx) < SENSOR_SAMPLES) { return; }
+	if ((++sensor.sample_idx) < SENSOR_SAMPLES) { 
+		return(STAT_OK);
+	}
 
 	// process the array to clean up samples
 	double mean;
@@ -116,7 +120,7 @@ void sensor_callback()
 	if (sensor.std_dev > sensor.reading_variance_max) {
 		sensor.state = SENSOR_ERROR;
 		sensor.code = SENSOR_ERROR_BAD_READINGS;
-		return;
+		return(STAT_OK);
 	}
 
 	// reject the outlier samples and re-compute the average
@@ -140,6 +144,7 @@ void sensor_callback()
 		sensor.state = SENSOR_ERROR;
 		sensor.code = SENSOR_ERROR_NO_POWER;
 	}
+	return(STAT_OK);
 }
 
 /*

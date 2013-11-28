@@ -91,9 +91,9 @@ static void _application_init(void)
 	xio_init();						// xmega io subsystem
 
 	// hardware devices
+	systick_init();					// systick 1ms counter
 	adc_init(ADC_CHANNEL);
 	pwm_init();
-	tick_init();
 	led_init();
 
 	// application sub-systems

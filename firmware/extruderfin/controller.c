@@ -29,6 +29,8 @@
 #include "controller.h"
 #include "json_parser.h"
 #include "text_parser.h"
+#include "sensor.h"
+#include "heater.h"
 #include "xio.h"
 
 #include <util/delay.h>
@@ -109,7 +111,9 @@ void controller_run()
 static void _controller_HSM()
 {
 //	DISPATCH(tick_callback());			// regular interval timer clock handler (ticks)
-	DISPATCH(_spew_ASCII());			// read and execute next incoming command
+//	DISPATCH(_spew_ASCII());			// read and execute next incoming command
+	DISPATCH(sensor_callback());
+//	DISPATCH(heater_callback());
 	DISPATCH(_command_dispatch());		// read and execute next incoming command
 }
 

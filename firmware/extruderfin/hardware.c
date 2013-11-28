@@ -170,80 +170,24 @@ uint8_t pwm_set_duty(double duty)
 	return (STAT_OK);
 }
 
-
-/**** Tick - Tick tock - Regular Interval Timer Clock Functions ****
- * tick_init() 	  - initialize RIT timers and data
- * RIT ISR()	  - RIT interrupt routine 
- * tick_callback() - run RIT from dispatch loop
- * tick_10ms()	  - tasks that run every 10 ms
- * tick_100ms()	  - tasks that run every 100 ms
- * tick_1sec()	  - tasks that run every 100 ms
+/*
+ * systick_init() 	  - initialize RIT timers and data
+ * SysTickTimer_getValue() - this is a hack to get around some compatibility problems
  */
-void tick_init(void)
+void systick_init(void)
 {
 	PRR &= ~PRTIM0_bm;				// Enable Timer0 in the power reduction register (hardware.h)
 	TCCR0A = TICK_MODE;				// mode_settings
 	TCCR0B = TICK_PRESCALER;		// 1024 ~= 7800 Hz
 	OCR0A = TICK_COUNT;
 	TIMSK0 = (1<<OCIE0A);			// enable compare interrupts
-
 	hw.sys_ticks = 0;
-	
-	hw.tick_10ms_count = 10;
-	hw.tick_100ms_count = 10;
-	hw.tick_1sec_count = 10;	
 }
 
 ISR(TIMER0_COMPA_vect)
 {
 	hw.sys_ticks++;
-	hw.tick_flag = true;
 }
-
-uint8_t tick_callback(void)
-{
-	if (hw.tick_flag == false) { return (STAT_NOOP);}
-
-	hw.tick_flag = false;
-	tick_1ms();
-
-	if (--hw.tick_10ms_count != 0) { return (STAT_OK);}
-	hw.tick_10ms_count = 10;
-	tick_10ms();
-
-	if (--hw.tick_100ms_count != 0) { return (STAT_OK);}
-	hw.tick_100ms_count = 10;
-	tick_100ms();
-
-	if (--hw.tick_1sec_count != 0) { return (STAT_OK);}
-	hw.tick_1sec_count = 10;
-	tick_1sec();
-
-	return (STAT_OK);
-}
-
-void tick_1ms(void)				// 1ms callout
-{
-	sensor_callback();
-}
-
-void tick_10ms(void)			// 10 ms callout
-{
-}
-
-void tick_100ms(void)			// 100ms callout
-{
-	heater_callback();
-}
-
-void tick_1sec(void)			// 1 second callout
-{
-//	led_toggle();
-}
-
-/*
- * SysTickTimer_getValue() - this is a hack to get around some compatibility problems
- */
 
 #ifdef __AVR
 uint32_t SysTickTimer_getValue()

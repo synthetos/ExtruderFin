@@ -88,10 +88,15 @@ void heater_off(uint8_t state, uint8_t code)
 	led_off();
 }
 
-void heater_callback()
+stat_t heater_callback()
 {
-	// catch the no-op cases
-	if ((heater.state == HEATER_OFF) || (heater.state == HEATER_SHUTDOWN)) { return;}
+	// cases where you don't execute the callback:
+	if (heater.state == HEATER_OFF)	return (STAT_NOOP);
+	if (heater.state == HEATER_SHUTDOWN) return (STAT_NOOP);
+	if (heater.next_systick < SysTickTimer_getValue())
+
+	heater.next_systick = SysTickTimer_getValue() + HEATER_SYSTICK_INTERVAL;
+
 	rpt_readout();
 
 	// get current temperature from the sensor
@@ -100,7 +105,7 @@ void heater_callback()
 	// trap overheat condition
 	if (heater.temperature > heater.overheat_temperature) {
 		heater_off(HEATER_SHUTDOWN, HEATER_OVERHEATED);
-		return;
+		return (STAT_OK);
 	}
 
 	sensor_start_reading();				// start reading for the next interval
@@ -111,7 +116,7 @@ void heater_callback()
 			heater_off(HEATER_SHUTDOWN, HEATER_SENSOR_ERROR);
 			printf_P(PSTR("Heater Sensor Error Shutdown\n"));	
 		}
-		return;
+		return (STAT_OK);
 	}
 	heater.bad_reading_count = 0;		// reset the bad reading counter
 
@@ -126,13 +131,13 @@ void heater_callback()
 			(heater.regulation_timer > heater.ambient_timeout)) {
 			heater_off(HEATER_SHUTDOWN, HEATER_AMBIENT_TIMED_OUT);
 			printf_P(PSTR("Heater Ambient Error Shutdown\n"));	
-			return;
+			return (STAT_OK);
 		}
 		if ((heater.temperature < heater.setpoint) &&
 			(heater.regulation_timer > heater.regulation_timeout)) {
 			heater_off(HEATER_SHUTDOWN, HEATER_REGULATION_TIMED_OUT);
 			printf_P(PSTR("Heater Timeout Error Shutdown\n"));	
-			return;
+			return (STAT_OK);
 		}
 	}
 
@@ -161,6 +166,7 @@ void heater_callback()
 			led_toggle();
 		}
 	}
+	return (STAT_OK);
 }
 
 /**** Heater PID Functions ****/

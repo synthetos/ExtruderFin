@@ -93,17 +93,9 @@
 
 typedef struct hwSingleton {				// hardware devices that are part of the chip
 	uint32_t sys_ticks;						// counts up every 1ms tick 
-	uint8_t tick_flag;						// true = the timer interrupt fired
-	uint8_t tick_10ms_count;				// 10ms down counter
-	uint8_t tick_100ms_count;				// 100ms down counter
-	uint8_t tick_1sec_count;				// 1 second down counter
-
 	double pwm_freq;						// save it for stopping and starting PWM
-	
-	// Non-volatile RAM
 	uint16_t nvm_base_addr;					// NVM base address
 	uint16_t nvm_profile_base;				// NVM base address of current profile
-
 } hwSingleton_t;
 
 hwSingleton_t hw;						// HW is ALWAYS a singleton. You can't just "make more"
@@ -123,13 +115,8 @@ void pwm_off(void);
 uint8_t pwm_set_freq(double freq);
 uint8_t pwm_set_duty(double duty);
 
-void tick_init(void);
+void systick_init(void);
 uint32_t SysTickTimer_getValue(void);
-uint8_t tick_callback(void);
-void tick_1ms(void);
-void tick_10ms(void);
-void tick_100ms(void);
-void tick_1sec(void);
 
 void led_init(void);
 void led_on(void);

@@ -40,7 +40,7 @@
 
 /****** REVISIONS ******/
 
-#define FIRMWARE_BUILD 			008.06		// Initial debugging in-circuit. Runs ASCII test pattern
+#define FIRMWARE_BUILD 			008.07		// Reworking timers / systick
 #define FIRMWARE_VERSION		0.1			// firmware major version
 #define HARDWARE_PLATFORM		1			// board style 
 #define HARDWARE_VERSION		1			// board revision number
