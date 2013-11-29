@@ -75,7 +75,7 @@ void rpt_exception(uint8_t status)
 void _startup_helper(stat_t status, const char_t *msg )
 {
 #ifndef __SUPPRESS_STARTUP_MESSAGES
-	js.json_footer_depth = 0;
+//	js.json_footer_depth = 0;
 	cmd_reset_list();
 	cmd_add_object((const char_t *)"fv");		// firmware version
 	cmd_add_object((const char_t *)"fb");		// firmware build
@@ -99,8 +99,8 @@ void rpt_print_loading_configs_message(void)
 
 void rpt_print_system_ready_message(void)
 {
+	printf_P(PSTR("Device Initialized %1.0f\n"),(double)42);
 	_startup_helper(STAT_OK, PSTR("SYSTEM READY"));
-//	printf_P(PSTR("\nDevice Initialized %1.0f\n"),42);
 //	if (cfg.comm_mode == TEXT_MODE) { text_response(STAT_OK, (char_t *)"");}// prompt
 }
 

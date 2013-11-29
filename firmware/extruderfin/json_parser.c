@@ -467,7 +467,8 @@ void json_print_response(uint8_t status)
 
 	while (cs.out_buf[strcount2] != ',') { strcount2--; }// find start of checksum
 	sprintf((char *)cs.out_buf + strcount2 + 1, "%d%s", compute_checksum(cs.out_buf, strcount2), tail);
-	fprintf(stderr, "%s", cs.out_buf);
+//	fprintf(stderr, "%s", cs.out_buf);
+	printf("%s", cs.out_buf);
 }
 
 /***********************************************************************************

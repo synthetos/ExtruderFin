@@ -87,6 +87,8 @@
 //#include <avr/pgmspace.h>			// precursor for xio.h
 #include "xio.h"					// all device sub-system includes are nested here
 
+xioDev_t *ds[XIO_DEV_COUNT];			// array of device structure pointers
+
 /***********************************************************************************
  * PUBLIC ENTRY POINTS - access functions via the XIO_DEV device number
  * xio_open() 		- open device for use or re-use
@@ -109,6 +111,7 @@ int xio_getc(const uint8_t dev) { return (ds[dev]->x_getc(&(ds[dev]->stream)));}
 int xio_putc(const uint8_t dev, const char c) { return (ds[dev]->x_putc(c, &(ds[dev]->stream)));}
 int xio_ctrl(const uint8_t dev, const flags_t flags) { return (xio_ctrl_generic(ds[dev], flags));}
 int xio_set_baud(const uint8_t dev, const uint8_t baud) { xio_set_baud_usart(ds[dev], baud); return (XIO_OK);}
+
 void xio_set_stdin(const uint8_t dev)  { stdin  = &(ds[dev]->stream);}
 void xio_set_stdout(const uint8_t dev) { stdout = &(ds[dev]->stream);}
 void xio_set_stderr(const uint8_t dev) { stderr = &(ds[dev]->stream);}
@@ -119,21 +122,21 @@ void xio_set_stderr(const uint8_t dev) { stderr = &(ds[dev]->stream);}
  * xio_ctrl_generic() 	- set control-flags
  * xio_null() 			- xio null function
  */
-void xio_init()
+void xio_init(uint8_t std_in, uint8_t std_out, uint8_t std_err)
 {
 	// run device constructors and register devices in dev array
 	ds[XIO_DEV_USART] = xio_init_usart(XIO_DEV_USART);
 	ds[XIO_DEV_SPI]   = xio_init_spi(XIO_DEV_SPI);
-//	ds[XIO_DEV_PGM]   = xio_init_file(XIO_DEV_PGM);
+	ds[XIO_DEV_PGM]   = xio_init_file(XIO_DEV_PGM);
 
 	// open individual devices (file device opens occur at time-of-use)
 	xio_open(XIO_DEV_USART, NULL, USART_XIO_FLAGS);
 	xio_open(XIO_DEV_SPI, NULL, SPI_XIO_FLAGS);
 
 	// setup std devices for printf/fprintf to work
-	xio_set_stdin(XIO_DEV_USART);
-	xio_set_stdout(XIO_DEV_USART);
-	xio_set_stderr(XIO_DEV_SPI);
+	xio_set_stdin(std_in);
+	xio_set_stdout(std_out);
+	xio_set_stderr(std_err);	
 }
 
 void xio_reset_generic(xioDev_t *d,  const flags_t flags)
@@ -250,7 +253,6 @@ int xio_gets_generic(xioDev_t *d, char *buf, const int size)
  *	Of course, this only works if some interrupt is loading things behind
  *	the scenes.
  */
-//int xio_read_buffer(xioBuf_t *b) 
 int8_t xio_read_buffer(xioBuf_t *b) 
 {
 	if (b->wr == b->rd) { return (_FDEV_ERR);}	// return if queue empty
@@ -258,15 +260,27 @@ int8_t xio_read_buffer(xioBuf_t *b)
 	return (b->buf[b->rd]);						// return character from buffer
 }												// leave rd on *returned* char
 
-//int xio_write_buffer(xioBuf_t *b, char c) 
 int8_t xio_write_buffer(xioBuf_t *b, char c) 
 {
+	buffer_t next_wr;
+	
+	// blocking version
+	if ((next_wr = --(b->wr)) == 0) 
+		next_wr = b->size;	// advance wr with wrap
+	while (next_wr == b->rd) 
+		sleep_mode(); 		// sleep until there is space in the buffer
+	b->wr = next_wr;							// advance wr from temp value
+	b->buf[b->wr] = c;							// write char to buffer
+	return (XIO_OK);							// leave wr on *written* char
+/*
+	// non-blocking version
 	buffer_t next_wr = b->wr-1;					// pre-advance wr to temporary variable
 	if (next_wr == 0) { next_wr = b->size;}		// advance wr with wrap
 	if (next_wr == b->rd) { return (_FDEV_ERR);}// return if queue full
 	b->buf[next_wr] = c;						// write char to buffer
 	b->wr = next_wr;							// advance wr from temp value
 	return (XIO_OK);							// leave wr on *written* char
+*/
 }
 
 /*

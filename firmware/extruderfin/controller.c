@@ -61,7 +61,8 @@ static stat_t _command_dispatch(void);
 /*
  * controller_init()
  */
-void controller_init(uint8_t std_in, uint8_t std_out, uint8_t std_err)
+//void controller_init(uint8_t std_in, uint8_t std_out, uint8_t std_err)
+void controller_init()
 {
 	cs.magic_start = MAGICNUM;
 	cs.magic_end = MAGICNUM;
@@ -79,11 +80,11 @@ void controller_init(uint8_t std_in, uint8_t std_out, uint8_t std_err)
 	cs.bootloader_requested = false;
 
 	// serial IO settings
-	xio_set_stdin(std_in);
-	xio_set_stdout(std_out);
-	xio_set_stderr(std_err);
-	cs.active_src = std_in;
-	cs.default_src = std_in;
+//	xio_set_stdin(std_in);
+//	xio_set_stdout(std_out);
+//	xio_set_stderr(std_err);
+	cs.active_src = STD_IN;
+	cs.default_src = STD_IN;
 //	tg_set_primary_source(cs.default_src);
 }
 
@@ -137,8 +138,8 @@ static stat_t _command_dispatch(void)
 	// read input line or return if not a completed line
 	// xio_gets() is a non-blocking workalike of fgets()
 	while (true) {
-		if ((status = xio_gets(cs.active_src, cs.in_buf, sizeof(cs.in_buf))) == STAT_OK) {
-//		if ((status = xio_gets(XIO_DEV_USART, cs.in_buf, sizeof(cs.in_buf))) == STAT_OK) {
+//		if ((status = xio_gets(cs.active_src, cs.in_buf, sizeof(cs.in_buf))) == STAT_OK) {
+		if ((status = xio_gets(STD_IN, cs.in_buf, sizeof(cs.in_buf))) == STAT_OK) {
 			cs.bufp = cs.in_buf;
 			break;
 		}
@@ -154,10 +155,10 @@ static stat_t _command_dispatch(void)
 //		}
 		return (status);								// Note: STAT_EAGAIN, errors, etc. will drop through
 	}
-	cs.linelen = strlen(cs.in_buf)+1;					// linelen only tracks primary input
+//	cs.linelen = strlen(cs.in_buf)+1;					// linelen only tracks primary input
 //	strncpy(cs.saved_buf, cs.bufp, SAVED_BUFFER_LEN-1);	// save input buffer for reporting
 
-	printf("%s\n",cs.in_buf);
+//	printf("%s\n",cs.in_buf);
 
 	// dispatch the new text line
 	switch (toupper(*cs.bufp)) {						// first char

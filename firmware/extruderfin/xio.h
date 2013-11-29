@@ -95,12 +95,15 @@
 //#include <stdbool.h>
 //#include <avr/interrupt.h>
 //#include <avr/pgmspace.h>
+#include <avr/sleep.h>					// needed for blocking TX
 //... but for this project it needs to be done this way: 
 #include "extruderfin.h"
 #include "config.h"
 #include "hardware.h"
 
-// see other xio_.h includes below the structures and typdefs
+/***** PLEASE NOTE *****
+ sub-includes for the various devices are below the structures and typedefs
+*/
 
 /*************************************************************************
  *	Device configurations
@@ -182,8 +185,8 @@ typedef void (*x_flow_t)(xioDev_t *d);
 #include "xio/xio_usart.h"
 #include "xio/xio_file.h"
 
-xioDev_t *ds[XIO_DEV_COUNT];			// array of device structure pointers 
-extern struct controllerSingleton tg;	// needed by init for default source
+// array of device structure pointers 
+extern xioDev_t *ds[];
 
 /*******************************************************************************
  *	Function Prototypes
@@ -196,12 +199,14 @@ int xio_gets(const uint8_t dev, char *buf, const int size);
 int xio_getc(const uint8_t dev);
 int xio_putc(const uint8_t dev, const char c);
 int xio_set_baud(const uint8_t dev, const uint8_t baud_rate);
+
 void xio_set_stdin(const uint8_t dev);
 void xio_set_stdout(const uint8_t dev);
 void xio_set_stderr(const uint8_t dev);
 
 // private functions (excuse me sir, this is a private function)
-void xio_init(void);
+//void xio_init(void);
+void xio_init(uint8_t std_in, uint8_t std_out, uint8_t std_err);
 void xio_reset_generic(xioDev_t *d, const flags_t flags);
 int xio_ctrl_generic(xioDev_t *d, const flags_t flags);
 void xio_null(xioDev_t *d);				// NULL callback (used for flow control)
@@ -245,9 +250,9 @@ enum xioCodes {
 	XIO_ERROR_16,			// reserved
 	XIO_ERROR_17,			// reserved
 	XIO_ERROR_18,			// reserved
-	XIO_ERROR_19			// NOTE: XIO codes align to here
+	XIO_ERROR_19			// NOTE: XIO codes align to STAT code to here
 };
-#define XIO_ERRNO_MAX XIO_BUFFER_FULL_NON_FATAL
+#define XIO_ERRNO_MAX XIO_ERROR_19
 
 /*
  * xio control flag values

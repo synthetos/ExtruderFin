@@ -75,8 +75,8 @@ stat_t text_parser(char_t *str)
 
 	// trap special displays
 	if (str[0] == '?') {					// handle status report case
-//		rpt_print_status();
-		printf("respond\n");
+		rpt_print_status();
+//		printf("respond\n");
 		return (STAT_OK);
 	}
 

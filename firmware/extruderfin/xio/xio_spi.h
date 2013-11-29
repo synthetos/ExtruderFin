@@ -39,8 +39,8 @@
 #define SPI_XIO_FLAGS 	(XIO_LINEMODE)
 
 // Buffer structs must be the same as xioBuf, except that the buf array size is defined.
-#define SPI_RX_BUFFER_SIZE 64
-#define SPI_TX_BUFFER_SIZE 64
+#define SPI_RX_BUFFER_SIZE 32
+#define SPI_TX_BUFFER_SIZE 32
 
 typedef struct xioSpiRX {
 	buffer_t size;							// initialize to SPI_RX_BUFFER_SIZE-1

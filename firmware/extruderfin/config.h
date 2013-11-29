@@ -81,8 +81,8 @@ typedef uint8_t index_t;			// use this if there are < 256 indexed objects
 //typedef uint16_t index_t;			// use this if there are > 255 indexed objects
 
 									// defines allocated from stack (not-pre-allocated)
-#define CMD_FORMAT_LEN 80			// print formatting string max length
-#define CMD_MESSAGE_LEN 80			// sufficient space to contain end-user messages
+#define CMD_FORMAT_LEN 64			// print formatting string max length
+#define CMD_MESSAGE_LEN 64			// sufficient space to contain end-user messages
 
 									// pre-allocated defines (take RAM permanently)
 #define CMD_SHARED_STRING_LEN 192	// shared string for string values
