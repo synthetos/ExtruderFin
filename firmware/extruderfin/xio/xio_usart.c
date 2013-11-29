@@ -1,7 +1,8 @@
 /*
  * xio_usart.c	- General purpose USART device driver for atmega family
- * 				- works with avr-gcc stdio library
- * Part of TinyG project
+ * 				  Works with avr-gcc stdio library
+ * This file works with ATMEGA328's on Kinen fins
+ * This file is part of the TinyG project
  *
  * Copyright (c) 2010 - 2013 Alden S. Hart Jr.
  *

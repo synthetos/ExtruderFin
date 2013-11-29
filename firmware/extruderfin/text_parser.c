@@ -1,5 +1,6 @@
 /*
- * text_parser.c - text parser for extruderfin
+ * text_parser.c - text parser for extruder fin
+ * This file works with any processor on Kinen fins (generic)
  * This file is part of the TinyG project
  *
  * Copyright (c) 2010 - 2013 Alden S. Hart, Jr.
@@ -30,6 +31,7 @@
 #include "controller.h"
 #include "text_parser.h"
 #include "json_parser.h"
+#include "persistence.h"
 #include "report.h"
 //#include "help.h"
 #include "xio.h"					// for ASCII char definitions
@@ -76,7 +78,6 @@ stat_t text_parser(char_t *str)
 	// trap special displays
 	if (str[0] == '?') {					// handle status report case
 		rpt_print_status();
-//		printf("respond\n");
 		return (STAT_OK);
 	}
 
@@ -99,7 +100,7 @@ stat_t text_parser(char_t *str)
 	} else { 								// process SET and RUN commands
 //		if (cm.machine_state == MACHINE_ALARM) return (STAT_MACHINE_ALARMED); 
 		status = cmd_set(cmd);				// set (or run) single value
-		cmd_persist(cmd);					// conditionally persist depending on flags in array
+		nvm_persist(cmd);					// conditionally persist depending on flags in array
 	}
 	cmd_print_list(status, TEXT_MULTILINE_FORMATTED, JSON_RESPONSE_FORMAT); // print the results
 	return (status);

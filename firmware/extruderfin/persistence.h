@@ -1,6 +1,6 @@
 /*
- * report.h - contains all reporting statements
- * This file works with any processor on Kinen fins (generic)
+ * persistence.h - application independent configuration persistence
+ * This file works with ATMEGA328's on Kinen fins
  * This file is part of the TinyG project
  *
  * Copyright (c) 2012 - 2013 Alden S. Hart Jr.
@@ -25,15 +25,47 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
  * OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-#ifndef report_h
-#define report_h
 
-void rpt_exception(uint8_t status);
-void rpt_print_loading_configs_message(void);
-void rpt_print_initializing_message(void);
-void rpt_print_system_ready_message(void);
-void rpt_print_status(void);
+#ifndef PERSISTENCE_H_ONCE
+#define PERSISTENCE_H_ONCE
 
+#ifdef __cplusplus
+extern "C"{
 #endif
 
+/***********************************************************************************
+ **** DEFINITIONS AND SETTINGS *****************************************************
+ ***********************************************************************************/
 
+#define NVM_VALUE_LEN 4				// NVM value length (float, fixed length)
+#define NVM_BASE_ADDR 0x0000		// base address of usable NVM
+
+/**** Structures ****/
+
+/**** Function Prototypes ****/
+
+void nvm_init(void);
+void nvm_persist(cmdObj_t *cmd);		// main entry point for persistence
+stat_t nvm_read_value(cmdObj_t *cmd);
+stat_t nvm_write_value(cmdObj_t *cmd);
+
+#ifdef __DEBUG
+void nvm_dump_all(const uint16_t start_record, const uint16_t end_record, char *label);
+#endif
+
+/*** Unit tests ***/
+
+/* unit test setup */
+//#define __UNIT_TEST_PERSISTENCE		// uncomment to enable NVM unit tests
+#ifdef __UNIT_TEST_PERSISTENCE
+void nvm_unit_tests(void);
+#define	NVM_UNITS nvm_unit_tests();
+#else
+#define	NVM_UNITS
+#endif // __UNIT_TEST_PERSISTENCE
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // End of include guard: PERSISTENCE_H_ONCE

@@ -43,6 +43,7 @@ C_SRCS +=  \
 ../heater.c \
 ../json_parser.c \
 ../main.c \
+../persistence.c \
 ../report.c \
 ../sensor.c \
 ../hardware.c \
@@ -50,7 +51,6 @@ C_SRCS +=  \
 ../util.c \
 ../xio.c \
 ../xio/xio_file.c \
-../xio/xio_signals.c \
 ../xio/xio_spi.c \
 ../xio/xio_usart.c
 
@@ -68,6 +68,7 @@ controller.o \
 heater.o \
 json_parser.o \
 main.o \
+persistence.o \
 report.o \
 sensor.o \
 hardware.o \
@@ -75,7 +76,6 @@ text_parser.o \
 util.o \
 xio.o \
 xio/xio_file.o \
-xio/xio_signals.o \
 xio/xio_spi.o \
 xio/xio_usart.o
 
@@ -87,6 +87,7 @@ controller.o \
 heater.o \
 json_parser.o \
 main.o \
+persistence.o \
 report.o \
 sensor.o \
 hardware.o \
@@ -94,7 +95,6 @@ text_parser.o \
 util.o \
 xio.o \
 xio/xio_file.o \
-xio/xio_signals.o \
 xio/xio_spi.o \
 xio/xio_usart.o
 
@@ -106,6 +106,7 @@ controller.d \
 heater.d \
 json_parser.d \
 main.d \
+persistence.d \
 report.d \
 sensor.d \
 hardware.d \
@@ -113,7 +114,6 @@ text_parser.d \
 util.d \
 xio.d \
 xio/xio_file.d \
-xio/xio_signals.d \
 xio/xio_spi.d \
 xio/xio_usart.d
 
@@ -125,6 +125,7 @@ controller.d \
 heater.d \
 json_parser.d \
 main.d \
+persistence.d \
 report.d \
 sensor.d \
 hardware.d \
@@ -132,7 +133,6 @@ text_parser.d \
 util.d \
 xio.d \
 xio/xio_file.d \
-xio/xio_signals.d \
 xio/xio_spi.d \
 xio/xio_usart.d
 

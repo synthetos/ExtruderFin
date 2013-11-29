@@ -1,5 +1,6 @@
 /*
- * json_parser.c - JSON parser for TinyG systems.
+ * json_parser.c - JSON parser for extruder
+ * This file works with any processor on Kinen fins (generic)
  * This file is part of the TinyG project
  *
  * Copyright (c) 2011 - 2013 Alden S. Hart Jr.

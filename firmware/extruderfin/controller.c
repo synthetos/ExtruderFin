@@ -1,5 +1,6 @@
 /*
- * controller.c - extruderfin controller and top level parser
+ * controller.c - controller and top level parser for extruderfin
+ * This file works with any processor on Kinen fins (generic)
  * This file is part of the TinyG project
  *
  * Copyright (c) 2012 - 2013 Alden S. Hart Jr.
@@ -168,18 +169,18 @@ static stat_t _command_dispatch(void)
 //		case '~': { cm_request_cycle_start(); break; }
 
 		case NUL: { 									// blank line (just a CR)
-			if (cfg.comm_mode != JSON_MODE) {
+			if (cs.comm_mode != JSON_MODE) {
 				text_response(STAT_OK);
 			}
 			break;
 		}
 		case '$': case '?': case 'H': { 				// Text mode input
-			cfg.comm_mode = TEXT_MODE;
+			cs.comm_mode = TEXT_MODE;
 			text_response(text_parser(cs.bufp));
 			break;
 		}
 		case '{': { 									// JSON input
-			cfg.comm_mode = JSON_MODE;
+			cs.comm_mode = JSON_MODE;
 			json_parser(cs.bufp);
 			break;
 		}

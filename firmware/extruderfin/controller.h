@@ -1,5 +1,6 @@
 /*
- * controller.h - extruderfin controller and main dispatch loop
+ * controller.h - controller and main dispatch loop for extruderfin project
+ * This file works with any processor on Kinen fins (generic)
  * This file is part of the TinyG project
  *
  * Copyright (c) 2012 - 2013 Alden S. Hart Jr.
@@ -49,6 +50,7 @@ typedef struct controllerSingleton {	// main controller struct
 	float hw_version;					// tinyg hardware compatibility - platform revision
 
 	// communications state variables
+	uint8_t comm_mode;					// JSON or text mode
 	uint8_t active_src;					// active source device
 	uint8_t primary_src;				// primary input source device
 	uint8_t secondary_src;				// secondary input source device
@@ -56,6 +58,14 @@ typedef struct controllerSingleton {	// main controller struct
 	uint8_t network_mode;				// 0=master, 1=repeater, 2=slave
 	uint16_t linelen;					// length of currently processing line
 	uint16_t read_index;				// length of line being read
+
+//	uint8_t comm_mode;				// TG_TEXT_MODE or TG_JSON_MODE
+//	uint8_t enable_cr;				// enable CR in CRFL expansion on TX
+//	uint8_t enable_echo;			// enable text-mode echo
+//	uint8_t enable_flow_control;	// enable XON/XOFF or RTS/CTS flow control
+//	uint8_t ignore_crlf;			// ignore CR or LF on RX --- these 4 are shadow settings for XIO cntrl bits
+//	uint8_t usb_baud_rate;			// see xio_usart.h for XIO_BAUD values
+//	uint8_t usb_baud_flag;			// technically this belongs in the controller singleton
 
 	// system state variables
 //	uint8_t linelen;					// length of currently processing line

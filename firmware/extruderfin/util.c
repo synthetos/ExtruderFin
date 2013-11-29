@@ -1,5 +1,6 @@
 /*
  * util.c - a random assortment of useful functions
+ * This file works with any processor on Kinen fins (generic)
  * This file is part of the TinyG project
  *
  * Copyright (c) 2010 - 2013 Alden S. Hart, Jr.

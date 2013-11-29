@@ -1,5 +1,6 @@
 /*
- * text_parser.h - text parser and text mode support for tinyg2
+ * text_parser.h - text parser and text mode support for extruder fin
+ * This file works with any processor on Kinen fins (generic)
  * This file is part of the TinyG project
  *
  * Copyright (c) 2013 Alden S. Hart, Jr.

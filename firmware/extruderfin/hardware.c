@@ -1,5 +1,6 @@
 /*
  * hardware.c - general hardware support functions
+ * This file works with ATMEGA328's on Kinen fins
  * This file is part of the TinyG project
  *
  * Copyright (c) 2012 - 2013 Alden S. Hart Jr.

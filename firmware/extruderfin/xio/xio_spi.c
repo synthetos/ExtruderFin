@@ -1,8 +1,9 @@
 /*
  * xio_spi.c	- General purpose SPI device driver for xmega family
- * 				- works with avr-gcc stdio library
+ * 				  Compatible with avr-gcc stdio library
  *
- * Part of TinyG project
+ * This file works with ATMEGA328's on Kinen fins
+ * This file is part of the TinyG project
  *
  * Copyright (c) 2012 - 2013 Alden S. Hart Jr.
  *
@@ -61,7 +62,7 @@
  *		slave. It's just IO.
  *
  *		If the slave has no data to send it should return ETX (0x03) on MISO. This is 
- *		useful to distinghuish between an "empty" slave and a non-responsive SPI slave or
+ *		useful to distinguish between an "empty" slave and a non-responsive SPI slave or
  *		unpopulated Kinen socket - which would return NULs or possibly 0xFFs.
  *
  *	- The master may poll for message data from the slave by sending STX chars to

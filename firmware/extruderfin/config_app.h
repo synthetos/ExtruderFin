@@ -1,6 +1,7 @@
 /*
  * config_app.h - application-specific part of configuration data
- * Part of TinyG project
+ * This file works with any processor on Kinen fins (generic)
+ * This file is part of the TinyG project
  *
  * Copyright (c) 2010 - 2013 Alden S. Hart Jr.
  *
@@ -107,16 +108,6 @@
  */
 typedef struct cfgParameters {
 	uint16_t magic_start;			// magic number to test memory integrity
-
-	// communications settings
-	uint8_t comm_mode;				// TG_TEXT_MODE or TG_JSON_MODE
-//	uint8_t enable_cr;				// enable CR in CRFL expansion on TX
-//	uint8_t enable_echo;			// enable text-mode echo
-//	uint8_t enable_flow_control;	// enable XON/XOFF or RTS/CTS flow control
-//	uint8_t ignore_crlf;			// ignore CR or LF on RX --- these 4 are shadow settings for XIO cntrl bits
-//	uint8_t usb_baud_rate;			// see xio_usart.h for XIO_BAUD values
-//	uint8_t usb_baud_flag;			// technically this belongs in the controller singleton
-
 	uint16_t magic_end;
 } cfgParameters_t;
 cfgParameters_t cfg; 				// declared in the header to make it global

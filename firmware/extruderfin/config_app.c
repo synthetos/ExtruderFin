@@ -1,6 +1,7 @@
 /*
  * config_app.h - application-specific part of configuration data
- * Part of extruderfin project
+ * This file works with any processor on Kinen fins (generic)
+ * This file is part of the TinyG project
  *
  * Copyright (c) 2010 - 2013 Alden S. Hart Jr.
  *

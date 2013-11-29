@@ -40,7 +40,7 @@
 
 /****** REVISIONS ******/
 
-#define FIRMWARE_BUILD 			008.13		// Serial RX/TX buttoned up (for now)
+#define FIRMWARE_BUILD 			009.01		// Separated persistence, removed xio_signals, header work
 #define FIRMWARE_VERSION		0.1			// firmware major version
 #define HARDWARE_PLATFORM		1			// board style 
 #define HARDWARE_VERSION		1			// board revision number
@@ -52,8 +52,8 @@
 #define __TEXT_MODE							// comment out to disable text mode support (saves ~9Kb)
 #define __HELP_SCREENS						// comment out to disable help screens 		(saves ~3.5Kb)
 #define __CANNED_TESTS 						// comment out to remove $tests 			(saves ~12Kb)
+#define __PERSISTENCE						// comment out if persistence is not needed / required
 
-#define __ENABLE_PERSISTENCE
 #define __ENABLE_USART_DEVICE
 #define __ENABLE_SPI_DEVICE
 #define __ENABLE_PGM_FILE_DEVICE

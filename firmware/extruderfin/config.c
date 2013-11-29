@@ -1,6 +1,7 @@
 /*
  * config.c - application independent configuration handling
- * This file is part of the TinyG2 project
+ * This file works with any processor on Kinen fins (generic)
+ * This file is part of the TinyG project
  *
  * Copyright (c) 2010 - 2013 Alden S. Hart Jr.
  *
@@ -35,6 +36,7 @@
 #include "json_parser.h"
 #include "text_parser.h"
 #include "hardware.h"
+#include "persistence.h"
 #include "util.h"
 #include "xio.h"
 
@@ -59,7 +61,7 @@ cmdObj_t cmd_list[CMD_LIST_LEN];	// JSON header element
  * cmd_get() 	- Build a cmdObj with the values from the target & return the value
  *			   	  Populate cmd body with single valued elements or groups (iterates)
  * cmd_print()	- Output a formatted string for the value.
- * cmd_persist()- persist value to NVM. Takes special cases into account
+ * nvm_persist()- See persistence.c 
  */
 stat_t cmd_set(cmdObj_t *cmd)
 {
@@ -77,15 +79,6 @@ void cmd_print(cmdObj_t *cmd)
 {
 	if (cmd->index >= cmd_index_max()) return;
 	((fptrCmd)GET_TABLE_WORD(print))(cmd);
-}
-
-void cmd_persist(cmdObj_t *cmd)
-{
-#ifdef __DISABLE_PERSISTENCE	// cutout for faster simulation in test
-	return;
-#endif
-	if (cmd_index_lt_groups(cmd->index) == false) return;
-	if (GET_TABLE_BYTE(flags) & F_PERSIST) cmd_write_NVM_value(cmd);
 }
 
 /************************************************************************************
@@ -107,26 +100,20 @@ void config_init()
 	cfg.magic_end = MAGICNUM;
 
 //	cs.comm_mode = JSON_MODE;				// initial value until EEPROM is read
-//	hw.nvm_base_addr = NVM_BASE_ADDR;
-//	hw.nvm_profile_base = cfg.nvm_base_addr;
-//	cmd->value = true;
-//	set_defaults(cmd);
 
 	cmd->index = 0;							// this will read the first record in NVM
-	cmd_read_NVM_value(cmd);
+	nvm_read_value(cmd);
 	if (cmd->value != cs.fw_build) {
 		cmd->value = true;					// case (1) NVM is not setup or not in revision
 		set_defaults(cmd);
 	} else {								// case (2) NVM is setup and in revision
-//		rpt_print_loading_configs_message();
 		for (cmd->index=0; cmd_index_is_single(cmd->index); cmd->index++) {
 			if (GET_TABLE_BYTE(flags) & F_INITIALIZE) {
 				strcpy_P(cmd->token, cfgArray[cmd->index].token);// read token from array
-				cmd_read_NVM_value(cmd);
+				nvm_read_value(cmd);
 				cmd_set(cmd);
 			}
 		}
-//		sr_init_status_report();
 	}
 }
 
@@ -147,7 +134,7 @@ stat_t set_defaults(cmdObj_t *cmd)
 			cmd->value = GET_TABLE_FLOAT(def_value);
 			strcpy_P(cmd->token, cfgArray[cmd->index].token);
 			cmd_set(cmd);
-			cmd_persist(cmd);				// persist must occur when no other interrupts are firing
+			nvm_persist(cmd);				// persist must occur when no other interrupts are firing
 		}
 	}
 //	rpt_print_initializing_message(); // don't start TX until all the NVM persistence is done
@@ -325,7 +312,7 @@ stat_t get_grp(cmdObj_t *cmd)
 
 stat_t set_grp(cmdObj_t *cmd)
 {
-	if (cfg.comm_mode == TEXT_MODE) return (STAT_UNRECOGNIZED_COMMAND);
+	if (cs.comm_mode == TEXT_MODE) return (STAT_UNRECOGNIZED_COMMAND);
 	for (uint8_t i=0; i<CMD_MAX_OBJECTS; i++) {
 		if ((cmd = cmd->nx) == NULL) break;
 		if (cmd->objtype == TYPE_EMPTY) break;
@@ -333,7 +320,7 @@ stat_t set_grp(cmdObj_t *cmd)
 			cmd_get(cmd);
 		else {
 			cmd_set(cmd);
-			cmd_persist(cmd);
+			nvm_persist(cmd);
 		}
 	}
 	return (STAT_OK);
@@ -615,7 +602,7 @@ cmdObj_t *cmd_add_string(const char_t *token, const char_t *string) // add a str
  */
 cmdObj_t *cmd_conditional_message(const char_t *string)	// conditionally add a message object to the body
 {
-	if ((cfg.comm_mode == JSON_MODE) && (js.echo_json_messages != true)) { return (NULL);}
+	if ((cs.comm_mode == JSON_MODE) && (js.echo_json_messages != true)) { return (NULL);}
 	return(cmd_add_string((const char_t *)"msg", string));
 }
 
@@ -636,43 +623,11 @@ cmdObj_t *cmd_conditional_message(const char_t *string)	// conditionally add a m
 
 void cmd_print_list(stat_t status, uint8_t text_flags, uint8_t json_flags)
 {
-	if (cfg.comm_mode == JSON_MODE) {
+	if (cs.comm_mode == JSON_MODE) {
 		json_print_list(status, json_flags);
 	} else {
 		text_print_list(status, text_flags);
 	}
-}
-
-/************************************************************************************
- ***** EEPROM PERSISTENCE FUNCTIONS *************************************************
- ************************************************************************************
- * cmd_read_NVM_value()	 - return value (as float) by index
- * cmd_write_NVM_value() - write to NVM by index, but only if the value has changed
- *
- *	It's the responsibility of the caller to make sure the index does not exceed range
- */
-
-stat_t cmd_read_NVM_value(cmdObj_t *cmd)
-{
-//	int8_t nvm_byte_array[NVM_VALUE_LEN];
-//	uint16_t nvm_address = cfg.nvm_profile_base + (cmd->index * NVM_VALUE_LEN);
-//	(void)EEPROM_ReadBytes(nvm_address, nvm_byte_array, NVM_VALUE_LEN);
-//	memcpy(&cmd->value, &nvm_byte_array, NVM_VALUE_LEN);
-	return (STAT_OK);
-}
-
-stat_t cmd_write_NVM_value(cmdObj_t *cmd)
-{
-//	float tmp = cmd->value;
-//	ritorno(cmd_read_NVM_value(cmd));
-//	if (cmd->value != tmp) {		// catches the isnan() case as well
-//		cmd->value = tmp;
-//		int8_t nvm_byte_array[NVM_VALUE_LEN];
-//		memcpy(&nvm_byte_array, &tmp, NVM_VALUE_LEN);
-//		uint16_t nvm_address = cfg.nvm_profile_base + (cmd->index * NVM_VALUE_LEN);
-//		(void)EEPROM_WriteBytes(nvm_address, nvm_byte_array, NVM_VALUE_LEN);
-//	}
-	return (STAT_OK);
 }
 
 /****************************************************************************

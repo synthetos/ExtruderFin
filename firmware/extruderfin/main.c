@@ -1,5 +1,6 @@
 /*
  * main.c - extruderfin main file
+ * This file works with any processor on Kinen fins (generic)
  * This file is part of the TinyG project.
  *
  * Copyright (c) 2012 - 2013 Alden S. Hart Jr.
@@ -29,6 +30,7 @@
 #include "config.h"				// #2
 #include "controller.h"
 #include "hardware.h"
+#include "persistence.h"
 #include "json_parser.h"
 #include "text_parser.h"
 #include "heater.h"
@@ -85,24 +87,24 @@ static void _application_init(void)
 {
 	// There are a lot of dependencies in the order of these inits.
 	// Don't change the ordering unless you understand this.
+	// Also, you cannot use XIO (i.e printf) until sei() is set
 
 	cli();
 
 	// hardware and low-level drivers
 	hardware_init();					// [1] system hardware setup - must be first
 	systick_init();						// [2] systick 1ms counter
-	xio_init(STD_IN, STD_OUT, STD_ERR);	// [3] xmega io subsystem
-//	printf("startup\n");
-	json_init();
-	text_init();
+	nvm_init();							// [3] persistence sub-system
+	xio_init(STD_IN, STD_OUT, STD_ERR);	// [4] xmega io subsystem
 
-	// hardware devices
-//	systick_init();						// systick 1ms counter
+	// hardware devices (hardware.c/.h)
 	adc_init(ADC_CHANNEL);
 	pwm_init();
 	led_init();
 
 	// application sub-systems
+	json_init();						// JSON parser
+	text_init();						// text parser
 	controller_init();					// must be first app init; reqs xio_init()
 	config_init();						// config records from eeprom
 	heater_init();						// setup the heater module and subordinate functions

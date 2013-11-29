@@ -14,6 +14,8 @@ json_parser.c
 
 main.c
 
+persistence.c
+
 report.c
 
 sensor.c
@@ -27,8 +29,6 @@ util.c
 xio.c
 
 xio\xio_file.c
-
-xio\xio_signals.c
 
 xio\xio_spi.c
 

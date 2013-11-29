@@ -1,7 +1,7 @@
 /*
  * sensor.c - TinyG temperature controller - sensor functions
- *
- * Part of TinyG project
+ * This file works with any processor on Kinen fins (generic)
+ * This file is part of the TinyG project
  *
  * Copyright (c) 2012 - 2013 Alden S. Hart Jr.
  *

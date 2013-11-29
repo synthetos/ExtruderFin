@@ -1,5 +1,6 @@
 /*
- * json_parser.c - JSON parser for TinyG extruderfin
+ * json_parser.c - JSON parser for extruderfin
+ * This file works with any processor on Kinen fins (generic)
  * This file is part of the TinyG project
  *
  * Copyright (c) 2011 - 2013 Alden S. Hart Jr.
@@ -30,6 +31,7 @@
 #include "controller.h"
 #include "json_parser.h"
 #include "text_parser.h"
+#include "persistence.h"
 #include "report.h"
 #include "util.h"
 #include "xio.h"					// for char definitions
@@ -136,7 +138,7 @@ static stat_t _json_parser_kernal(char_t *str)
 	} else {
 //		if (cm.machine_state == MACHINE_ALARM) return (STAT_MACHINE_ALARMED); 
 		ritorno(cmd_set(cmd));								// set value or call a function (e.g. gcode)
-		cmd_persist(cmd);
+		nvm_persist(cmd);
 	}
 	return (STAT_OK);										// only successful commands exit through this point
 }

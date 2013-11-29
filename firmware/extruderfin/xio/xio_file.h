@@ -1,8 +1,9 @@
 /*
- * xio_file.h	- device driver for file-type devices
- *   			- works with avr-gcc stdio library
+ * xio_file.h	- Device driver for file-type devices
+ *   			  Compatible with avr-gcc stdio library
  *
- * Part of TinyG project
+ * This file works with any processor on Kinen fins (generic)
+ * This file is part of the TinyG project
  *
  * Copyright (c) 2010 - 2013 Alden S. Hart Jr.
  *

@@ -1,5 +1,6 @@
 /*
  * config.h - configuration sub-system generic part (see config_app for application part)
+ * This file works with any processor on Kinen fins (generic)
  * This file is part of the TinyG project
  *
  * Copyright (c) 2012 - 2013 Alden S. Hart Jr.
@@ -98,9 +99,6 @@ typedef uint8_t index_t;			// use this if there are < 256 indexed objects
 #define CMD_LIST_LEN (CMD_BODY_LEN+2)// +2 allows for a header and a footer
 #define CMD_MAX_OBJECTS (CMD_BODY_LEN-1)// maximum number of objects in a body string
 
-#define NVM_VALUE_LEN 4				// NVM value length (float, fixed length)
-#define NVM_BASE_ADDR 0x0000		// base address of usable NVM
-
 enum tgCommunicationsMode {
 	TEXT_MODE = 0,					// text command line mode
 	JSON_MODE,						// strict JSON construction
@@ -196,7 +194,6 @@ stat_t set_defaults(cmdObj_t *cmd);
 stat_t cmd_get(cmdObj_t *cmd);			// main entry point for get value
 stat_t cmd_set(cmdObj_t *cmd);			// main entry point for set value
 void cmd_print(cmdObj_t *cmd);			// main entry point for print value
-void cmd_persist(cmdObj_t *cmd);		// main entry point for persistence
 
 // helpers
 index_t	cmd_index_max(void);
@@ -241,14 +238,6 @@ cmdObj_t *cmd_add_string(const char_t *token, const char_t *string);
 cmdObj_t *cmd_add_message(const char *string);
 //cmdObj_t *cmd_add_message_P(const char *string);
 void cmd_print_list(uint8_t status, uint8_t text_flags, uint8_t json_flags);
-
-void cmd_persist(cmdObj_t *cmd);		// main entry point for persistence
-stat_t cmd_read_NVM_value(cmdObj_t *cmd);
-stat_t cmd_write_NVM_value(cmdObj_t *cmd);
-
-#ifdef __DEBUG
-void cfg_dump_NVM(const uint16_t start_record, const uint16_t end_record, char *label);
-#endif
 
 
 /*********************************************************************************************

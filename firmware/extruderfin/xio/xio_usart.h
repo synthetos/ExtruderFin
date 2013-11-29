@@ -1,6 +1,7 @@
 /*
  * xio_usart.h - Common USART definitions 
- * Part of TinyG project
+ * This file works with ATMEGA328's on Kinen fins
+ * This file is part of the TinyG project
  *
  * Copyright (c) 2010 - 2013 Alden S. Hart Jr.
  *
