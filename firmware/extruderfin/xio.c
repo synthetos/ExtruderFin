@@ -248,10 +248,10 @@ int xio_gets_generic(xioDev_t *d, char *buf, const int size)
 /* 
  * Buffer read and write primitives
  *
- * 	You can make these blocking routines by calling them in a while(true)
- * 	while waiting for something other than _FDEV_ERR to be returned. 
- *	Of course, this only works if some interrupt is loading things behind
- *	the scenes.
+ * 	You can make these blocking routines by calling them in a while(true) while 
+ *	waiting for something other than _FDEV_ERR to be returned. Of course, this 
+ *	only works if some interrupt is loading things behind the scenes. For an 
+ *	example see xio_putc_usart().
  */
 int8_t xio_read_buffer(xioBuf_t *b) 
 {
@@ -262,25 +262,12 @@ int8_t xio_read_buffer(xioBuf_t *b)
 
 int8_t xio_write_buffer(xioBuf_t *b, char c) 
 {
-	buffer_t next_wr;
-	
-	// blocking version
-	if ((next_wr = b->wr-1) == 0) 
-		next_wr = b->size;	// advance wr with wrap
-	while (next_wr == b->rd) 
-		sleep_mode(); 		// sleep until there is space in the buffer
-	b->wr = next_wr;							// advance wr from temp value
-	b->buf[b->wr] = c;							// write char to buffer
-	return (XIO_OK);							// leave wr on *written* char
-/*
-	// non-blocking version
 	buffer_t next_wr = b->wr-1;					// pre-advance wr to temporary variable
 	if (next_wr == 0) { next_wr = b->size;}		// advance wr with wrap
 	if (next_wr == b->rd) { return (_FDEV_ERR);}// return if queue full
 	b->buf[next_wr] = c;						// write char to buffer
 	b->wr = next_wr;							// advance wr from temp value
 	return (XIO_OK);							// leave wr on *written* char
-*/
 }
 
 /*

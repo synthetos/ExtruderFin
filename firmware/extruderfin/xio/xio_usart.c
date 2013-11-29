@@ -102,38 +102,21 @@ void xio_set_baud_usart(xioDev_t *d, const uint32_t baud)
  */
 int xio_putc_usart(const char c, FILE *stream)
 {
-/*
-	int status;
-	
 	// blocking write
-	if ((status = xio_write_buffer(((xioDev_t *)stream->udata)->tx, c)) == _FDEV_ERR) {
-		sleep_mode();
-	}
+	int status;
 	UCSR0B |= (1<<UDRIE0);			// enable TX interrupts - they will keep firing
+	while ((status = xio_write_buffer(((xioDev_t *)stream->udata)->tx, c)) == _FDEV_ERR) {
+		sleep_mode();				// wakes up when usart TX data register is empty
+	}
 	return (status);
-*/
-	UCSR0B |= (1<<UDRIE0); 			// enable TX interrupts - they will keep firing
-	int8_t status = xio_write_buffer(((xioDev_t *)stream->udata)->tx, c);
-//	UCSR0B |= (1<<UDRIE0); 			// enable TX interrupts - they will keep firing
-//	UCSR0B |= (1<<TXCIE0); 			// enable TX interrupts - they will keep firing
-	return (status);	
 }
 
 ISR(USART_UDRE_vect)
 {
-	int8_t c_tx = xio_read_buffer(USART0tx);
-	if (c_tx == _FDEV_ERR) {
-//		UCSR0B &= ~(1<<UDRIE0);		// disable interrupts
-	} else {
-		UDR0 = (char)c_tx;			// write char to USART xmit register
-//		UCSR0B |= (1<<UDRIE0); 		// enable TX interrupts - they will keep firing
-	}
+	int8_t c = xio_read_buffer(USART0tx);
+	if (c != _FDEV_ERR) 
+		UDR0 = (char)c;				// write char to USART xmit register
 }
-
-ISR(USART_TX_vect)
-{
-	
-}	
 
 /*
  *  xio_getc_usart() - generic char reader for USART devices
