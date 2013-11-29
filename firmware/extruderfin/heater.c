@@ -1,6 +1,6 @@
 /*
- * heater.c - Kinen temperature controller - heater file
- * Part of Kinen project
+ * heater.c - TinyG temperature controller - heater file
+ * Part of TinyG project
  *
  * Copyright (c) 2012 - 2013 Alden S. Hart Jr.
  *
@@ -40,7 +40,7 @@
  * heater_off()	 	- turn heater off	
  * heater_callback() - 100ms timed loop for heater control
  *
- *	heater_init() sets default values that may be overwritten via Kinen communications. 
+ *	heater_init() sets default values that may be overwritten via TinyG communications. 
  *	heater_on() sets initial values used regardless of any changes made to settings.
  */
 void heater_init()

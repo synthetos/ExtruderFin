@@ -1,6 +1,6 @@
 /*
  * xio.c - eXtended IO devices - common code file
- * Part of Kinen project
+ * Part of TinyG project
  *
  * Copyright (c) 2010 - 2013 Alden S. Hart Jr.
  *

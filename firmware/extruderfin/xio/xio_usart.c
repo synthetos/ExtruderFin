@@ -1,7 +1,7 @@
 /*
- * xio_usart.c	- General purpose USART device driver for xmega family
+ * xio_usart.c	- General purpose USART device driver for atmega family
  * 				- works with avr-gcc stdio library
- * Part of Kinen project
+ * Part of TinyG project
  *
  * Copyright (c) 2010 - 2013 Alden S. Hart Jr.
  *
@@ -83,8 +83,11 @@ FILE *xio_open_usart(const uint8_t dev, const char *addr, const flags_t flags)
  */
 void xio_set_baud_usart(xioDev_t *d, const uint32_t baud)
 {
-	UBRR0 = (F_CPU / (16 * baud)) - 1;
-	UCSR0A &= ~(1<<U2X0);		// baud doubler off
+//	UBRR0 = (F_CPU / (16 * baud)) - 1;
+//	UCSR0A &= ~(1<<U2X0);		// baud doubler off
+
+	UBRR0 = (F_CPU / (8 * baud)) - 1;
+	UCSR0A |= (1<<U2X0);		// baud doubler on
 }
 
 /* 

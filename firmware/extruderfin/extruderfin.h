@@ -40,7 +40,7 @@
 
 /****** REVISIONS ******/
 
-#define FIRMWARE_BUILD 			008.12		// Serial TX appears to work. Still testing.
+#define FIRMWARE_BUILD 			008.13		// Serial RX/TX buttoned up (for now)
 #define FIRMWARE_VERSION		0.1			// firmware major version
 #define HARDWARE_PLATFORM		1			// board style 
 #define HARDWARE_VERSION		1			// board revision number

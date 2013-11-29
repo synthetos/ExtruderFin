@@ -1,7 +1,7 @@
 /*
  * xio_spi.h	- General purpose SPI device driver for xmega family
  * 				- works with avr-gcc stdio library
- * Part of Kinen project
+ * Part of TinyG project
  *
  * Copyright (c) 2012 - 2013 Alden S. Hart Jr.
  *

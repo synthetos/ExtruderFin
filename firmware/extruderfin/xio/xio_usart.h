@@ -1,6 +1,6 @@
 /*
  * xio_usart.h - Common USART definitions 
- * Part of Kinen project
+ * Part of TinyG project
  *
  * Copyright (c) 2010 - 2013 Alden S. Hart Jr.
  *
@@ -32,14 +32,14 @@
  * USART DEVICE CONFIGS AND STRUCTURES
  ******************************************************************************/
 
-//#define USART_BAUD_RATE		9600
-#define USART_BAUD_RATE		38400
-//#define USART_BAUD_RATE		57600
-//#define USART_BAUD_RATE		115200
-#define USART_BAUD_DOUBLER	0		// 0=turns baud doubler off
+//#define USART_BAUD_RATE	9600
+//#define USART_BAUD_RATE	38400
+#define USART_BAUD_RATE		57600		// fastest it seems to go with an 8 MHz clock
+//#define USART_BAUD_RATE	115200		// won't go this fast
+
+#define USART_BAUD_DOUBLER	1			// 0=turns baud doubler off
 #define USART_ENABLE_FLAGS	( 1<<RXCIE0 | 1<<TXEN0 | 1<<RXEN0)  // enable recv interrupt, TX and RX
 #define USART_XIO_FLAGS 	(XIO_BLOCK |  XIO_ECHO | XIO_XOFF | XIO_LINEMODE )
-#define USART_UCSRC			(0x03)	// 8_BIT
 
 // Buffer structs must be the same as xioBuf except that the buf array size is defined.
 #define USART_RX_BUFFER_SIZE 32

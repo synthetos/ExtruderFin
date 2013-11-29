@@ -1,6 +1,6 @@
 /*
  * report.c - contains all reporting statements
- * Part of Kinen project
+ * Part of TinyG project
  *
  * Copyright (c) 2010 - 2013 Alden S. Hart Jr.
  *

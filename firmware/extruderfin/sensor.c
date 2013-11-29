@@ -1,7 +1,7 @@
 /*
- * sensor.c - Kinen temperature controller - sensor functions
+ * sensor.c - TinyG temperature controller - sensor functions
  *
- * Part of Kinen project
+ * Part of TinyG project
  *
  * Copyright (c) 2012 - 2013 Alden S. Hart Jr.
  *

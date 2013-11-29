@@ -2,7 +2,7 @@
  *  xio_file.c	- device driver for program memory "files"
  * 				- works with avr-gcc stdio library
  *
- * Part of Kinen project
+ * Part of TinyG project
  *
  * Copyright (c) 2010 - 2013 Alden S. Hart Jr.
  *

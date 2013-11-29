@@ -1,6 +1,6 @@
 /*
- * heater.h - Kinen temperature controller - heater functions
- * Part of Kinen project
+ * heater.h - TinyG temperature controller - heater functions
+ * Part of TinyG project
  *
  * Copyright (c) 2012 - 2013 Alden S. Hart Jr.
  *

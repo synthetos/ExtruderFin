@@ -1,5 +1,5 @@
 /*
- * json_parser.c - JSON parser for Kinen systems.
+ * json_parser.c - JSON parser for TinyG systems.
  * This file is part of the TinyG project
  *
  * Copyright (c) 2011 - 2013 Alden S. Hart Jr.
