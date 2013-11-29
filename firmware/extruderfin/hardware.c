@@ -239,9 +239,7 @@ void led_toggle(void)
 	}
 }
 
-
 /***** END OF SYSTEM FUNCTIONS *****/
-
 
 /***********************************************************************************
  * CONFIGURATION AND INTERFACE FUNCTIONS
@@ -303,6 +301,7 @@ void hw_print_hv(cmdObj_t *cmd) { text_print_flt(cmd, fmt_hv);}
 //void hw_print_id(cmdObj_t *cmd) { text_print_str(cmd, fmt_id);}
 
 #endif //__TEXT_MODE 
+
 #ifdef __cplusplus
 }
 #endif

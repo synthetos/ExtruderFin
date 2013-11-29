@@ -63,7 +63,6 @@ extern txtSingleton_t txt;
 #ifdef __TEXT_MODE
 
 	stat_t text_parser(char_t *str);
-//	void text_response(const stat_t status, char_t *buf);
 	void text_response(const stat_t status);
 	void text_print_list(stat_t status, uint8_t flags);
 	void text_print_inline_pairs(cmdObj_t *cmd);
@@ -103,7 +102,7 @@ extern txtSingleton_t txt;
 
 void text_init(void);
 stat_t text_parser_stub(char_t *str);
-void text_response_stub(const stat_t status, char_t *buf);
+void text_response_stub(const stat_t status);
 void text_print_list_stub(stat_t status, uint8_t flags);
 
 

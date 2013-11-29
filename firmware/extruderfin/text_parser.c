@@ -46,7 +46,7 @@ txtSingleton_t txt;					// declare the singleton for either __TEXT_MODE setting
 
 void text_init() {}
 stat_t text_parser_stub(char_t *str) {return (STAT_OK);}
-void text_response_stub(const stat_t status, char_t *buf) {}
+void text_response_stub(const stat_t status) {}
 void text_print_list_stub (stat_t status, uint8_t flags) {}
 void tx_print_stub(cmdObj_t *cmd) {}
 

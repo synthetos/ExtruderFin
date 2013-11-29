@@ -81,12 +81,8 @@ void controller_init()
 	cs.bootloader_requested = false;
 
 	// serial IO settings
-//	xio_set_stdin(std_in);
-//	xio_set_stdout(std_out);
-//	xio_set_stderr(std_err);
 	cs.active_src = STD_IN;
 	cs.default_src = STD_IN;
-//	tg_set_primary_source(cs.default_src);
 }
 
 /*
@@ -124,10 +120,9 @@ void controller_run()
 #define	DISPATCH(func) if (func == STAT_EAGAIN) return;
 static void _controller_HSM()
 {
-//	DISPATCH(tick_callback());			// regular interval timer clock handler (ticks)
 //	DISPATCH(_spew_ASCII());			// read and execute next incoming command
-//	DISPATCH(sensor_callback());
-//	DISPATCH(heater_callback());
+	DISPATCH(sensor_callback());
+	DISPATCH(heater_callback());
 	DISPATCH(_command_dispatch());		// read and execute next incoming command
 }
 
@@ -157,9 +152,6 @@ static stat_t _command_dispatch(void)
 		return (status);								// Note: STAT_EAGAIN, errors, etc. will drop through
 	}
 //	cs.linelen = strlen(cs.in_buf)+1;					// linelen only tracks primary input
-//	strncpy(cs.saved_buf, cs.bufp, SAVED_BUFFER_LEN-1);	// save input buffer for reporting
-
-//	printf("%s\n",cs.in_buf);
 
 	// dispatch the new text line
 	switch (toupper(*cs.bufp)) {						// first char

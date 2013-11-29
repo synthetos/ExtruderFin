@@ -112,7 +112,7 @@ static void _application_init(void)
 
 	// let 'er rip
 	sei(); 								// enable interrupts
-	printf("READY\n");
+	led_on();
 	rpt_print_system_ready_message();	// (LAST) announce system is ready
 }
 

@@ -27,8 +27,8 @@
  */
 /* Special thanks to Adam Mayer and the Replicator project for heater guidance
  */
-#ifndef sensor_h
-#define sensor_h
+#ifndef SENSOR_H_ONCE
+#define SENSOR_H_ONCE
 
 /******************************************************************************
  * PARAMETERS AND SETTINGS
@@ -103,4 +103,4 @@ uint8_t sensor_get_code(void);
 double sensor_get_temperature(void);
 stat_t sensor_callback(void);
 
-#endif
+#endif	// SENSOR_H_ONCE

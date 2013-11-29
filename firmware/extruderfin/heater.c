@@ -216,3 +216,68 @@ double pid_calculate(double setpoint,double temperature)
 	return pid.output;
 }
 
+/***** END OF SYSTEM FUNCTIONS *****/
+
+/***********************************************************************************
+ * CONFIGURATION AND INTERFACE FUNCTIONS
+ * Functions to get and set variables from the cfgArray table
+ ***********************************************************************************/
+
+/*
+ * hw_get_id() - get device ID (signature)
+ */
+/*
+stat_t hw_get_id(cmdObj_t *cmd) 
+{
+	char_t tmp[SYS_ID_LEN];
+	_get_id(tmp);
+	cmd->objtype = TYPE_STRING;
+	ritorno(cmd_copy_string(cmd, tmp));
+	return (STAT_OK);
+}
+*/
+/*
+ * hw_run_boot() - invoke boot form the cfgArray
+ */
+/*
+stat_t hw_run_boot(cmdObj_t *cmd)
+{
+//	hw_request_bootloader();
+	return(STAT_OK);
+}
+*/
+/*
+ * hw_set_hv() - set hardware version number
+ */
+/*
+stat_t hw_set_hv(cmdObj_t *cmd) 
+{
+	if (cmd->value > HARDWARE_VERSION_MAX) { return (STAT_INPUT_VALUE_UNSUPPORTED);}
+	set_flt(cmd);					// record the hardware version
+//	_port_bindings(cmd->value);		// reset port bindings
+//	switch_init();					// re-initialize the GPIO ports
+//+++++	gpio_init();				// re-initialize the GPIO ports
+	return (STAT_OK);
+}
+*/
+/***********************************************************************************
+ * TEXT MODE SUPPORT
+ * Functions to print variables from the cfgArray table
+ ***********************************************************************************/
+/*
+#ifdef __TEXT_MODE
+
+static const char fmt_st[]  PROGMEM = "[st]  firmware build%18.2f\n";
+static const char fmt_fv[] PROGMEM = "[fv]  firmware version%16.2f\n";
+static const char fmt_hp[] PROGMEM = "[hp]  hardware platform%15.2f\n";
+static const char fmt_hv[] PROGMEM = "[hv]  hardware version%16.2f\n";
+//static const char fmt_id[] PROGMEM = "[id]  TinyG ID%30s\n";
+
+void hw_print_fb(cmdObj_t *cmd) { text_print_flt(cmd, fmt_fb);}
+void hw_print_fv(cmdObj_t *cmd) { text_print_flt(cmd, fmt_fv);}
+void hw_print_hp(cmdObj_t *cmd) { text_print_flt(cmd, fmt_hp);}
+void hw_print_hv(cmdObj_t *cmd) { text_print_flt(cmd, fmt_hv);}
+//void hw_print_id(cmdObj_t *cmd) { text_print_str(cmd, fmt_id);}
+
+#endif //__TEXT_MODE 
+*/
