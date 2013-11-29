@@ -40,8 +40,9 @@
 #define USART_UCSRC			(0x03)	// 8_BIT
 
 // Buffer structs must be the same as xioBuf except that the buf array size is defined.
-#define USART_RX_BUFFER_SIZE 32
-#define USART_TX_BUFFER_SIZE 32
+#define USART_RX_BUFFER_SIZE 80
+//#define USART_TX_BUFFER_SIZE 128
+#define USART_TX_BUFFER_SIZE 16
 
 typedef struct xioUsartRX {
 	buffer_t size;						// initialize to USART_RX_BUFFER_SIZE-1

@@ -92,7 +92,7 @@ static void _application_init(void)
 	hardware_init();					// [1] system hardware setup - must be first
 	systick_init();						// [2] systick 1ms counter
 	xio_init(STD_IN, STD_OUT, STD_ERR);	// [3] xmega io subsystem
-	printf("startup\n");
+//	printf("startup\n");
 	json_init();
 	text_init();
 

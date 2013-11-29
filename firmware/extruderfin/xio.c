@@ -265,7 +265,7 @@ int8_t xio_write_buffer(xioBuf_t *b, char c)
 	buffer_t next_wr;
 	
 	// blocking version
-	if ((next_wr = --(b->wr)) == 0) 
+	if ((next_wr = b->wr-1) == 0) 
 		next_wr = b->size;	// advance wr with wrap
 	while (next_wr == b->rd) 
 		sleep_mode(); 		// sleep until there is space in the buffer

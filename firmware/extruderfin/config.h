@@ -85,8 +85,8 @@ typedef uint8_t index_t;			// use this if there are < 256 indexed objects
 #define CMD_MESSAGE_LEN 64			// sufficient space to contain end-user messages
 
 									// pre-allocated defines (take RAM permanently)
-#define CMD_SHARED_STRING_LEN 192	// shared string for string values
-#define CMD_BODY_LEN 16				// body elements - allow for 1 parent + N children
+#define CMD_SHARED_STRING_LEN 128	// shared string for string values
+#define CMD_BODY_LEN 13				// body elements - allow for 1 parent + N children
 									// (each body element takes about 30 bytes of RAM)
 
 // Stuff you probably don't want to change 
