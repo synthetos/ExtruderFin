@@ -30,6 +30,7 @@
 #include "config.h"			// #2
 #include "controller.h"
 #include "hardware.h"
+#include "text_parser.h"
 #include "heater.h"
 #include "sensor.h"
 #include "report.h"
@@ -223,61 +224,45 @@ double pid_calculate(double setpoint,double temperature)
  * Functions to get and set variables from the cfgArray table
  ***********************************************************************************/
 
-/*
- * hw_get_id() - get device ID (signature)
- */
-/*
-stat_t hw_get_id(cmdObj_t *cmd) 
-{
-	char_t tmp[SYS_ID_LEN];
-	_get_id(tmp);
-	cmd->objtype = TYPE_STRING;
-	ritorno(cmd_copy_string(cmd, tmp));
-	return (STAT_OK);
-}
-*/
-/*
- * hw_run_boot() - invoke boot form the cfgArray
- */
-/*
-stat_t hw_run_boot(cmdObj_t *cmd)
-{
-//	hw_request_bootloader();
-	return(STAT_OK);
-}
-*/
-/*
- * hw_set_hv() - set hardware version number
- */
-/*
-stat_t hw_set_hv(cmdObj_t *cmd) 
-{
-	if (cmd->value > HARDWARE_VERSION_MAX) { return (STAT_INPUT_VALUE_UNSUPPORTED);}
-	set_flt(cmd);					// record the hardware version
-//	_port_bindings(cmd->value);		// reset port bindings
-//	switch_init();					// re-initialize the GPIO ports
-//+++++	gpio_init();				// re-initialize the GPIO ports
-	return (STAT_OK);
-}
-*/
 /***********************************************************************************
  * TEXT MODE SUPPORT
  * Functions to print variables from the cfgArray table
  ***********************************************************************************/
-/*
+
 #ifdef __TEXT_MODE
 
-static const char fmt_st[]  PROGMEM = "[st]  firmware build%18.2f\n";
-static const char fmt_fv[] PROGMEM = "[fv]  firmware version%16.2f\n";
-static const char fmt_hp[] PROGMEM = "[hp]  hardware platform%15.2f\n";
-static const char fmt_hv[] PROGMEM = "[hv]  hardware version%16.2f\n";
-//static const char fmt_id[] PROGMEM = "[id]  TinyG ID%30s\n";
+static const char fmt_st[]  PROGMEM = "[h1st]  heater state%17d\n";
+static const char fmt_tmp[] PROGMEM = "[h1tmp] heater temperature%14.2f\n";
+static const char fmt_set[] PROGMEM = "[h1set] heater set point%16.2f\n";
+static const char fmt_hys[] PROGMEM = "[h1hys] heater hysteresis%12d\n";
+static const char fmt_amb[] PROGMEM = "[h1amb] heater ambient temp%13.2f\n";
+static const char fmt_ovr[] PROGMEM = "[h1ovr] heater overheat temp%12.2f\n";
+static const char fmt_ato[] PROGMEM = "[h1ato] heater ambient timeout%10.2f\n";
+static const char fmt_reg[] PROGMEM = "[h1reg] heater regulation range%9.2f\n";
+static const char fmt_rto[] PROGMEM = "[h1rto] heater regulation timeout%7.2f\n";
+static const char fmt_bad[] PROGMEM = "[h1bad] heater bad reading max%7d\n";
 
-void hw_print_fb(cmdObj_t *cmd) { text_print_flt(cmd, fmt_fb);}
-void hw_print_fv(cmdObj_t *cmd) { text_print_flt(cmd, fmt_fv);}
-void hw_print_hp(cmdObj_t *cmd) { text_print_flt(cmd, fmt_hp);}
-void hw_print_hv(cmdObj_t *cmd) { text_print_flt(cmd, fmt_hv);}
-//void hw_print_id(cmdObj_t *cmd) { text_print_str(cmd, fmt_id);}
+static const char fmt_kp[]  PROGMEM = "[p1kp]  PID Kp%26.2f\n";
+static const char fmt_ki[]  PROGMEM = "[p1ki]  PID Ki%26.2f\n";
+static const char fmt_kd[]  PROGMEM = "[p1kd]  PID Kd%26.2f\n";
+static const char fmt_smx[] PROGMEM = "[p1smx] output max%22.2f\n";
+static const char fmt_smn[] PROGMEM = "[p1smn] output min%22.2f\n";
+
+void h1_print_st(cmdObj_t *cmd)  { text_print_ui8(cmd, fmt_st);}
+void h1_print_tmp(cmdObj_t *cmd) { text_print_flt(cmd, fmt_tmp);}
+void h1_print_set(cmdObj_t *cmd) { text_print_flt(cmd, fmt_set);}
+void h1_print_hys(cmdObj_t *cmd) { text_print_ui8(cmd, fmt_hys);}
+void h1_print_amb(cmdObj_t *cmd) { text_print_flt(cmd, fmt_amb);}
+void h1_print_ovr(cmdObj_t *cmd) { text_print_flt(cmd, fmt_ovr);}
+void h1_print_ato(cmdObj_t *cmd) { text_print_flt(cmd, fmt_ato);}
+void h1_print_reg(cmdObj_t *cmd) { text_print_flt(cmd, fmt_reg);}
+void h1_print_rto(cmdObj_t *cmd) { text_print_flt(cmd, fmt_rto);}
+void h1_print_bad(cmdObj_t *cmd) { text_print_ui8(cmd, fmt_bad);}
+
+void p1_print_kp(cmdObj_t *cmd)  { text_print_flt(cmd, fmt_kp);}
+void p1_print_ki(cmdObj_t *cmd)  { text_print_flt(cmd, fmt_ki);}
+void p1_print_kd(cmdObj_t *cmd)  { text_print_flt(cmd, fmt_kd);}
+void p1_print_smx(cmdObj_t *cmd) { text_print_flt(cmd, fmt_smx);}
+void p1_print_smn(cmdObj_t *cmd) { text_print_flt(cmd, fmt_smn);}
 
 #endif //__TEXT_MODE 
-*/

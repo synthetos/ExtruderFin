@@ -29,6 +29,7 @@
 #include "extruderfin.h"	// #1
 #include "config.h"			// #2
 #include "controller.h"
+#include "text_parser.h"
 #include "hardware.h"
 #include "sensor.h"
 #include "util.h"
@@ -188,3 +189,28 @@ static inline double _sensor_sample(uint8_t adc_channel)
 	return (((double)adc_read() * SENSOR_SLOPE) + SENSOR_OFFSET);
 #endif
 }
+/***** END OF SYSTEM FUNCTIONS *****/
+
+/***********************************************************************************
+ * CONFIGURATION AND INTERFACE FUNCTIONS
+ * Functions to get and set variables from the cfgArray table
+ ***********************************************************************************/
+
+/***********************************************************************************
+ * TEXT MODE SUPPORT
+ * Functions to print variables from the cfgArray table
+ ***********************************************************************************/
+
+#ifdef __TEXT_MODE
+
+static const char fmt_st[]  PROGMEM = "[s1st]  sensor state%17d\n";
+static const char fmt_tmp[] PROGMEM = "[s1tmp] sensor temperature%14.2f\n";
+static const char fmt_svm[] PROGMEM = "[s1svm] sensor sample variance%10.2f\n";
+static const char fmt_rvm[] PROGMEM = "[s1rvm] sensor reading variance%9.2f\n";
+
+void s1_print_st(cmdObj_t *cmd) { text_print_ui8(cmd, fmt_st);}
+void s1_print_tmp(cmdObj_t *cmd) { text_print_flt(cmd, fmt_tmp);}
+void s1_print_svm(cmdObj_t *cmd) { text_print_flt(cmd, fmt_svm);}
+void s1_print_rvm(cmdObj_t *cmd) { text_print_flt(cmd, fmt_rvm);}
+
+#endif //__TEXT_MODE 

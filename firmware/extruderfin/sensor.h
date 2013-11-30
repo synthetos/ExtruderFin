@@ -103,4 +103,20 @@ uint8_t sensor_get_code(void);
 double sensor_get_temperature(void);
 stat_t sensor_callback(void);
 
+#ifdef __TEXT_MODE
+
+	void s1_print_st(cmdObj_t *cmd);
+	void s1_print_tmp(cmdObj_t *cmd);
+	void s1_print_svm(cmdObj_t *cmd);
+	void s1_print_rvm(cmdObj_t *cmd);
+
+#else
+
+	#define s1_print_st tx_print_stub
+	#define s1_print_tmp tx_print_stub
+	#define s1_print_svm tx_print_stub
+	#define s1_print_rvm tx_print_stub
+
+#endif // __TEXT_MODE
+
 #endif	// SENSOR_H_ONCE

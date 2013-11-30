@@ -142,6 +142,47 @@ void pid_init();
 void pid_reset();
 double pid_calculate(double setpoint,double temperature);
 
+#ifdef __TEXT_MODE
+
+	void h1_print_st(cmdObj_t *cmd);
+	void h1_print_tmp(cmdObj_t *cmd);
+	void h1_print_set(cmdObj_t *cmd);
+	void h1_print_hys(cmdObj_t *cmd);
+	void h1_print_amb(cmdObj_t *cmd);
+	void h1_print_ovr(cmdObj_t *cmd);
+	void h1_print_ato(cmdObj_t *cmd);
+	void h1_print_reg(cmdObj_t *cmd);
+	void h1_print_rto(cmdObj_t *cmd);
+	void h1_print_bad(cmdObj_t *cmd);
+
+	void p1_print_kp(cmdObj_t *cmd);
+	void p1_print_ki(cmdObj_t *cmd);
+	void p1_print_kd(cmdObj_t *cmd);
+	void p1_print_smx(cmdObj_t *cmd);
+	void p1_print_smn(cmdObj_t *cmd);
+
+#else
+
+	#define h1_print_st tx_print_stub
+	#define h1_print_tmp tx_print_stub
+	#define h1_print_set tx_print_stub
+	#define h1_print_hys tx_print_stub
+	#define h1_print_amb tx_print_stub
+	#define h1_print_ovr tx_print_stub
+	#define h1_print_ato tx_print_stub
+	#define h1_print_reg tx_print_stub
+	#define h1_print_rto tx_print_stub
+	#define h1_print_bad tx_print_stub
+
+	#define p1_print_kp tx_print_stub
+	#define p1_print_ki tx_print_stub
+	#define p1_print_kd tx_print_stub
+	#define p1_print_smx tx_print_stub
+	#define p1_print_smn tx_print_stub
+
+#endif // __TEXT_MODE
+
+
 /******************************************************************************
  * DEFINE UNIT TESTS
  ******************************************************************************/

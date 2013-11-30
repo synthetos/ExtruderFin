@@ -111,6 +111,7 @@
 #include "config.h"			// #2
 #include "controller.h"
 #include "text_parser.h"
+#include "json_parser.h"
 #include "hardware.h"
 #include "heater.h"
 #include "sensor.h"
@@ -118,6 +119,8 @@
 #ifdef __cplusplus
 extern "C"{
 #endif
+
+static stat_t _do_all(cmdObj_t *cmd);
 
 /*** structures ***/
 
@@ -157,47 +160,47 @@ const cfgItem_t cfgArray[] PROGMEM = {
 //	{ "sys", "id", _fns, 0, hw_print_id, hw_get_id, set_nul,  (float *)&cs.null, 0 },  // device ID (ASCII signature)
 
 	// Heater object
-	{ "h1", "h1st",  _f00, 0, tx_print_nul, get_ui8, set_ui8,(float *)&heater.state, HEATER_OFF },
-	{ "h1", "h1tmp", _f00, 0, tx_print_nul, get_flt, set_flt,(float *)&heater.temperature, LESS_THAN_ZERO },
-	{ "h1", "h1set", _f00, 0, tx_print_nul, get_flt, set_flt,(float *)&heater.setpoint, HEATER_HYSTERESIS },
-	{ "h1", "h1hys", _f00, 0, tx_print_nul, get_ui8, set_ui8,(float *)&heater.hysteresis, HEATER_HYSTERESIS },
-	{ "h1", "h1amb", _f00, 0, tx_print_nul, get_flt, set_flt,(float *)&heater.ambient_temperature, HEATER_AMBIENT_TEMPERATURE },
-	{ "h1", "h1ovr", _f00, 0, tx_print_nul, get_flt, set_flt,(float *)&heater.overheat_temperature, HEATER_OVERHEAT_TEMPERATURE },
-	{ "h1", "h1ato", _f00, 0, tx_print_nul, get_flt, set_flt,(float *)&heater.ambient_timeout, HEATER_AMBIENT_TIMEOUT },
-	{ "h1", "h1reg", _f00, 0, tx_print_nul, get_flt, set_flt,(float *)&heater.regulation_range, HEATER_REGULATION_RANGE },
-	{ "h1", "h1rto", _f00, 0, tx_print_nul, get_flt, set_flt,(float *)&heater.regulation_timeout, HEATER_REGULATION_TIMEOUT },
-	{ "h1", "h1bad", _f00, 0, tx_print_nul, get_ui8, set_ui8,(float *)&heater.bad_reading_max, HEATER_BAD_READING_MAX },
+	{ "h1", "h1st",  _f00, 0, h1_print_st,  get_ui8, set_ui8,(float *)&heater.state, HEATER_OFF },
+	{ "h1", "h1tmp", _f00, 0, h1_print_tmp, get_flt, set_flt,(float *)&heater.temperature, LESS_THAN_ZERO },
+	{ "h1", "h1set", _f00, 0, h1_print_set, get_flt, set_flt,(float *)&heater.setpoint, HEATER_HYSTERESIS },
+	{ "h1", "h1hys", _f00, 0, h1_print_hys, get_ui8, set_ui8,(float *)&heater.hysteresis, HEATER_HYSTERESIS },
+	{ "h1", "h1amb", _f00, 0, h1_print_amb, get_flt, set_flt,(float *)&heater.ambient_temperature, HEATER_AMBIENT_TEMPERATURE },
+	{ "h1", "h1ovr", _f00, 0, h1_print_ovr, get_flt, set_flt,(float *)&heater.overheat_temperature, HEATER_OVERHEAT_TEMPERATURE },
+	{ "h1", "h1ato", _f00, 0, h1_print_ato, get_flt, set_flt,(float *)&heater.ambient_timeout, HEATER_AMBIENT_TIMEOUT },
+	{ "h1", "h1reg", _f00, 0, h1_print_reg, get_flt, set_flt,(float *)&heater.regulation_range, HEATER_REGULATION_RANGE },
+	{ "h1", "h1rto", _f00, 0, h1_print_rto, get_flt, set_flt,(float *)&heater.regulation_timeout, HEATER_REGULATION_TIMEOUT },
+	{ "h1", "h1bad", _f00, 0, h1_print_bad, get_ui8, set_ui8,(float *)&heater.bad_reading_max, HEATER_BAD_READING_MAX },
 
 	// Sensor object
-	{ "s1", "s1st",  _f00, 0, tx_print_nul, get_ui8, set_ui8,(float *)&sensor.state, SENSOR_OFF },
-	{ "s1", "s1tmp", _f00, 0, tx_print_nul, get_flt, set_flt,(float *)&sensor.temperature, LESS_THAN_ZERO },
-	{ "s1", "s1svm", _f00, 0, tx_print_nul, get_flt, set_flt,(float *)&sensor.sample_variance_max, SENSOR_SAMPLE_VARIANCE_MAX },
-	{ "s1", "s1rvm", _f00, 0, tx_print_nul, get_flt, set_flt,(float *)&sensor.reading_variance_max, SENSOR_READING_VARIANCE_MAX },
+	{ "s1", "s1st",  _f00, 0, s1_print_st,  get_ui8, set_ui8,(float *)&sensor.state, SENSOR_OFF },
+	{ "s1", "s1tmp", _f00, 0, s1_print_tmp, get_flt, set_flt,(float *)&sensor.temperature, LESS_THAN_ZERO },
+	{ "s1", "s1svm", _f00, 0, s1_print_svm, get_flt, set_flt,(float *)&sensor.sample_variance_max, SENSOR_SAMPLE_VARIANCE_MAX },
+	{ "s1", "s1rvm", _f00, 0, s1_print_rvm, get_flt, set_flt,(float *)&sensor.reading_variance_max, SENSOR_READING_VARIANCE_MAX },
 
 	// PID object
-//	{ "p1", "p1st",  _f00, 0, tx_print_nul, get_ui8, set_ui8,(float *)&pid.state, 0 },
-	{ "p1", "p1kp",	 _f00, 0, tx_print_nul, get_flt, set_flt,(float *)&pid.Kp, PID_Kp },
-	{ "p1", "p1ki",	 _f00, 0, tx_print_nul, get_flt, set_flt,(float *)&pid.Ki, PID_Ki },
-	{ "p1", "p1kd",	 _f00, 0, tx_print_nul, get_flt, set_flt,(float *)&pid.Kd, PID_Kd },
-	{ "p1", "p1smx", _f00, 0, tx_print_nul, get_flt, set_flt,(float *)&pid.output_max, PID_MAX_OUTPUT },
-	{ "p1", "p1smn", _f00, 0, tx_print_nul, get_flt, set_flt,(float *)&pid.output_min, PID_MIN_OUTPUT },
+//	{ "p1", "p1st",  _f00, 0, p1_print_nul, get_ui8, set_ui8,(float *)&pid.state, 0 },
+	{ "p1", "p1kp",	 _f00, 0, p1_print_kp,  get_flt, set_flt,(float *)&pid.Kp, PID_Kp },
+	{ "p1", "p1ki",	 _f00, 0, p1_print_ki,  get_flt, set_flt,(float *)&pid.Ki, PID_Ki },
+	{ "p1", "p1kd",	 _f00, 0, p1_print_kd,  get_flt, set_flt,(float *)&pid.Kd, PID_Kd },
+	{ "p1", "p1smx", _f00, 0, p1_print_smx, get_flt, set_flt,(float *)&pid.output_max, PID_MAX_OUTPUT },
+	{ "p1", "p1smn", _f00, 0, p1_print_smn, get_flt, set_flt,(float *)&pid.output_min, PID_MIN_OUTPUT },
 
 	// Group lookups - must follow the single-valued entries for proper sub-string matching
 	// *** Must agree with CMD_COUNT_GROUPS below ****
 	{ "","sys",_f00, 0, tx_print_nul, get_grp, set_grp,(float *)&cs.null,0 },	// system group
 	{ "","h1", _f00, 0, tx_print_nul, get_grp, set_grp,(float *)&cs.null,0 },	// heater group
 	{ "","s1", _f00, 0, tx_print_nul, get_grp, set_grp,(float *)&cs.null,0 },	// sensor group
-	{ "","p1", _f00, 0, tx_print_nul, get_grp, set_grp,(float *)&cs.null,0 }		// PID group
+	{ "","p1", _f00, 0, tx_print_nul, get_grp, set_grp,(float *)&cs.null,0 },	// PID group
 //																				   ^  watch the final (missing) comma!
 	// Uber-group (groups of groups, for text-mode displays only)
 	// *** Must agree with CMD_COUNT_UBER_GROUPS below ****
-//	{ "", "$", _f00, 0, tx_print_nul, get_nul, set_nul,(float *)&kc.null,0 }
+	{ "", "$", _f00, 0, tx_print_nul, _do_all, set_nul,(float *)&cs.null,0 }
 };
 
 /***** Make sure these defines line up with any changes in the above table *****/
 
 #define CMD_COUNT_GROUPS 		4		// count of simple groups
-#define CMD_COUNT_UBER_GROUPS 	0 		// count of uber-groups
+#define CMD_COUNT_UBER_GROUPS 	1 		// count of uber-groups
 
 /* <DO NOT MESS WITH THESE DEFINES> */
 #define CMD_INDEX_MAX (sizeof cfgArray / sizeof(cfgItem_t))
@@ -210,6 +213,31 @@ index_t	cmd_index_max() { return ( CMD_INDEX_MAX );}
 uint8_t cmd_index_is_single(index_t index) { return ((index <= CMD_INDEX_END_SINGLES) ? true : false);}
 uint8_t cmd_index_is_group(index_t index) { return (((index >= CMD_INDEX_START_GROUPS) && (index < CMD_INDEX_START_UBER_GROUPS)) ? true : false);}
 uint8_t cmd_index_lt_groups(index_t index) { return ((index <= CMD_INDEX_START_GROUPS) ? true : false);}
+
+/*
+ * Uber Groups
+ */
+
+static stat_t _do_all(cmdObj_t *cmd)	// print all parameters
+{
+	strcpy(cmd->token,"sys");			// print system group (no need to length check the copy)
+	get_grp(cmd);
+//	cmd_print_list(STAT_OK, TEXT_MULTILINE_FORMATTED, JSON_RESPONSE_FORMAT);
+
+	strcpy(cmd->token,"h1");
+	get_grp(cmd);
+//	cmd_print_list(STAT_OK, TEXT_MULTILINE_FORMATTED, JSON_RESPONSE_FORMAT);
+
+	strcpy(cmd->token,"p1");
+	get_grp(cmd);
+//	cmd_print_list(STAT_OK, TEXT_MULTILINE_FORMATTED, JSON_RESPONSE_FORMAT);
+
+	strcpy(cmd->token,"s1");
+	get_grp(cmd);
+//	cmd_print_list(STAT_OK, TEXT_MULTILINE_FORMATTED, JSON_RESPONSE_FORMAT);
+
+	return (STAT_OK);			// print all offsets
+}
 
 #ifdef __cplusplus
 }
