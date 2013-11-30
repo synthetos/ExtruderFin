@@ -191,7 +191,7 @@ const cfgItem_t cfgArray[] PROGMEM = {
 	{ "","h1", _f00, 0, tx_print_nul, get_grp, set_grp,(float *)&cs.null,0 },	// heater group
 	{ "","s1", _f00, 0, tx_print_nul, get_grp, set_grp,(float *)&cs.null,0 },	// sensor group
 	{ "","p1", _f00, 0, tx_print_nul, get_grp, set_grp,(float *)&cs.null,0 },	// PID group
-//																				   ^  watch the final (missing) comma!
+																		//  ^  watch the final (missing) comma!
 	// Uber-group (groups of groups, for text-mode displays only)
 	// *** Must agree with CMD_COUNT_UBER_GROUPS below ****
 	{ "", "$", _f00, 0, tx_print_nul, _do_all, set_nul,(float *)&cs.null,0 }
@@ -220,23 +220,23 @@ uint8_t cmd_index_lt_groups(index_t index) { return ((index <= CMD_INDEX_START_G
 
 static stat_t _do_all(cmdObj_t *cmd)	// print all parameters
 {
-	strcpy(cmd->token,"sys");			// print system group (no need to length check the copy)
+	strcpy_P(cmd->token, PSTR("sys"));	// print system group
 	get_grp(cmd);
-//	cmd_print_list(STAT_OK, TEXT_MULTILINE_FORMATTED, JSON_RESPONSE_FORMAT);
+	cmd_print_list(STAT_OK, TEXT_MULTILINE_FORMATTED, JSON_RESPONSE_FORMAT);
 
-	strcpy(cmd->token,"h1");
+	strcpy_P(cmd->token, PSTR("h1"));
 	get_grp(cmd);
-//	cmd_print_list(STAT_OK, TEXT_MULTILINE_FORMATTED, JSON_RESPONSE_FORMAT);
+	cmd_print_list(STAT_OK, TEXT_MULTILINE_FORMATTED, JSON_RESPONSE_FORMAT);
 
-	strcpy(cmd->token,"p1");
+	strcpy_P(cmd->token,PSTR("p1"));
 	get_grp(cmd);
-//	cmd_print_list(STAT_OK, TEXT_MULTILINE_FORMATTED, JSON_RESPONSE_FORMAT);
+	cmd_print_list(STAT_OK, TEXT_MULTILINE_FORMATTED, JSON_RESPONSE_FORMAT);
 
-	strcpy(cmd->token,"s1");
+	strcpy_P(cmd->token,PSTR("s1"));
 	get_grp(cmd);
-//	cmd_print_list(STAT_OK, TEXT_MULTILINE_FORMATTED, JSON_RESPONSE_FORMAT);
+	cmd_print_list(STAT_OK, TEXT_MULTILINE_FORMATTED, JSON_RESPONSE_FORMAT);
 
-	return (STAT_OK);			// print all offsets
+	return (STAT_OK);
 }
 
 #ifdef __cplusplus

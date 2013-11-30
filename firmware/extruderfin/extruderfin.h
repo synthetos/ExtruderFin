@@ -40,7 +40,7 @@
 
 /****** REVISIONS ******/
 
-#define FIRMWARE_BUILD 			010.01		// Application work
+#define FIRMWARE_BUILD 			010.03		// Cleanup and some minor memory use optimization
 #define FIRMWARE_VERSION		0.1			// firmware major version
 #define HARDWARE_PLATFORM		1			// board style 
 #define HARDWARE_VERSION		1			// board revision number
@@ -139,8 +139,6 @@ typedef uint16_t magic_t;		// magic number size
  * It returns only if an error occurred. (ritorno is Italian for return) 
  */
 typedef uint8_t stat_t;
-#define SHARED_BUF_LEN 48				// string and status message string storage allocation
-
 extern stat_t status_code;				// allocated in main.c
 extern char shared_buf[];				// allocated in main.c
 

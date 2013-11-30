@@ -49,8 +49,6 @@ typedef struct txtSingleton {		// text mode data
 
 	/*** config values (PUBLIC) ***/
 
-	char_t format[CMD_FORMAT_LEN+1];
-
 	/*** runtime values (PRIVATE) ***/
 
 	uint8_t text_verbosity;			// see enum in this file for settings

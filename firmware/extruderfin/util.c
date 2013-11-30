@@ -32,6 +32,7 @@
  */
 
 #include "extruderfin.h"
+#include "config.h"
 #include "util.h"
 
 #ifdef __cplusplus

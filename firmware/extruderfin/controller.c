@@ -134,8 +134,8 @@ static stat_t _command_dispatch(void)
 	// read input line or return if not a completed line
 	// xio_gets() is a non-blocking workalike of fgets()
 	while (true) {
-//		if ((status = xio_gets(cs.active_src, cs.in_buf, sizeof(cs.in_buf))) == STAT_OK) {
-		if ((status = xio_gets(STD_IN, cs.in_buf, sizeof(cs.in_buf))) == STAT_OK) {
+		if ((status = xio_gets(cs.active_src, cs.in_buf, sizeof(cs.in_buf))) == STAT_OK) {
+//		if ((status = xio_gets(STD_IN, cs.in_buf, sizeof(cs.in_buf))) == STAT_OK) {
 			cs.bufp = cs.in_buf;
 			break;
 		}

@@ -96,7 +96,9 @@ uint16_t adc_read()
 
 /**** PWM - Pulse Width Modulation Functions ****/
 /*
- * pwm_init() - initialize RTC timers and data
+ * pwm_init() - initialize pwm timers and data
+ * pwm_on()
+ * pwm_off()
  *
  * 	Configure timer 2 for extruder heater PWM
  *	Mode: 8 bit Fast PWM Fast w/OCR2A setting PWM freq (TOP value)
@@ -185,28 +187,15 @@ void systick_init(void)
 	hw.sys_ticks = 0;
 }
 
-ISR(TIMER0_COMPA_vect)
-{
-	hw.sys_ticks++;
-}
-
-#ifdef __AVR
 uint32_t SysTickTimer_getValue()
 {
 	return (hw.sys_ticks);	// system ticks by 1 ms
 }
-#endif // __AVR
 
-#ifdef __ARM
-uint32_t SysTickTimer_getValue()
+ISR(TIMER0_COMPA_vect)
 {
-	return (SysTickTimer.getValue());
+	hw.sys_ticks++;
 }
-#endif // __ARM
-
-#ifdef __cplusplus
-}
-#endif
 
 /**** LED Functions ****
  * led_init()
@@ -275,9 +264,6 @@ stat_t hw_set_hv(cmdObj_t *cmd)
 {
 	if (cmd->value > HARDWARE_VERSION_MAX) { return (STAT_INPUT_VALUE_UNSUPPORTED);}
 	set_flt(cmd);					// record the hardware version
-//	_port_bindings(cmd->value);		// reset port bindings
-//	switch_init();					// re-initialize the GPIO ports
-//+++++	gpio_init();				// re-initialize the GPIO ports
 	return (STAT_OK);
 }
 

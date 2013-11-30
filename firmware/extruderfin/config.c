@@ -31,7 +31,6 @@
 
 #include "extruderfin.h"	// #1
 #include "config.h"			// #2
-//#include "report.h"
 #include "controller.h"
 #include "json_parser.h"
 #include "text_parser.h"
@@ -334,7 +333,7 @@ stat_t set_grp(cmdObj_t *cmd)
  */
 uint8_t cmd_group_is_prefixed(char_t *group)
 {
-	if (strcmp("sr",group) == 0) return (false);
+//	if (strcmp("sr",group) == 0) return (false);
 	if (strcmp("sys",group) == 0) return (false);
 	return (true);
 }
@@ -376,23 +375,6 @@ index_t cmd_get_index(const char_t *group, const char_t *token)
 	}
 	return (NO_MATCH);
 }
-
-/* 
- * cmd_get_type() - returns command type as a CMD_TYPE enum
- */
-/*
-uint8_t cmd_get_type(cmdObj_t *cmd)
-{
-	if (cmd->token[0] == NUL) return (CMD_TYPE_NULL);
-	if (strcmp("gc", cmd->token) == 0) return (CMD_TYPE_GCODE);
-	if (strcmp("sr", cmd->token) == 0) return (CMD_TYPE_REPORT);
-	if (strcmp("qr", cmd->token) == 0) return (CMD_TYPE_REPORT);
-	if (strcmp("msg",cmd->token) == 0) return (CMD_TYPE_MESSAGE);
-	if (strcmp("err",cmd->token) == 0) return (CMD_TYPE_MESSAGE); 	// errors are reported as messages
-	if (strcmp("n",  cmd->token) == 0) return (CMD_TYPE_LINENUM);
-	return (CMD_TYPE_CONFIG);
-}
-*/
 
 /******************************************************************************
  * cmdObj low-level object and list operations
@@ -501,15 +483,6 @@ stat_t cmd_copy_string(cmdObj_t *cmd, const char_t *src)
 	cmd->stringp = (char_t (*)[])dst;
 	return (STAT_OK);
 }
-
-/* UNUSED
-stat_t cmd_copy_string_P(cmdObj_t *cmd, const char_t *src_P)
-{
-	char_t buf[CMD_SHARED_STRING_LEN];
-	strncpy_P(buf, src_P, CMD_SHARED_STRING_LEN);
-	return (cmd_copy_string(cmd, buf));
-}
-*/
 
 cmdObj_t *cmd_add_object(const char_t *token)  // add an object to the body using a token
 {

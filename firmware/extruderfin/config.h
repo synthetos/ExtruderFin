@@ -81,14 +81,11 @@ extern "C"{
 typedef uint8_t index_t;			// use this if there are < 256 indexed objects
 //typedef uint16_t index_t;			// use this if there are > 255 indexed objects
 
-									// defines allocated from stack (not-pre-allocated)
-#define CMD_FORMAT_LEN 64			// print formatting string max length
-#define CMD_MESSAGE_LEN 64			// sufficient space to contain end-user messages
-
 									// pre-allocated defines (take RAM permanently)
+#define SHARED_BUF_LEN 48			// string and status message string storage allocation
 #define CMD_SHARED_STRING_LEN 128	// shared string for string values
 #define CMD_BODY_LEN 13				// body elements - allow for 1 parent + N children
-									// (each body element takes about 30 bytes of RAM)
+									// (each body element takes about 24 bytes of RAM)
 
 // Stuff you probably don't want to change 
 
