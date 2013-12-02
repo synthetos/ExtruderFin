@@ -40,10 +40,10 @@
 
 /****** REVISIONS ******/
 
-#define FIRMWARE_BUILD 			(float)011.01	// Experiment with cmd->value type
-#define FIRMWARE_VERSION		(float)0.1		// firmware major version
-#define HARDWARE_PLATFORM		(float)1		// board style 
-#define HARDWARE_VERSION		(float)1		// board revision number
+#define FIRMWARE_BUILD 			011.02		// Using a union for cmd->value seems to be working
+#define FIRMWARE_VERSION		0.1			// firmware major version
+#define HARDWARE_PLATFORM		1			// board style 
+#define HARDWARE_VERSION		1			// board revision number
 #define HARDWARE_VERSION_MAX	HARDWARE_VERSION
 
 /****** COMPILE-TIME SETTINGS ******/
