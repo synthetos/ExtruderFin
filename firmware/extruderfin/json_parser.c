@@ -215,9 +215,9 @@ static stat_t _get_nv_pair_strict(cmdObj_t *cmd, char_t **pstr, int8_t *depth)
 		cmd->objtype = TYPE_NULL;
 		cmd->value.i = TYPE_NULL;
 	
-	// numbers
-	} else if (isdigit(**pstr) || (**pstr == '-')) {// value is a number
-		cmd->value.f = (float)strtod(*pstr, &tmp);// tmp is the end pointer
+	// numbers	//+++++ How do you distinguish between an FP and an int? perhaps the table?
+	} else if (isdigit(**pstr) || (**pstr == '-')) {// value is a number - treat as floating point
+		cmd->value.f = (float)strtod(*pstr, &tmp);	// tmp is the end pointer
 
 		if(tmp == *pstr) { return (STAT_BAD_NUMBER_FORMAT);}
 		cmd->objtype = TYPE_FLOAT;
@@ -229,7 +229,7 @@ static stat_t _get_nv_pair_strict(cmdObj_t *cmd, char_t **pstr, int8_t *depth)
 		(*pstr)++;
 		return(STAT_EAGAIN);					// signal that there is more to parse
 
-	// strings
+	// strings	//+++++ Does it make sense to eliminate the string pointer and use the value union?
 	} else if (**pstr == '\"') { 				// value is a string
 		(*pstr)++;
 		cmd->objtype = TYPE_STRING;
@@ -333,14 +333,12 @@ uint16_t json_serialize(cmdObj_t *cmd, char_t *out_buf, uint16_t size)
 
 			// check for illegal float values
 			if (cmd->objtype == TYPE_FLOAT) {
-//				if (isnan((double)cmd->value) || isinf((double)cmd->value)) { cmd->value = 0;}
 				if (isnan((double)cmd->value.f) || isinf((double)cmd->value.f)) { cmd->value.f = 0;}
 			}
 
 			// serialize output value
 			if		(cmd->objtype == TYPE_NULL)		{ str += (char_t)sprintf((char *)str, "\"\"");} // Note that that "" is NOT null.
 			else if (cmd->objtype == TYPE_INTEGER)	{
-//				str += (char_t)sprintf((char *)str, "%1.0f", (double)cmd->value);
 				str += (char_t)sprintf((char *)str, "%lu", cmd->value.i);
 			}
 //			else if (cmd->objtype == TYPE_DATA)	{
@@ -496,7 +494,7 @@ stat_t json_set_jv(cmdObj_t *cmd)
 	js.echo_json_gcode_block = false;
 
 	if (cmd->value.i >= JV_FOOTER) 	{ js.echo_json_footer = true;}
-	if (cmd->value.i >= JV_MESSAGES)	{ js.echo_json_messages = true;}
+	if (cmd->value.i >= JV_MESSAGES){ js.echo_json_messages = true;}
 	if (cmd->value.i >= JV_CONFIGS)	{ js.echo_json_configs = true;}
 	if (cmd->value.i >= JV_LINENUM)	{ js.echo_json_linenum = true;}
 	if (cmd->value.i >= JV_VERBOSE)	{ js.echo_json_gcode_block = true;}

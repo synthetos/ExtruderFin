@@ -108,29 +108,30 @@ stat_t text_parser(char_t *str)
 
 static stat_t _text_parser_kernal(char_t *str, cmdObj_t *cmd)
 {
-	char_t *rd, *wr;						// read and write pointers
-//	char_t separators[] = {"="};			// STRICT: only separator allowed is = sign
-	char_t separators[] = {" =:|\t"};		// RELAXED: any separator someone might use
+	char_t *rd, *wr;							// read and write pointers
+//	char_t separators[] = {"="};				// STRICT: only separator allowed is = sign
+	char_t separators[] = {" =:|\t"};			// RELAXED: any separator someone might use
 
 	// pre-process and normalize the string
-//	cmd_reset_obj(cmd);						// initialize config object
-	cmd_copy_string(cmd, str);				// make a copy for eventual reporting
-	if (*str == '$') str++;					// ignore leading $
+//	cmd_reset_obj(cmd);							// initialize config object
+	cmd_copy_string(cmd, str);					// make a copy for eventual reporting
+	if (*str == '$') str++;						// ignore leading $
 	for (rd = wr = str; *rd != NUL; rd++, wr++) {
-		*wr = tolower(*rd);					// convert string to lower case
-		if (*rd == ',') { *wr = *(++rd);}	// skip over commas
+		*wr = tolower(*rd);						// convert string to lower case
+		if (*rd == ',') { *wr = *(++rd);}		// skip over commas
 	}
-	*wr = NUL;								// terminate the string
+	*wr = NUL;									// terminate the string
 
 	// parse fields into the cmd struct
 	cmd->objtype = TYPE_NULL;
-	if ((rd = strpbrk(str, separators)) == NULL) { // no value part
+	if ((rd = strpbrk(str, separators)) == NULL) {// no value part
 		strncpy(cmd->token, str, CMD_TOKEN_LEN);
 	} else {
-		*rd = NUL;							// terminate at end of name
+		*rd = NUL;								// terminate at end of name
 		strncpy(cmd->token, str, CMD_TOKEN_LEN);
 		str = ++rd;
-		cmd->value.f = strtof(str, &rd);	// rd used as end pointer
+		//+++++ Are values always float? Can there be int values?
+		cmd->value.f = strtof(str, &rd);		// rd used as end pointer
 		if (rd != str) {
 			cmd->objtype = TYPE_FLOAT;
 		}
@@ -200,8 +201,9 @@ void text_print_inline_pairs(cmdObj_t *cmd)
 	for (uint8_t i=0; i<CMD_BODY_LEN-1; i++) {
 		switch (cmd->objtype) {
 			case TYPE_PARENT: 	{ if ((cmd = cmd->nx) == NULL) return; continue;} // NULL means parent with no child
-			case TYPE_FLOAT:	{ fprintf_P(stderr,PSTR("%s:%1.3f"), cmd->token, cmd->value); break;}
-			case TYPE_INTEGER:	{ fprintf_P(stderr,PSTR("%s:%1.0f"), cmd->token, cmd->value); break;}
+			case TYPE_FLOAT:	{ fprintf_P(stderr,PSTR("%s:%1.3f"), cmd->token, cmd->value.f); break;}
+//			case TYPE_INTEGER:	{ fprintf_P(stderr,PSTR("%s:%1.0f"), cmd->token, cmd->value.f); break;}
+			case TYPE_INTEGER:	{ fprintf_P(stderr,PSTR("%s:%d"), cmd->token, cmd->value.i); break;}
 //			case TYPE_DATA:	    { fprintf_P(stderr,PSTR("%s:%lu"), cmd->token, *v); break;}
 			case TYPE_STRING:	{ fprintf_P(stderr,PSTR("%s:%s"), cmd->token, *cmd->stringp); break;}
 			case TYPE_EMPTY:	{ fprintf_P(stderr,PSTR("\n")); return; }
@@ -217,8 +219,9 @@ void text_print_inline_values(cmdObj_t *cmd)
 	for (uint8_t i=0; i<CMD_BODY_LEN-1; i++) {
 		switch (cmd->objtype) {
 			case TYPE_PARENT: 	{ if ((cmd = cmd->nx) == NULL) return; continue;} // NULL means parent with no child
-			case TYPE_FLOAT:	{ fprintf_P(stderr,PSTR("%1.3f"), cmd->value); break;}
-			case TYPE_INTEGER:	{ fprintf_P(stderr,PSTR("%1.0f"), cmd->value); break;}
+			case TYPE_FLOAT:	{ fprintf_P(stderr,PSTR("%1.3f"), cmd->value.f); break;}
+//			case TYPE_INTEGER:	{ fprintf_P(stderr,PSTR("%1.0f"), cmd->value.f); break;}
+			case TYPE_INTEGER:	{ fprintf_P(stderr,PSTR("%d"), cmd->value.i); break;}
 //			case TYPE_DATA:	    { fprintf_P(stderr,PSTR("%lu"), *v); break;}
 			case TYPE_STRING:	{ fprintf_P(stderr,PSTR("%s"), *cmd->stringp); break;}
 			case TYPE_EMPTY:	{ fprintf_P(stderr,PSTR("\n")); return; }
@@ -266,7 +269,7 @@ void text_print_flt(cmdObj_t *cmd, const char *format) { fprintf_P(stderr, forma
 
 void text_print_flt_units(cmdObj_t *cmd, const char *format, const char *units) 
 {
-	fprintf_P(stderr, format, cmd->value, units);
+	fprintf_P(stderr, format, cmd->value, units);	//+++++ ??? How does this work?
 }
 
 /*
