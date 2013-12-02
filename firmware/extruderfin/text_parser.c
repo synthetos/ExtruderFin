@@ -130,7 +130,7 @@ static stat_t _text_parser_kernal(char_t *str, cmdObj_t *cmd)
 		*rd = NUL;							// terminate at end of name
 		strncpy(cmd->token, str, CMD_TOKEN_LEN);
 		str = ++rd;
-		cmd->value = strtof(str, &rd);		// rd used as end pointer
+		cmd->value.f = strtof(str, &rd);	// rd used as end pointer
 		if (rd != str) {
 			cmd->objtype = TYPE_FLOAT;
 		}
@@ -259,9 +259,10 @@ void tx_print_flt(cmdObj_t *cmd) { text_print_flt(cmd, fmt_flt);}
 
 void text_print_nul(cmdObj_t *cmd, const char *format) { fprintf_P(stderr, format);}	// just print the format string
 void text_print_str(cmdObj_t *cmd, const char *format) { fprintf_P(stderr, format, *cmd->stringp);}
-void text_print_ui8(cmdObj_t *cmd, const char *format) { fprintf_P(stderr, format, (uint8_t)cmd->value);}
-void text_print_int(cmdObj_t *cmd, const char *format) { fprintf_P(stderr, format, (uint32_t)cmd->value);}
-void text_print_flt(cmdObj_t *cmd, const char *format) { fprintf_P(stderr, format, cmd->value);}
+//void text_print_ui8(cmdObj_t *cmd, const char *format) { fprintf_P(stderr, format, (uint8_t)cmd->value.i);}
+void text_print_ui8(cmdObj_t *cmd, const char *format) { fprintf_P(stderr, format, cmd->value.i);}
+void text_print_int(cmdObj_t *cmd, const char *format) { fprintf_P(stderr, format, cmd->value.i);}
+void text_print_flt(cmdObj_t *cmd, const char *format) { fprintf_P(stderr, format, cmd->value.f);}
 
 void text_print_flt_units(cmdObj_t *cmd, const char *format, const char *units) 
 {

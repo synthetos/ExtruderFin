@@ -106,11 +106,14 @@
  ***********************************************************************************
  * Define the cfg structures(s) used by the application
  */
+/* UNUSED. Uncomment if you need parameters at the cfg level
+			Also uncomment the magic numbers and assertions in config_init()
 typedef struct cfgParameters {
 	uint16_t magic_start;			// magic number to test memory integrity
 	uint16_t magic_end;
 } cfgParameters_t;
 cfgParameters_t cfg; 				// declared in the header to make it global
+*/
 
 /***********************************************************************************
  **** PROGRAM MEMORY STRINGS AND STRING ARRAYS *************************************

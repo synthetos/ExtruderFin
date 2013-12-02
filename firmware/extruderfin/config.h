@@ -144,7 +144,14 @@ typedef struct cmdString {				// shared string object
 	char string[CMD_SHARED_STRING_LEN];
 	uint16_t magic_end;					// guard to detect string buffer underruns
 } cmdStr_t;
-
+/*
+union value_t {
+//	uint8_t u8;
+	uint32_t i;
+	float	 f;
+//	char c[4];
+} value;
+*/
 typedef struct cmdObject {				// depending on use, not all elements may be populated
 	struct cmdObject *pv;				// pointer to previous object or NULL if first object
 	struct cmdObject *nx;				// pointer to next object or NULL if last object
@@ -152,7 +159,13 @@ typedef struct cmdObject {				// depending on use, not all elements may be popul
 	int8_t depth;						// depth of object in the tree. 0 is root (-1 is invalid)
 	int8_t objtype;						// see cmdType
 	int8_t precision;					// decimal precision for reporting (JSON)
-	float value;						// numeric value
+//	float value;						// numeric value
+//	uint32_t value;						// numeric value - base type is int
+//	value_t value;						// numeric value - base type is int
+	union {
+		uint32_t i;
+		float f;	
+	} value;
 	char token[CMD_TOKEN_LEN+1];		// full mnemonic token for lookup
 	char group[CMD_GROUP_LEN+1];		// group prefix or NUL if not in a group
 	char (*stringp)[];					// pointer to array of characters from shared character array
@@ -169,7 +182,8 @@ typedef struct cfgItem {
 	fptrPrint print;					// print binding: aka void (*print)(cmdObj_t *cmd);
 	fptrCmd get;						// GET binding aka uint8_t (*get)(cmdObj_t *cmd)
 	fptrCmd set;						// SET binding aka uint8_t (*set)(cmdObj_t *cmd)
-	float *target;						// target for writing config value
+//	float *target;						// target for writing config value
+	void *target;						// target for writing config value
 	float def_value;					// default value for config item
 } cfgItem_t;
 
@@ -201,18 +215,18 @@ uint8_t cmd_index_lt_groups(index_t index);
 // generic internal functions
 stat_t set_nul(cmdObj_t *cmd);		// set nothing (no operation)
 stat_t set_ui8(cmdObj_t *cmd);		// set uint8_t value
+stat_t set_int(cmdObj_t *cmd);		// set uint32_t integer value
+stat_t set_flt(cmdObj_t *cmd);		// set floating point value
+//stat_t set_data(cmdObj_t *cmd);	// set uint32_t integer value blind cast
 //stat_t set_01(cmdObj_t *cmd);		// set a 0 or 1 value with validation
 //stat_t set_012(cmdObj_t *cmd);	// set a 0, 1 or 2 value with validation
 //stat_t set_0123(cmdObj_t *cmd);	// set a 0, 1, 2 or 3 value with validation
-stat_t set_int(cmdObj_t *cmd);		// set uint32_t integer value
-//stat_t set_data(cmdObj_t *cmd);	// set uint32_t integer value blind cast
-stat_t set_flt(cmdObj_t *cmd);		// set floating point value
 
 stat_t get_nul(cmdObj_t *cmd);		// get null value type
 stat_t get_ui8(cmdObj_t *cmd);		// get uint8_t value
 stat_t get_int(cmdObj_t *cmd);		// get uint32_t integer value
-//stat_t get_data(cmdObj_t *cmd);	// get uint32_t integer value blind cast
 stat_t get_flt(cmdObj_t *cmd);		// get float value
+//stat_t get_data(cmdObj_t *cmd);	// get uint32_t integer value blind cast
 
 stat_t set_grp(cmdObj_t *cmd);		// set data for a group
 stat_t get_grp(cmdObj_t *cmd);		// get data for a group

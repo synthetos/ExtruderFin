@@ -91,22 +91,22 @@ static void _application_init(void)
 
 	cli();
 
-	// hardware and low-level drivers
+	// hardware and low-level drivers	// [n] must be in sequence
 	hardware_init();					// [1] system hardware setup - must be first
-	systick_init();						// [2] systick 1ms counter
-	nvm_init();							// [3] persistence sub-system
+	nvm_init();							// [2] persistence sub-system
+	config_init();						// [3] config records from eeprom
 	xio_init(STD_IN, STD_OUT, STD_ERR);	// [4] xmega io subsystem
 
 	// hardware devices (hardware.c/.h)
-	adc_init(ADC_CHANNEL);
-	pwm_init();
-	led_init();
+	systick_init();						// systick 1ms counter
+	adc_init(ADC_CHANNEL);				// ADC for sensor
+	pwm_init();							// PWM for heater
+	led_init();							// LED for style
 
 	// application sub-systems
+	controller_init();					// must be first app sub-systems init
 	json_init();						// JSON parser
 	text_init();						// text parser
-	controller_init();					// must be first app init; reqs xio_init()
-	config_init();						// config records from eeprom
 	heater_init();						// setup the heater module and subordinate functions
 	sensor_init();
 

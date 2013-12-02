@@ -95,11 +95,14 @@ void config_init()
 	cmdObj_t *cmd = cmd_reset_list();
 	cmdStr.magic_start = MAGICNUM;
 	cmdStr.magic_end = MAGICNUM;
-	cfg.magic_start = MAGICNUM;
-	cfg.magic_end = MAGICNUM;
+//	cfg.magic_start = MAGICNUM;
+//	cfg.magic_end = MAGICNUM;
 
 //	cs.comm_mode = JSON_MODE;				// initial value until EEPROM is read
 
+	cmd->value.i = true;					// case (1) NVM is not setup or not in revision
+	set_defaults(cmd);
+/*
 	cmd->index = 0;							// this will read the first record in NVM
 	nvm_read_value(cmd);
 	if (cmd->value != cs.fw_build) {
@@ -114,29 +117,50 @@ void config_init()
 			}
 		}
 	}
+*/
 }
-
 
 /*
  * set_defaults() - reset NVM with default values for active profile
  */
 stat_t set_defaults(cmdObj_t *cmd) 
 {
-	if (fp_FALSE(cmd->value)) {				// failsafe. Must set true or no action occurs
+//	if (fp_FALSE(cmd->value)) {				// failsafe. Must set true or no action occurs
+	if (fp_FALSE(cmd->value.i)) {			// failsafe. Must set true or no action occurs
 //		help_defa(cmd);
 		return (STAT_OK);
 	}
 //	cm_set_units_mode(MILLIMETERS);			// must do inits in MM mode
 
+//	uint32_t *v;
+//	uint32_t v_u32;
+//	float v_flt;
+//	float v_flt2;
+	
 	for (cmd->index=0; cmd_index_is_single(cmd->index); cmd->index++) {
 		if (GET_TABLE_BYTE(flags) & F_INITIALIZE) {
-			cmd->value = GET_TABLE_FLOAT(def_value);
+/*			
+//			cmd->value = GET_TABLE_FLOAT(def_value);
+
+//			*v = (uint32_t*)&cmd->value;
+//			*v = *((uint32_t *)GET_TABLE_WORD(target));
+
+//			*v = (uint32_t*)&cmd->value;
+			v_flt = GET_TABLE_FLOAT(def_value);
+//			v_u32 = GET_TABLE_WORD(def_value);
+//			v_u32 = pgm_read_dword(&cfgArray[cmd->index].def_value);
+			v_u32 = GET_TABLE_DWORD(def_value);
+			v_flt2 = (float)v_u32;
+
+//			*v = (uint32_t*)GET_TABLE_WORD(def_value);
+			*v = (uint32_t*)GET_TABLE_DWORD(def_value);
+			*((uint32_t *)GET_TABLE_WORD(target)) = *v;
+*/
 			strcpy_P(cmd->token, cfgArray[cmd->index].token);
 			cmd_set(cmd);
 			nvm_persist(cmd);				// persist must occur when no other interrupts are firing
 		}
 	}
-//	rpt_print_initializing_message(); // don't start TX until all the NVM persistence is done
 	return (STAT_OK);
 }
 
@@ -156,7 +180,8 @@ stat_t get_nul(cmdObj_t *cmd)
 
 stat_t get_ui8(cmdObj_t *cmd)
 {
-	cmd->value = (float)*((uint8_t *)GET_TABLE_WORD(target));
+//	cmd->value = (float)*((uint8_t *)GET_TABLE_WORD(target));
+	cmd->value.i = (uint32_t)*((uint8_t *)GET_TABLE_WORD(target));
 	cmd->objtype = TYPE_INTEGER;
 	return (STAT_OK);
 }
@@ -164,7 +189,8 @@ stat_t get_ui8(cmdObj_t *cmd)
 stat_t get_int(cmdObj_t *cmd)
 {
 	//	cmd->value = (float)*((uint32_t *)GET_TABLE_WORD(target));
-	cmd->value = *((uint32_t *)GET_TABLE_WORD(target));
+//	cmd->value.i = *((uint32_t *)GET_TABLE_WORD(target));
+	cmd->value.i = *((uint32_t *)GET_TABLE_WORD(target));
 	cmd->objtype = TYPE_INTEGER;
 	return (STAT_OK);
 }
@@ -179,7 +205,12 @@ stat_t get_data(cmdObj_t *cmd)
 */
 stat_t get_flt(cmdObj_t *cmd)
 {
-	cmd->value = *((float *)GET_TABLE_WORD(target));
+//	cmd->value = *((uint32_t *)GET_TABLE_WORD(target));
+//	cmd->value = *((float *)GET_TABLE_WORD(target));
+
+	uint32_t *v = (uint32_t*)&cmd->value;
+	*v = *((uint32_t *)GET_TABLE_WORD(target));
+
 	cmd->precision = (int8_t)GET_TABLE_WORD(precision);
 	cmd->objtype = TYPE_FLOAT;
 	return (STAT_OK);
@@ -198,33 +229,33 @@ stat_t set_nul(cmdObj_t *cmd) { return (STAT_NOOP);}
 
 stat_t set_ui8(cmdObj_t *cmd)
 {
-	*((uint8_t *)GET_TABLE_WORD(target)) = cmd->value;
+	*((uint8_t *)GET_TABLE_WORD(target)) = cmd->value.i;
 	cmd->objtype = TYPE_INTEGER;
 	return(STAT_OK);
 }
 
 stat_t set_01(cmdObj_t *cmd)
 {
-	if (cmd->value > 1) return (STAT_INPUT_VALUE_UNSUPPORTED);	// if
+	if (cmd->value.i > 1) return (STAT_INPUT_VALUE_UNSUPPORTED);	// if
 	return (set_ui8(cmd));										// else
 }
 
 stat_t set_012(cmdObj_t *cmd)
 {
-	if (cmd->value > 2) return (STAT_INPUT_VALUE_UNSUPPORTED);	// if
+	if (cmd->value.i > 2) return (STAT_INPUT_VALUE_UNSUPPORTED);	// if
 	return (set_ui8(cmd));										// else
 }
 
 stat_t set_0123(cmdObj_t *cmd)
 {
-	if (cmd->value > 3) return (STAT_INPUT_VALUE_UNSUPPORTED);	// if
+	if (cmd->value.i > 3) return (STAT_INPUT_VALUE_UNSUPPORTED);	// if
 	return (set_ui8(cmd));										// else
 }
 
 stat_t set_int(cmdObj_t *cmd)
 {
 //	*((uint32_t *)GET_TABLE_WORD(target)) = cmd->value;
-	*((uint32_t *)GET_TABLE_WORD(target)) = (uint32_t)cmd->value;
+	*((uint32_t *)GET_TABLE_WORD(target)) = (uint32_t)cmd->value.i;
 	cmd->objtype = TYPE_INTEGER;
 	return(STAT_OK);
 }
@@ -239,7 +270,12 @@ stat_t set_data(cmdObj_t *cmd)
 */
 stat_t set_flt(cmdObj_t *cmd)
 {
-	*((float *)GET_TABLE_WORD(target)) = cmd->value;
+//	*((uint32_t *)GET_TABLE_WORD(target)) = cmd->value;
+//	*((float *)GET_TABLE_WORD(target)) = cmd->value;
+
+	uint32_t *v = (uint32_t*)&cmd->value;
+	*((uint32_t *)GET_TABLE_WORD(target)) = *v;
+
 	cmd->precision = GET_TABLE_WORD(precision);
 	cmd->objtype = TYPE_FLOAT;
 	return(STAT_OK);
@@ -432,7 +468,7 @@ cmdObj_t *cmd_reset_obj(cmdObj_t *cmd)		// clear a single cmdObj structure
 {
 	cmd->objtype = TYPE_EMPTY;				// selective clear is much faster than calling memset
 	cmd->index = 0;
-	cmd->value = 0;
+	cmd->value.i = 0;
 	cmd->precision = 0;
 	cmd->token[0] = NUL;
 	cmd->group[0] = NUL;
@@ -509,7 +545,8 @@ cmdObj_t *cmd_add_integer(const char_t *token, const uint32_t value)// add an in
 			continue;
 		}
 		strcpy(cmd->token, token);
-		cmd->value = (float) value;
+//		cmd->value = (float) value;
+		cmd->value.i = value;
 		cmd->objtype = TYPE_INTEGER;
 		return (cmd);
 	}
@@ -543,7 +580,7 @@ cmdObj_t *cmd_add_float(const char_t *token, const float value)	// add a float o
 			continue;
 		}
 		strcpy(cmd->token, token);
-		cmd->value = value;
+		cmd->value.f = value;
 		cmd->objtype = TYPE_FLOAT;
 		return (cmd);
 	}

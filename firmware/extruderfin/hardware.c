@@ -262,7 +262,7 @@ stat_t hw_run_boot(cmdObj_t *cmd)
  */
 stat_t hw_set_hv(cmdObj_t *cmd) 
 {
-	if (cmd->value > HARDWARE_VERSION_MAX) { return (STAT_INPUT_VALUE_UNSUPPORTED);}
+	if (cmd->value.i > HARDWARE_VERSION_MAX) { return (STAT_INPUT_VALUE_UNSUPPORTED);}
 	set_flt(cmd);					// record the hardware version
 	return (STAT_OK);
 }

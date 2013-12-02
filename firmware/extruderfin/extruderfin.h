@@ -40,10 +40,10 @@
 
 /****** REVISIONS ******/
 
-#define FIRMWARE_BUILD 			010.03		// Cleanup and some minor memory use optimization
-#define FIRMWARE_VERSION		0.1			// firmware major version
-#define HARDWARE_PLATFORM		1			// board style 
-#define HARDWARE_VERSION		1			// board revision number
+#define FIRMWARE_BUILD 			(float)011.01	// Experiment with cmd->value type
+#define FIRMWARE_VERSION		(float)0.1		// firmware major version
+#define HARDWARE_PLATFORM		(float)1		// board style 
+#define HARDWARE_VERSION		(float)1		// board revision number
 #define HARDWARE_VERSION_MAX	HARDWARE_VERSION
 
 /****** COMPILE-TIME SETTINGS ******/
@@ -90,6 +90,7 @@ typedef char char_t;			// ARM/C++ version uses uint8_t as char_t
 #define GET_TABLE_WORD(a)  pgm_read_word(&cfgArray[cmd->index].a)	// get word value from cfgArray
 #define GET_TABLE_BYTE(a)  pgm_read_byte(&cfgArray[cmd->index].a)	// get byte value from cfgArray
 #define GET_TABLE_FLOAT(a) pgm_read_float(&cfgArray[cmd->index].a)	// get float value from cfgArray
+#define GET_TABLE_DWORD(a) pgm_read_dword(&cfgArray[cmd->index].a)	// get 32 bit binary value from cfgArray
 #define GET_TOKEN_BYTE(i,a) (char_t)pgm_read_byte(&cfgArray[i].a)	// get token byte value from cfgArray
 
 // populate the shared buffer with the token string given the index
