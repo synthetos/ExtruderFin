@@ -52,7 +52,6 @@ void _init() {;}
 
 static void _application_init(void);
 static void _unit_tests(void);
-static void run_canned_startup(void);
 
 /****************************************************************************
  **** CODE ******************************************************************
@@ -119,22 +118,9 @@ static void _application_init(void)
 	heater_on(100);						// turn heater to 100 degrees C
 }
 
-/*
- * run_canned_startup() - run a string on startup
- *
- *	Pre-load the USB RX (input) buffer with some test strings that will be called 
- *	on startup. Be mindful of the char limit on the read buffer (RX_BUFFER_SIZE).
- *	It's best to create a test file for really complicated things.
- */
-void run_canned_startup()	// uncomment __CANNED_STARTUP in tempfin1.h if you need this run
-{
-#ifdef __CANNED_STARTUP
-	xio_queue_RX_string(XIO_DEV_USART, "{\"fv\":\"\"}\n");
-#endif
-}
 
 /******************************************************************************
- **** STATUIS MESSAGES ********************************************************
+ **** STATUS MESSAGES *********************************************************
  ******************************************************************************/
 
 

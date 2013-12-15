@@ -53,10 +53,10 @@
 
 #ifndef __SIMULATION
   #define __TEXT_MODE						// comment out to disable text mode support (saves ~5Kb)
-  #define __HELP_SCREENS					// comment out to disable help screens
   #define __PERSISTENCE						// comment out if persistence is not needed / required
+  #define __HELP_SCREENS					// comment out to disable help screens
+  #define __CANNED_TESTS 					// there are no canned tests
 #endif
-//#define __CANNED_TESTS 					// tehre are no canned tests
 
 #define __ENABLE_USART_DEVICE
 #define __ENABLE_SPI_DEVICE
@@ -65,7 +65,7 @@
 /****** DEVELOPMENT SETTINGS ******/
 
 #ifdef __SIMULATION
-  #define __CANNED_STARTUP					// run any canned startup commands
+//  #define __CANNED_STARTUP					// run any canned startup commands
   #define __SUPPRESS_STARTUP_MESSAGES 		// what it says
 #endif
 //#define __UNIT_TESTS						// master enable for unit tests; USAGE: uncomment test in .h file
