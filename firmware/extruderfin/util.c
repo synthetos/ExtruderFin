@@ -50,17 +50,17 @@ extern "C"{
  *	"A lot of people talk about standard deviation but what is a standard deviant?"
  */
 
-double std_dev(double a[], uint8_t n, double *mean) 
+float std_dev(float a[], uint8_t n, float *mean) 
 {
 	if(n == 0) { return (0);}
-	double sum = 0;
-	double sq_sum = 0;
+	float sum = 0;
+	float sq_sum = 0;
 	for(uint8_t i=0; i<n; ++i) {
 		sum += a[i];
 		sq_sum += square(a[i]);
 	}
 	*mean = sum / n;
-	double variance = (sq_sum / n) - square(*mean);
+	float variance = (sq_sum / n) - square(*mean);
 	return sqrt(variance);
 }
 

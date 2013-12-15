@@ -79,14 +79,14 @@ typedef struct SensorStruct {
 	uint8_t sample_idx;			// index into sample array
 	uint8_t samples;			// number of samples in final average
 	uint32_t next_sample;		// systick on which to take next sample
-	double temperature;			// high confidence temperature reading
-	double std_dev;				// standard deviation of sample array
-	double sample_variance_max;	// sample deviation above which to reject a sample
-	double reading_variance_max;// standard deviation to reject the entire reading
-	double disconnect_temperature;	// bogus temperature indicates thermocouple is disconnected
-	double no_power_temperature;	// bogus temperature indicates no power to thermocouple amplifier
-	double sample[SENSOR_SAMPLES];	// array of sensor samples in a reading
-	double test;
+	float temperature;			// high confidence temperature reading
+	float std_dev;				// standard deviation of sample array
+	float sample_variance_max;	// sample deviation above which to reject a sample
+	float reading_variance_max;// standard deviation to reject the entire reading
+	float disconnect_temperature;	// bogus temperature indicates thermocouple is disconnected
+	float no_power_temperature;	// bogus temperature indicates no power to thermocouple amplifier
+	float sample[SENSOR_SAMPLES];	// array of sensor samples in a reading
+	float test;
 } sensor_t;
 sensor_t sensor;				// allocate one sensor channel
 
@@ -100,7 +100,7 @@ void sensor_off(void);
 void sensor_start_reading(void);
 uint8_t sensor_get_state(void);
 uint8_t sensor_get_code(void);
-double sensor_get_temperature(void);
+float sensor_get_temperature(void);
 stat_t sensor_callback(void);
 
 #ifdef __TEXT_MODE

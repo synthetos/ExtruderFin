@@ -99,30 +99,30 @@ typedef struct HeaterStruct {
 	int8_t hysteresis;			// number of successive readings in or out or regulation before changing state
 	uint8_t bad_reading_max;	// sets number of successive bad readings before declaring an error
 	uint8_t bad_reading_count;	// count of successive bad readings
-	double temperature;			// current heater temperature
-	double setpoint;			// set point for regulation
-	double regulation_range;	// +/- range to consider heater in regulation
-	double regulation_timer;	// time taken so far in a HEATING cycle
-	double ambient_timeout;		// timeout beyond which regulation has failed (seconds)
-	double regulation_timeout;	// timeout beyond which regulation has failed (seconds)
-	double ambient_temperature;	// temperature below which it's ambient temperature (heater failed)
-	double overheat_temperature;// overheat temperature (cutoff temperature)
+	float temperature;			// current heater temperature
+	float setpoint;			// set point for regulation
+	float regulation_range;	// +/- range to consider heater in regulation
+	float regulation_timer;	// time taken so far in a HEATING cycle
+	float ambient_timeout;		// timeout beyond which regulation has failed (seconds)
+	float regulation_timeout;	// timeout beyond which regulation has failed (seconds)
+	float ambient_temperature;	// temperature below which it's ambient temperature (heater failed)
+	float overheat_temperature;// overheat temperature (cutoff temperature)
 } heater_t;
 
 typedef struct PIDstruct {		// PID controller itself
 	uint8_t state;				// PID state (actually very simple)
 	uint8_t code;				// PID code (more information about PID state)
-	double output;				// also used for anti-windup on integral term
-	double output_max;			// saturation filter max
-	double output_min;			// saturation filter min
-	double error;				// current error term
-	double prev_error;			// error term from previous pass
-	double integral;			// integral term
-	double derivative;			// derivative term
-//	double dt;					// pid time constant
-	double Kp;					// proportional gain
-	double Ki;					// integral gain 
-	double Kd;					// derivative gain
+	float output;				// also used for anti-windup on integral term
+	float output_max;			// saturation filter max
+	float output_min;			// saturation filter min
+	float error;				// current error term
+	float prev_error;			// error term from previous pass
+	float integral;			// integral term
+	float derivative;			// derivative term
+//	float dt;					// pid time constant
+	float Kp;					// proportional gain
+	float Ki;					// integral gain 
+	float Kd;					// derivative gain
 } PID_t;
 
 // allocations
@@ -134,13 +134,13 @@ PID_t pid;						// allocate one PID channel...
  ******************************************************************************/
 
 void heater_init(void);
-void heater_on(double setpoint);
+void heater_on(float setpoint);
 void heater_off(uint8_t state, uint8_t code);
 stat_t heater_callback(void);
 
 void pid_init();
 void pid_reset();
-double pid_calculate(double setpoint,double temperature);
+float pid_calculate(float setpoint,float temperature);
 
 #ifdef __TEXT_MODE
 

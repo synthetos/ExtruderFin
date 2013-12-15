@@ -64,7 +64,7 @@
  *	  - target - memory location that the value is written to / read from
  *	  - default value - for cold initialization
  *
- *	Persistence is provided by an NVM array containing values in EEPROM as doubles; 
+ *	Persistence is provided by an NVM array containing values in EEPROM as floats; 
  *	indexed by cfgArray index
  *
  *	The following rules apply to mnemonic tokens

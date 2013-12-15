@@ -52,7 +52,7 @@ extern "C"{
 
 //*** math utilities ***
 
-double std_dev(double a[], uint8_t n, double *mean);
+float std_dev(float a[], uint8_t n, float *mean);
 
 float min3(float x1, float x2, float x3);
 float min4(float x1, float x2, float x3, float x4);

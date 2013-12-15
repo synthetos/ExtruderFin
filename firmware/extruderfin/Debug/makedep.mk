@@ -18,9 +18,9 @@ persistence.c
 
 report.c
 
-sensor.c
-
 hardware.c
+
+sensor_thermo.c
 
 text_parser.c
 

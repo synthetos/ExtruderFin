@@ -60,7 +60,7 @@ void heater_init()
 	pid_init();
 }
 
-void heater_on(double setpoint)
+void heater_on(float setpoint)
 {
 	// no action if heater is already on
 	if ((heater.state == HEATER_HEATING) || (heater.state == HEATER_REGULATED)) {
@@ -122,7 +122,7 @@ stat_t heater_callback()
 	}
 	heater.bad_reading_count = 0;		// reset the bad reading counter
 
-	double duty_cycle = pid_calculate(heater.setpoint, heater.temperature);
+	float duty_cycle = pid_calculate(heater.setpoint, heater.temperature);
 	pwm_set_duty(duty_cycle);
 
 	// handle HEATER exceptions
@@ -195,7 +195,7 @@ void pid_reset()
 	pid.prev_error = 0;
 }
 
-double pid_calculate(double setpoint,double temperature)
+float pid_calculate(float setpoint,float temperature)
 {
 	if (pid.state == PID_OFF) { return (pid.output_min);}
 

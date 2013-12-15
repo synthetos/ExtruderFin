@@ -672,7 +672,7 @@ cmdObj_t * _add_string(cmdObj_t *cmd, char *token, char *string)
 cmdObj_t * _add_integer(cmdObj_t *cmd, char *token, uint32_t integer)
 {
 	strncpy(cmd->token, token, CMD_TOKEN_LEN);
-	cmd->value = (double)integer;
+	cmd->value = (float)integer;
 	if (cmd->depth < cmd->pv->depth) { cmd->depth = cmd->pv->depth;}
 	cmd->type = TYPE_INTEGER;
 	return (cmd->nx);

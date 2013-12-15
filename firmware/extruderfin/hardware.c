@@ -67,11 +67,6 @@ void hardware_init()
 /**** ADC - Analog to Digital Converter for thermocouple reader ****/
 /*
  * adc_init() - initialize ADC. See tinyg_tc.h for settings used
- * adc_read() - returns a single ADC reading (raw). See __sensor_sample notes for more
- *
- *	There's a weird bug where sometimes the first conversion returns zero. 
- *	I need to fund out why this is happening and stop it.
- *	In the mean time there is a do-while loop in the read function.
  */
 void adc_init(uint8_t channel)
 {
@@ -84,14 +79,36 @@ void adc_init(uint8_t channel)
 	DIDR0 = (1<<channel);				// disable digital input
 }
 
+/*
+ * adc_read() - returns a single ADC reading (raw). See __sensor_sample notes for more
+ *
+ *	There's a weird bug where sometimes the first conversion returns zero. 
+ *	I need to find out why this is happening and stop it.
+ *	In the mean time there is a do-while loop in the read function.
+ *
+ *	NOTE: THe ADC does not return anything in simulation, so we fake something.
+ */
+
 uint16_t adc_read()
 {
+
+#ifndef __SIMULATION
+
 	do {
 		ADCSRA |= ADC_START_CONVERSION; // start the conversion
 		while (ADCSRA && (1<<ADIF) == 0);// wait about 100 uSec
 		ADCSRA |= (1<<ADIF);			// clear the conversion flag
 	} while (ADC == 0);
 	return (ADC);
+
+#else
+	float random_gain = 5;
+	float random_variation = ((float)(rand() - RAND_MAX/2) / RAND_MAX/2) * random_gain;
+	float reading = 60 + random_variation;
+	return (((float)reading * SENSOR_SLOPE) + SENSOR_OFFSET);	// useful for testing the math
+#endif
+
+
 }
 
 /**** PWM - Pulse Width Modulation Functions ****/
@@ -118,7 +135,7 @@ void pwm_init(void)
 	hw.pwm_freq = 0;
 }
 
-void pwm_on(double freq, double duty)
+void pwm_on(float freq, float duty)
 {
 	pwm_init();
 	pwm_set_freq(freq);
@@ -135,7 +152,7 @@ void pwm_off(void)
  *
  *	At current settings the range is from about 500 Hz to about 6000 Hz  
  */
-uint8_t pwm_set_freq(double freq)
+uint8_t pwm_set_freq(float freq)
 {
 	hw.pwm_freq = F_CPU / PWM_PRESCALE / freq;
 	if (hw.pwm_freq < PWM_MIN_RES) { 
@@ -160,7 +177,7 @@ uint8_t pwm_set_freq(double freq)
  *	Since I can't seem to get the output pin to work in non-inverted mode
  *	it's done in software in this routine.
  */
-uint8_t pwm_set_duty(double duty)
+uint8_t pwm_set_duty(float duty)
 {
 	if (duty < 0.01) {				// anything approaching 0% 
 		OCR2B = 255;

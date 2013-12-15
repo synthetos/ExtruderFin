@@ -37,7 +37,7 @@
 //#include "report.h"
 //#include "xio.h"
 
-static inline double _sensor_sample(uint8_t adc_channel);
+static inline float _sensor_sample(uint8_t adc_channel);
 
 /**** Temperature Sensor and Functions ****/
 /*
@@ -80,7 +80,7 @@ void sensor_start_reading()
 uint8_t sensor_get_state() { return (sensor.state);}
 uint8_t sensor_get_code() { return (sensor.code);}
 
-double sensor_get_temperature() 
+float sensor_get_temperature() 
 { 
 	if (sensor.state == SENSOR_HAS_DATA) { 
 		return (sensor.temperature);
@@ -116,7 +116,7 @@ stat_t sensor_callback()
 	}
 
 	// process the array to clean up samples
-	double mean;
+	float mean;
 	sensor.std_dev = std_dev(sensor.sample, SENSOR_SAMPLES, &mean);
 	if (sensor.std_dev > sensor.reading_variance_max) {
 		sensor.state = SENSOR_ERROR;
@@ -178,17 +178,11 @@ stat_t sensor_callback()
  *
  *		temp = (adc_value * 1.456355556) - -120.7135972
  */
-static inline double _sensor_sample(uint8_t adc_channel)
+static inline float _sensor_sample(uint8_t adc_channel)
 {
-#ifdef __TEST
-	double random_gain = 5;
-	double random_variation = ((double)(rand() - RAND_MAX/2) / RAND_MAX/2) * random_gain;
-	double reading = 60 + random_variation;
-	return (((double)reading * SENSOR_SLOPE) + SENSOR_OFFSET);	// useful for testing the math
-#else
-	return (((double)adc_read() * SENSOR_SLOPE) + SENSOR_OFFSET);
-#endif
+	return (((float)adc_read() * SENSOR_SLOPE) + SENSOR_OFFSET);
 }
+
 /***** END OF SYSTEM FUNCTIONS *****/
 
 /***********************************************************************************

@@ -40,7 +40,7 @@
 
 /****** REVISIONS ******/
 
-#define FIRMWARE_BUILD 			012.02		// working on temperature reading, advanced firmware revision to 0.2
+#define FIRMWARE_BUILD 			012.03		// debugging temperature reading
 #define FIRMWARE_VERSION		0.2			// firmware major version
 #define HARDWARE_PLATFORM		1			// board style 
 #define HARDWARE_VERSION		1			// board revision number
@@ -49,7 +49,7 @@
 /****** COMPILE-TIME SETTINGS ******/
 // Comment out what you don't need to skinny down the FLASH / RAM footprint
 
-//#define __SIMULATION
+#define __SIMULATION
 
 #ifndef __SIMULATION
   #define __TEXT_MODE						// comment out to disable text mode support (saves ~5Kb)

@@ -97,7 +97,7 @@
 
 typedef struct hwSingleton {				// hardware devices that are part of the chip
 	uint32_t sys_ticks;						// counts up every 1ms tick 
-	double pwm_freq;						// save it for stopping and starting PWM
+	float pwm_freq;						// save it for stopping and starting PWM
 	uint16_t nvm_base_addr;					// NVM base address
 	uint16_t nvm_profile_base;				// NVM base address of current profile
 } hwSingleton_t;
@@ -114,10 +114,10 @@ void adc_init(uint8_t channel);
 uint16_t adc_read(void);
 
 void pwm_init(void);
-void pwm_on(double freq, double duty);
+void pwm_on(float freq, float duty);
 void pwm_off(void);
-uint8_t pwm_set_freq(double freq);
-uint8_t pwm_set_duty(double duty);
+uint8_t pwm_set_freq(float freq);
+uint8_t pwm_set_duty(float duty);
 
 void systick_init(void);
 uint32_t SysTickTimer_getValue(void);
