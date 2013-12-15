@@ -30,7 +30,7 @@
 #include "controller.h"
 #include "json_parser.h"
 #include "text_parser.h"
-#include "sensor.h"
+#include "sensor_thermo.h"
 #include "heater.h"
 #include "xio.h"
 

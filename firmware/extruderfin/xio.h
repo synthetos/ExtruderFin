@@ -91,13 +91,8 @@
 #ifndef xio_h
 #define xio_h
 
-// prefer to use the native dependencies instead of the same packaged in extruderfin.h, hardware.h
-//#include <stdio.h>
-//#include <stdbool.h>
-//#include <avr/interrupt.h>
-//#include <avr/pgmspace.h>
-#include <avr/sleep.h>					// needed for blocking TX
-//... but for this project it needs to be done this way: 
+#include <avr/sleep.h>			// needed for blocking TX
+
 #include "extruderfin.h"
 #include "config.h"
 #include "hardware.h"

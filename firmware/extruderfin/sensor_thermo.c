@@ -31,7 +31,7 @@
 #include "controller.h"
 #include "text_parser.h"
 #include "hardware.h"
-#include "sensor.h"
+#include "sensor_thermo.h"
 #include "util.h"
 
 //#include "report.h"
@@ -50,7 +50,7 @@ static inline double _sensor_sample(uint8_t adc_channel);
  * sensor_get_code()		- return latest sensor code
  * sensor_callback() 		- perform sensor sampling / reading
  */
-void sensor_init()
+void thermo_init()
 {
 	memset(&sensor, 0, sizeof(sensor_t));
 	sensor.temperature = ABSOLUTE_ZERO;

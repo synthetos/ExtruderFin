@@ -35,7 +35,7 @@
 #include "controller.h"
 #include "hardware.h"
 #include "text_parser.h"
-#include "sensor.h"
+#include "sensor_thermo.h"
 #include "heater.h"
 
 #ifdef __cplusplus

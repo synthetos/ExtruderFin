@@ -31,8 +31,8 @@
 #include "controller.h"
 #include "hardware.h"
 #include "text_parser.h"
+#include "sensor_thermo.h"
 #include "heater.h"
-#include "sensor.h"
 #include "report.h"
 
 /**** Heater Functions ****/
@@ -56,7 +56,7 @@ void heater_init()
 	heater.ambient_temperature = HEATER_AMBIENT_TEMPERATURE;
 	heater.overheat_temperature = HEATER_OVERHEAT_TEMPERATURE;
 	heater.bad_reading_max = HEATER_BAD_READING_MAX;
-	sensor_init();
+	thermo_init();
 	pid_init();
 }
 
@@ -67,7 +67,7 @@ void heater_on(double setpoint)
 		return;
 	}
 	// turn on lower level functions
-	sensor_on();						// enable the sensor
+	sensor_on();						// enable the thermo sensor
 	sensor_start_reading();				// now start a reading
 	pid_reset();
 	pwm_on(PWM_FREQUENCY, 0);			// duty cycle will be set by PID loop

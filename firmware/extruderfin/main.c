@@ -33,14 +33,14 @@
 #include "persistence.h"
 #include "json_parser.h"
 #include "text_parser.h"
+#include "sensor_thermo.h"
 #include "heater.h"
-#include "sensor.h"
 #include "report.h"
 #include "xio.h"
 
 #ifdef __cplusplus
 extern "C"{
-#endif // __cplusplus
+#endif
 
 void _init() __attribute__ ((weak));
 void _init() {;}
@@ -48,6 +48,7 @@ void _init() {;}
 #ifdef __cplusplus
 }
 #endif // __cplusplus
+
 
 static void _application_init(void);
 static void _unit_tests(void);
@@ -107,13 +108,15 @@ static void _application_init(void)
 	controller_init();					// must be first app sub-systems init
 	json_init();						// JSON parser
 	text_init();						// text parser
+	thermo_init();						// setup thermocouple / thermistor
 	heater_init();						// setup the heater module and subordinate functions
-	sensor_init();
+
 
 	// let 'er rip
 	sei(); 								// enable interrupts
 	led_on();
 	rpt_print_system_ready_message();	// (LAST) announce system is ready
+	heater_on(100);						// turn heater to 100 degrees C
 }
 
 /*

@@ -94,7 +94,7 @@ sensor_t sensor;				// allocate one sensor channel
  * FUNCTION PROTOTYPES
  ******************************************************************************/
 
-void sensor_init(void);
+void thermo_init(void);
 void sensor_on(void);
 void sensor_off(void);
 void sensor_start_reading(void);

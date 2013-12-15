@@ -113,8 +113,8 @@
 #include "text_parser.h"
 #include "json_parser.h"
 #include "hardware.h"
+#include "sensor_thermo.h"
 #include "heater.h"
-#include "sensor.h"
 
 #ifdef __cplusplus
 extern "C"{

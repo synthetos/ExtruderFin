@@ -40,8 +40,8 @@
 
 /****** REVISIONS ******/
 
-#define FIRMWARE_BUILD 			012.01		// Picked up again 
-#define FIRMWARE_VERSION		0.1			// firmware major version
+#define FIRMWARE_BUILD 			012.02		// working on temperature reading, advanced firmware revision to 0.2
+#define FIRMWARE_VERSION		0.2			// firmware major version
 #define HARDWARE_PLATFORM		1			// board style 
 #define HARDWARE_VERSION		1			// board revision number
 #define HARDWARE_VERSION_MAX	HARDWARE_VERSION
@@ -49,10 +49,14 @@
 /****** COMPILE-TIME SETTINGS ******/
 // Comment out what you don't need to skinny down the FLASH / RAM footprint
 
-#define __TEXT_MODE							// comment out to disable text mode support (saves ~9Kb)
-#define __HELP_SCREENS						// comment out to disable help screens 		(saves ~3.5Kb)
-#define __CANNED_TESTS 						// comment out to remove $tests 			(saves ~12Kb)
-#define __PERSISTENCE						// comment out if persistence is not needed / required
+#define __SIMULATION
+
+#ifndef __SIMULATION
+  #define __TEXT_MODE						// comment out to disable text mode support (saves ~5Kb)
+  #define __HELP_SCREENS					// comment out to disable help screens
+  #define __PERSISTENCE						// comment out if persistence is not needed / required
+#endif
+//#define __CANNED_TESTS 					// tehre are no canned tests
 
 #define __ENABLE_USART_DEVICE
 #define __ENABLE_SPI_DEVICE
@@ -60,8 +64,10 @@
 
 /****** DEVELOPMENT SETTINGS ******/
 
-//#define __CANNED_STARTUP					// run any canned startup commands
-//#define __SUPPRESS_STARTUP_MESSAGES 		// what it says
+#ifdef __SIMULATION
+  #define __CANNED_STARTUP					// run any canned startup commands
+  #define __SUPPRESS_STARTUP_MESSAGES 		// what it says
+#endif
 //#define __UNIT_TESTS						// master enable for unit tests; USAGE: uncomment test in .h file
 
 void canned_startup(void);
