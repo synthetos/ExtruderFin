@@ -74,14 +74,20 @@
 #define PWM2_PORT			PORTD			// secondary PWM channel (on Timer 0)
 #define PWM2_OUT2B			(1<<PIND5)		// OC0B timer output bit
 
+// ADC defines (apply to all channels)
+
+#define ADC0_CHANNEL 		0				// ADC channel 1 / single-ended in this application (write to ADMUX)
+#define ADC1_CHANNEL 		1				// ADC channel 1 / single-ended in this application (write to ADMUX)
+
 #define ADC_PORT			PORTC			// Analog to digital converter channels
-#define ADC_CHANNEL 		0				// ADC channel 0 / single-ended in this application (write to ADMUX)
-#define ADC_REFS			0b01000000		// AVcc external 5v reference (write to ADMUX)
+#define ADC_VREF 			3.30 //was 5.00	// change this if the circuit changes. 3v would be about optimal
 #define ADC_ENABLE			(1<<ADEN)		// write this to ADCSRA to enable the ADC
 #define ADC_START_CONVERSION (1<<ADSC)		// write to ADCSRA to start conversion
 #define ADC_PRESCALE 		6				// 6=64x which is ~125KHz at 8Mhz clock
 #define ADC_PRECISION 		1024			// change this if you go to 8 bit precision
-#define ADC_VREF 			5.00			// change this if the circuit changes. 3v would be about optimal
+#define ADC_REFS			0b01000000		// AVcc external voltage reference (writteen to ADMUX)
+
+// timer deines
 
 #define TICK_TIMER			TCNT0			// Tickclock timer
 #define TICK_MODE			0x02			// CTC mode 		(TCCR0A value)
@@ -97,18 +103,19 @@
 
 typedef struct hwSingleton {				// hardware devices that are part of the chip
 	uint32_t sys_ticks;						// counts up every 1ms tick 
-	float pwm_freq;						// save it for stopping and starting PWM
+//	uint8_t adc_channel;					// set during init
+	float pwm_freq;							// save it for stopping and starting PWM
 	uint16_t nvm_base_addr;					// NVM base address
 	uint16_t nvm_profile_base;				// NVM base address of current profile
 } hwSingleton_t;
 
-hwSingleton_t hw;						// HW is ALWAYS a singleton. You can't just "make more"
+hwSingleton_t hw;							// HW is ALWAYS a singleton. You can't just "make more"
 
 /******************************************************************************
  * FUNCTION PROTOTYPES
  ******************************************************************************/
 
-void hardware_init(void);		// master hardware init
+void hardware_init(void);					// master hardware init
 
 void adc_init(uint8_t channel);
 uint16_t adc_read(void);

@@ -75,7 +75,8 @@ void adc_init(uint8_t channel)
 	ADCSRA = (ADC_ENABLE | ADC_PRESCALE);// Enable ADC (bit 7) & set prescaler
 
 	ADMUX &= 0xF0;						// clobber the channel
-	ADMUX |= 0x0F & ADC_CHANNEL;		// set the channel
+//	ADMUX |= 0x0F & ADC_CHANNEL;		// set the channel
+	ADMUX |= 0x0F & channel;			// set the channel
 	DIDR0 = (1<<channel);				// disable digital input
 }
 
@@ -86,7 +87,7 @@ void adc_init(uint8_t channel)
  *	I need to find out why this is happening and stop it.
  *	In the mean time there is a do-while loop in the read function.
  *
- *	NOTE: THe ADC does not return anything in simulation, so we fake something.
+ *	NOTE: The ADC does not return anything in simulation, so we fake something.
  */
 
 uint16_t adc_read()

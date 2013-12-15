@@ -100,7 +100,8 @@ static void _application_init(void)
 
 	// hardware devices (hardware.c/.h)
 	systick_init();						// systick 1ms counter
-	adc_init(ADC_CHANNEL);				// ADC for sensor
+//	adc_init(ADC0_CHANNEL);				// ADC0 == thermistor
+	adc_init(ADC1_CHANNEL);				// ADC1 == thermocouple
 	pwm_init();							// PWM for heater
 	led_init();							// LED for style
 
@@ -116,7 +117,7 @@ static void _application_init(void)
 	sei(); 								// enable interrupts
 	led_on();
 	rpt_print_system_ready_message();	// (LAST) announce system is ready
-	heater_on(100);						// turn heater to 100 degrees C
+	heater_on(60);						// turn heater to 100 degrees C
 }
 
 

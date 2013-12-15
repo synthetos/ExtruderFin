@@ -37,7 +37,7 @@
 //#include "report.h"
 //#include "xio.h"
 
-static inline float _sensor_sample(uint8_t adc_channel);
+static inline float _sensor_sample();
 
 /**** Temperature Sensor and Functions ****/
 /*
@@ -110,7 +110,7 @@ stat_t sensor_callback()
 	sensor.next_sample = SysTickTimer_getValue() + SENSOR_SAMPLE_MS;
 
 	// get a sample and return if still in the reading period
-	sensor.sample[sensor.sample_idx] = _sensor_sample(ADC_CHANNEL);
+	sensor.sample[sensor.sample_idx] = _sensor_sample();
 	if ((++sensor.sample_idx) < SENSOR_SAMPLES) { 
 		return(STAT_OK);
 	}
@@ -178,7 +178,7 @@ stat_t sensor_callback()
  *
  *		temp = (adc_value * 1.456355556) - -120.7135972
  */
-static inline float _sensor_sample(uint8_t adc_channel)
+static inline float _sensor_sample(void)
 {
 	return (((float)adc_read() * SENSOR_SLOPE) + SENSOR_OFFSET);
 }
