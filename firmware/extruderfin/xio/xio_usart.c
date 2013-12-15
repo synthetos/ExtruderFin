@@ -31,6 +31,7 @@
 // allocate and initialize USART structs
 xioUsartRX_t usart0_rx = { USART_RX_BUFFER_SIZE-1,1,1 };
 xioUsartTX_t usart0_tx = { USART_TX_BUFFER_SIZE-1,1,1 };
+
 xioDev_t usart0 = {
 		XIO_DEV_USART,
 		xio_open_usart,
