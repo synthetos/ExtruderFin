@@ -36,7 +36,7 @@
 
 /**** Sensor default parameters ***/
 
-#define SENSOR_SYSTICK_INTERVAL			1		// sample timer in ms
+#define SENSOR_SAMPLE_MS				1		// sample timer in ms
 #define SENSOR_SAMPLES 					20		// number of sensor samples to take for each reading period
 #define SENSOR_SAMPLE_VARIANCE_MAX 		1.1		// number of standard deviations from mean to reject a sample
 #define SENSOR_READING_VARIANCE_MAX 	20		// reject entire reading if std_dev exceeds this amount
@@ -78,7 +78,7 @@ typedef struct SensorStruct {
 	uint8_t code;				// sensor return code (more information about state)
 	uint8_t sample_idx;			// index into sample array
 	uint8_t samples;			// number of samples in final average
-	uint32_t next_systick;
+	uint32_t next_sample;		// systick on which to take next sample
 	double temperature;			// high confidence temperature reading
 	double std_dev;				// standard deviation of sample array
 	double sample_variance_max;	// sample deviation above which to reject a sample

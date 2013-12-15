@@ -49,7 +49,7 @@
 /****** COMPILE-TIME SETTINGS ******/
 // Comment out what you don't need to skinny down the FLASH / RAM footprint
 
-#define __SIMULATION
+//#define __SIMULATION
 
 #ifndef __SIMULATION
   #define __TEXT_MODE						// comment out to disable text mode support (saves ~5Kb)

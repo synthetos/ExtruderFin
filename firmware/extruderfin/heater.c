@@ -95,9 +95,9 @@ stat_t heater_callback()
 	// cases where you don't execute the callback:
 	if (heater.state == HEATER_OFF)	return (STAT_NOOP);
 	if (heater.state == HEATER_SHUTDOWN) return (STAT_NOOP);
-	if (heater.next_systick < SysTickTimer_getValue())
+	if (heater.next_sample > SysTickTimer_getValue()) return (STAT_NOOP);
 
-	heater.next_systick = SysTickTimer_getValue() + HEATER_SYSTICK_INTERVAL;
+	heater.next_sample = SysTickTimer_getValue() + HEATER_SAMPLE_MS;
 
 	rpt_print_status();
 

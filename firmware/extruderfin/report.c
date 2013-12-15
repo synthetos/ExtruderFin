@@ -100,9 +100,11 @@ void rpt_print_loading_configs_message(void)
 
 void rpt_print_system_ready_message(void)
 {
+#ifndef __SUPPRESS_STARTUP_MESSAGES
 	printf_P(PSTR("Device Initialized %1.0f\n"),(double)42);
 	_startup_helper(STAT_OK, PSTR("SYSTEM READY"));
 //	if (cfg.comm_mode == TEXT_MODE) { text_response(STAT_OK, (char_t *)"");}// prompt
+#endif
 }
 
 void rpt_print_status()

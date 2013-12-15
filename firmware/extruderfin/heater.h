@@ -36,7 +36,7 @@
 
 /**** Heater default parameters ***/
 
-#define HEATER_SYSTICK_INTERVAL		100		// sample timer in ms
+#define HEATER_SAMPLE_MS			100		// sample timer in ms
 #define HEATER_TICK_SECONDS 		0.1		// 100 ms
 #define HEATER_HYSTERESIS 			10		// number of successive readings before declaring heater at-temp or out of regulation
 #define HEATER_AMBIENT_TEMPERATURE	40		// detect heater not heating if readings stay below this temp
@@ -92,7 +92,7 @@ enum tcPIDState {							// PID state machine
 
 
 typedef struct HeaterStruct {
-	uint32_t next_systick;
+	uint32_t next_sample;		// systick on which to take next sample
 	uint8_t state;				// heater state
 	uint8_t code;				// heater code (more information about heater state)
 	uint8_t	toggle;

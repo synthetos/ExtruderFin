@@ -105,9 +105,9 @@ stat_t sensor_callback()
 	// cases where you don't execute the callback:
 	if (sensor.state == SENSOR_OFF)	return (STAT_NOOP);
 	if (sensor.code != SENSOR_TAKING_READING) return (STAT_NOOP);
-	if (sensor.next_systick < SysTickTimer_getValue())
+	if (sensor.next_sample > SysTickTimer_getValue()) return (STAT_NOOP);
 
-	sensor.next_systick = SysTickTimer_getValue() + SENSOR_SYSTICK_INTERVAL;
+	sensor.next_sample = SysTickTimer_getValue() + SENSOR_SAMPLE_MS;
 
 	// get a sample and return if still in the reading period
 	sensor.sample[sensor.sample_idx] = _sensor_sample(ADC_CHANNEL);
