@@ -22,6 +22,8 @@ hardware.c
 
 sensor_thermo.c
 
+test.c
+
 text_parser.c
 
 util.c

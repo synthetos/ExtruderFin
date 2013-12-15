@@ -47,6 +47,7 @@ C_SRCS +=  \
 ../report.c \
 ../hardware.c \
 ../sensor_thermo.c \
+../test.c \
 ../text_parser.c \
 ../util.c \
 ../xio.c \
@@ -72,6 +73,7 @@ persistence.o \
 report.o \
 hardware.o \
 sensor_thermo.o \
+test.o \
 text_parser.o \
 util.o \
 xio.o \
@@ -90,6 +92,7 @@ persistence.o \
 report.o \
 hardware.o \
 sensor_thermo.o \
+test.o \
 text_parser.o \
 util.o \
 xio.o \
@@ -108,6 +111,7 @@ persistence.d \
 report.d \
 hardware.d \
 sensor_thermo.d \
+test.d \
 text_parser.d \
 util.d \
 xio.d \
@@ -126,6 +130,7 @@ persistence.d \
 report.d \
 hardware.d \
 sensor_thermo.d \
+test.d \
 text_parser.d \
 util.d \
 xio.d \
@@ -177,17 +182,19 @@ LIB_DEP+=
 
 
 
+
+
 ./%.o: .././%.c
 	@echo Building file: $<
 	@echo Invoking: AVR8/GNU C Compiler : 3.4.2
-	$(QUOTE)C:\Program Files\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.2.1002\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -funsigned-char -funsigned-bitfields -DDEBUG -DF_CPU=32000000UL  -Os -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<"
+	$(QUOTE)C:\Program Files\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.2.1002\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -funsigned-char -funsigned-bitfields -DDEBUG -DF_CPU=32000000UL  -O0 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<"
 	@echo Finished building: $<
 	
 
 xio/%.o: ../xio/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR8/GNU C Compiler : 3.4.2
-	$(QUOTE)C:\Program Files\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.2.1002\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -funsigned-char -funsigned-bitfields -DDEBUG -DF_CPU=32000000UL  -Os -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<"
+	$(QUOTE)C:\Program Files\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.2.1002\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -funsigned-char -funsigned-bitfields -DDEBUG -DF_CPU=32000000UL  -O0 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -g2 -Wall -mmcu=atmega328p -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<"
 	@echo Finished building: $<
 	
 

@@ -119,8 +119,10 @@ int xio_putc_usart(const char c, FILE *stream)
 ISR(USART_UDRE_vect)
 {
 	int8_t c = xio_read_buffer(USART0tx);
-	if (c != _FDEV_ERR) 
+	if (c != _FDEV_ERR) {
 		UDR0 = (char)c;				// write char to USART xmit register
+	}
+	UCSR0B &= ~(1<<UDRIE0);			// disable TX interrupts - or they will keep firing
 }
 
 /*

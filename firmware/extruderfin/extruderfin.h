@@ -40,7 +40,7 @@
 
 /****** REVISIONS ******/
 
-#define FIRMWARE_BUILD 			012.04		// forgot to add the floating point print support. In now
+#define FIRMWARE_BUILD 			012.05		// fixed a bug in serial TX. Getting simulated temperature readings now. AS4 compiled code still won't perform strcpy() from cfgArray to cmd->token. In AS6 it works fine.
 #define FIRMWARE_VERSION		0.2			// firmware major version
 #define HARDWARE_PLATFORM		1			// board style 
 #define HARDWARE_VERSION		1			// board revision number

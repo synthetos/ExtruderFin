@@ -133,24 +133,8 @@ stat_t set_defaults(cmdObj_t *cmd)
 
 	for (cmd->index=0; cmd_index_is_single(cmd->index); cmd->index++) {
 		if (GET_TABLE_BYTE(flags) & F_INITIALIZE) {
-/*			
-//			cmd->value = GET_TABLE_FLOAT(def_value);
-
-//			*v = (uint32_t*)&cmd->value;
-//			*v = *((uint32_t *)GET_TABLE_WORD(target));
-//			*v = (uint32_t*)&cmd->value;
-			v_flt = GET_TABLE_FLOAT(def_value);
-//			v_u32 = GET_TABLE_WORD(def_value);
-//			v_u32 = pgm_read_dword(&cfgArray[cmd->index].def_value);
-			v_u32 = GET_TABLE_DWORD(def_value);
-			v_flt2 = (float)v_u32;
-//			*v = (uint32_t*)GET_TABLE_WORD(def_value);
-			*v = (uint32_t*)GET_TABLE_DWORD(def_value);
-			*((uint32_t *)GET_TABLE_WORD(target)) = *v;
-*/
 			cmd->value.i = GET_TABLE_DWORD(def_value);
-
-			strcpy_P(cmd->token, cfgArray[cmd->index].token);
+			strncpy_P(cmd->token, (char *)cfgArray[cmd->index].token, CMD_TOKEN_LEN);
 			cmd_set(cmd);
 			nvm_persist(cmd);				// persist must occur when no other interrupts are firing
 		}

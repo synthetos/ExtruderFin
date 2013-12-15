@@ -36,6 +36,7 @@
 #include "sensor_thermo.h"
 #include "heater.h"
 #include "report.h"
+#include "test.h"
 #include "xio.h"
 
 #ifdef __cplusplus

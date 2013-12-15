@@ -152,7 +152,7 @@ static stat_t _do_all(cmdObj_t *cmd);
  */
 
 const cfgItem_t cfgArray[] PROGMEM = {
-	// group token flags p, print_func,	 get_func,  set_func, target for get/set,   	default value
+	// group token flags p, print_func,	 get_func,  set_func, target for get/set,   		default value
 //	{ "sys", "fb", _f07, 2, hw_print_fb, get_flt,   set_nul,  (uint32_t *)&cs.fw_build,		FIRMWARE_BUILD }, // MUST BE FIRST!
 	{ "sys", "fb", _f07, 2, hw_print_fb, get_flt,   set_nul,  &cs.fw_build,					FIRMWARE_BUILD }, // MUST BE FIRST!
 	{ "sys", "fv", _f07, 3, hw_print_fv, get_flt,   set_nul,  &cs.fw_version,				FIRMWARE_VERSION },

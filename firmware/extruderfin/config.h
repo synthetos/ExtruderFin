@@ -144,6 +144,7 @@ typedef struct cmdString {				// shared string object
 	char string[CMD_SHARED_STRING_LEN];
 	uint16_t magic_end;					// guard to detect string buffer underruns
 } cmdStr_t;
+
 /*
 union value_t {
 //	uint8_t u8;
@@ -152,6 +153,7 @@ union value_t {
 //	char c[4];
 } value;
 */
+
 typedef struct cmdObject {				// depending on use, not all elements may be populated
 	struct cmdObject *pv;				// pointer to previous object or NULL if first object
 	struct cmdObject *nx;				// pointer to next object or NULL if last object
@@ -159,12 +161,9 @@ typedef struct cmdObject {				// depending on use, not all elements may be popul
 	int8_t depth;						// depth of object in the tree. 0 is root (-1 is invalid)
 	int8_t objtype;						// see cmdType
 	int8_t precision;					// decimal precision for reporting (JSON)
-//	float value;						// numeric value
-//	uint32_t value;						// numeric value - base type is int
-//	value_t value;						// numeric value - base type is int
 	union {
-		uint32_t i;
-		float f;	
+		uint32_t i;						// holds all integer values
+		float f;						// holds floats
 	} value;
 	char token[CMD_TOKEN_LEN+1];		// full mnemonic token for lookup
 	char group[CMD_GROUP_LEN+1];		// group prefix or NUL if not in a group
