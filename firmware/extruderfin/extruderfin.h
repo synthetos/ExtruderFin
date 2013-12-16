@@ -40,7 +40,7 @@
 
 /****** REVISIONS ******/
 
-#define FIRMWARE_BUILD 			013.03		// trying to fix the strcpy_P bug (compiler bug?)
+#define FIRMWARE_BUILD 			013.04		// trying to fix the strcpy_P bug (compiler bug?)
 #define FIRMWARE_VERSION		0.2			// firmware major version
 #define HARDWARE_PLATFORM		1			// board style 
 #define HARDWARE_VERSION		1			// board revision number

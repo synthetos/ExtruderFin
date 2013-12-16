@@ -134,7 +134,10 @@ stat_t set_defaults(cmdObj_t *cmd)
 	for (cmd->index=0; cmd_index_is_single(cmd->index); cmd->index++) {
 		if (GET_TABLE_BYTE(flags) & F_INITIALIZE) {
 			cmd->value.i = GET_TABLE_DWORD(def_value);
+
 			strncpy_P(cmd->token, (char *)cfgArray[cmd->index].token, CMD_TOKEN_LEN);
+//			strcpy(cmd->token, table2str(cfgArray[cmd->index].token));
+
 			cmd_set(cmd);
 			nvm_persist(cmd);				// persist must occur when no other interrupts are firing
 		}

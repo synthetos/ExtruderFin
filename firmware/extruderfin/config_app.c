@@ -241,6 +241,7 @@ static stat_t _do_all(cmdObj_t *cmd)	// print all parameters
 	return (STAT_OK);
 }
 
+
 #ifdef __cplusplus
 }
 #endif
