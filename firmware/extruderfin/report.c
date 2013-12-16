@@ -44,15 +44,14 @@ static const char msg_scode1[] PROGMEM = "  Taking Reading";
 static const char msg_scode2[] PROGMEM = "  Bad Reading";
 static const char msg_scode3[] PROGMEM = "  Disconnected";
 static const char msg_scode4[] PROGMEM = "  No Power";
-static PGM_P const msg_scode[] PROGMEM = { msg_scode0, msg_scode1, msg_scode2, msg_scode3, msg_scode4 };
+static const char const *msg_scode[] PROGMEM = { msg_scode0, msg_scode1, msg_scode2, msg_scode3, msg_scode4 };
 
 static const char msg_hstate0[] PROGMEM = "  OK";
 static const char msg_hstate1[] PROGMEM = "  Shutdown";
 static const char msg_hstate2[] PROGMEM = "  Heating";
 static const char msg_hstate3[] PROGMEM = "  REGULATED";
 static const char msg_hstate4[] PROGMEM = "  Cooling";
-static PGM_P const msg_hstate[] PROGMEM = { msg_hstate0, msg_hstate1, msg_hstate2, msg_hstate3, msg_hstate4};
-
+static const char const *msg_hstate[] PROGMEM = { msg_hstate0, msg_hstate1, msg_hstate2, msg_hstate3, msg_hstate4};
 
 /**** Exception Messages ************************************************************
  * rpt_exception() - generate an exception message - always in JSON format

@@ -40,7 +40,7 @@
 
 /****** REVISIONS ******/
 
-#define FIRMWARE_BUILD 			013.02		// documentation pass
+#define FIRMWARE_BUILD 			013.03		// trying to fix the strcpy_P bug (compiler bug?)
 #define FIRMWARE_VERSION		0.2			// firmware major version
 #define HARDWARE_PLATFORM		1			// board style 
 #define HARDWARE_VERSION		1			// board revision number
@@ -49,7 +49,7 @@
 /****** COMPILE-TIME SETTINGS ******/
 // Comment out what you don't need to skinny down the FLASH / RAM footprint
 
-//#define __SIMULATION
+#define __SIMULATION
 
 #ifndef __SIMULATION
   #define __TEXT_MODE						// comment out to disable text mode support (saves ~5Kb)

@@ -46,9 +46,7 @@ OBJECTS = util.o config.o config_app.o heater.o json_parser.o main.o report.o xi
 LINKONLYOBJECTS = 
 
 ## Build
-all: $(TARGET) extruderfin.hex extruderfin.eep extruderfin.lss size
-
-## Compile
+all: $(TARGET) extruderfin.hex extruderfin.eep extruderfin.lss## Compile
 util.o: ../util.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
@@ -115,10 +113,6 @@ $(TARGET): $(OBJECTS)
 
 %.lss: $(TARGET)
 	avr-objdump -h -S $< > $@
-
-size: ${TARGET}
-	@echo
-	@avr-size -C --mcu=${MCU} ${TARGET}
 
 ## Clean target
 .PHONY: clean
