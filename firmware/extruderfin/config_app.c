@@ -115,6 +115,7 @@
 #include "hardware.h"
 #include "sensor_thermo.h"
 #include "heater.h"
+#include "pid.h"
 
 #ifdef __cplusplus
 extern "C"{

@@ -40,7 +40,7 @@
 
 /****** REVISIONS ******/
 
-#define FIRMWARE_BUILD 			012.08		// more tuning temperature regulation functions
+#define FIRMWARE_BUILD 			013.01		// split pid functions into their own file
 #define FIRMWARE_VERSION		0.2			// firmware major version
 #define HARDWARE_PLATFORM		1			// board style 
 #define HARDWARE_VERSION		1			// board revision number

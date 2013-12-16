@@ -40,7 +40,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 LIBS = -lm 
 
 ## Objects that must be built in order to link
-OBJECTS = util.o config.o config_app.o heater.o json_parser.o main.o report.o xio_usart.o xio_file.o xio_spi.o controller.o hardware.o xio.o text_parser.o persistence.o sensor_thermo.o test.o 
+OBJECTS = util.o config.o config_app.o heater.o json_parser.o main.o report.o xio_usart.o xio_file.o xio_spi.o controller.o hardware.o xio.o text_parser.o persistence.o sensor_thermo.o test.o pid.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
@@ -98,6 +98,9 @@ sensor_thermo.o: ../sensor_thermo.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 test.o: ../test.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+pid.o: ../pid.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link

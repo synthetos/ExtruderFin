@@ -33,6 +33,7 @@
 #include "text_parser.h"
 #include "sensor_thermo.h"
 #include "heater.h"
+#include "pid.h"
 #include "util.h"
 
 /*** Strings and string arrays in program memory ***/

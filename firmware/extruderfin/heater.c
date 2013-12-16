@@ -33,8 +33,8 @@
 #include "text_parser.h"
 #include "sensor_thermo.h"
 #include "heater.h"
+#include "pid.h"
 #include "report.h"
-#include "util.h"
 
 /**** Heater Functions ****/
 /*
@@ -176,53 +176,6 @@ stat_t heater_callback()
 	return (STAT_OK);
 }
 
-/**** Heater PID Functions ****/
-/*
- * pid_init() - initialize PID with default values
- * pid_reset() - reset PID values to cold start
- * pid_calc() - derived from: http://www.embeddedheaven.com/pid-control-algorithm-c-language.htm
- */
-void pid_init() 
-{
-	memset(&pid, 0, sizeof(struct PIDstruct));
-	pid.Kp = PID_Kp;
-	pid.Ki = PID_Ki;
-	pid.Kd = PID_Kd;
-	pid.output_max = PID_OUTPUT_MAX;		// saturation filter max value
-	pid.output_min = PID_OUTPUT_MIN;		// saturation filter min value
-	pid.state = PID_ON;
-}
-
-void pid_reset()
-{
-	pid.output = 0;
-	pid.integral = PID_INITIAL_INTEGRAL;
-	pid.prev_error = 0;
-}
-
-float pid_calculate(float setpoint,float temperature)
-{
-	if (pid.state == PID_OFF) { return (pid.output_min);}
-
-	pid.error = setpoint - temperature;		// current error term
-
-	// perform integration only if error is GT epsilon, and with anti-windup
-	if ((fabs(pid.error) > PID_EPSILON) && (pid.output < pid.output_max)) {
-		pid.integral += (pid.error * PID_DT);
-		pid.integral = min(pid.integral, PID_INTEGRAL_MAX);
-	}
-	// compute derivative and output
-	pid.derivative = (pid.error - pid.prev_error) / PID_DT;
-	pid.output = pid.Kp * pid.error + pid.Ki * pid.integral + pid.Kd * pid.derivative;
-
-	// fix min amd max outputs (saturation filter)
-	if(pid.output > pid.output_max) { pid.output = pid.output_max; } else
-	if(pid.output < pid.output_min) { pid.output = pid.output_min; }
-	pid.prev_error = pid.error;
-
-	return pid.output;
-}
-
 /***** END OF SYSTEM FUNCTIONS *****/
 
 /***********************************************************************************
@@ -248,12 +201,6 @@ static const char fmt_reg[] PROGMEM = "[h1reg] heater regulation range%9.2f\n";
 static const char fmt_rto[] PROGMEM = "[h1rto] heater regulation timeout%7.2f\n";
 static const char fmt_bad[] PROGMEM = "[h1bad] heater bad reading max%7d\n";
 
-static const char fmt_kp[]  PROGMEM = "[p1kp]  PID Kp%26.2f\n";
-static const char fmt_ki[]  PROGMEM = "[p1ki]  PID Ki%26.2f\n";
-static const char fmt_kd[]  PROGMEM = "[p1kd]  PID Kd%26.2f\n";
-static const char fmt_smx[] PROGMEM = "[p1smx] output max%22.2f\n";
-static const char fmt_smn[] PROGMEM = "[p1smn] output min%22.2f\n";
-
 void h1_print_st(cmdObj_t *cmd)  { text_print_ui8(cmd, fmt_st);}
 void h1_print_tmp(cmdObj_t *cmd) { text_print_flt(cmd, fmt_tmp);}
 void h1_print_set(cmdObj_t *cmd) { text_print_flt(cmd, fmt_set);}
@@ -264,11 +211,5 @@ void h1_print_ato(cmdObj_t *cmd) { text_print_flt(cmd, fmt_ato);}
 void h1_print_reg(cmdObj_t *cmd) { text_print_flt(cmd, fmt_reg);}
 void h1_print_rto(cmdObj_t *cmd) { text_print_flt(cmd, fmt_rto);}
 void h1_print_bad(cmdObj_t *cmd) { text_print_ui8(cmd, fmt_bad);}
-
-void p1_print_kp(cmdObj_t *cmd)  { text_print_flt(cmd, fmt_kp);}
-void p1_print_ki(cmdObj_t *cmd)  { text_print_flt(cmd, fmt_ki);}
-void p1_print_kd(cmdObj_t *cmd)  { text_print_flt(cmd, fmt_kd);}
-void p1_print_smx(cmdObj_t *cmd) { text_print_flt(cmd, fmt_smx);}
-void p1_print_smn(cmdObj_t *cmd) { text_print_flt(cmd, fmt_smn);}
 
 #endif //__TEXT_MODE 

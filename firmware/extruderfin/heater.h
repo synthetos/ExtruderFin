@@ -27,8 +27,8 @@
  */
 /* Special thanks to Adam Mayer and the Replicator project for heater guidance
  */
-#ifndef heater_h
-#define heater_h
+#ifndef HEATER_H_ONCE
+#define HEATER_H_ONCE
 
 /******************************************************************************
  * PARAMETERS AND SETTINGS
@@ -61,34 +61,6 @@ enum tcHeaterCode {
 	HEATER_SENSOR_ERROR						// heater encountered a fatal sensor error
 };
 
-/**** PID default parameters ***/
-
-#define PID_DT 				((float)HEATER_SAMPLE_MS / (float)1000)	// PID time constant == heater sampling rate
-#define PID_EPSILON 		0.1				// error term precision
-#define PID_OUTPUT_MAX 		100				// saturation filter max PWM percent
-#define PID_OUTPUT_MIN 		0				// saturation filter min PWM percent
-#define PID_INTEGRAL_MAX	100
-#define PID_INITIAL_INTEGRAL 0				// initial integral value - set non-zero to speed things along
-
-#define PID_Kp 				2.00			// proportional gain term
-#define PID_Ki 				0.001 			// integral gain term
-#define PID_Kd 				0.4				// derivative gain term
-
-// some starting values from the example code
-//#define PID_Kp 				0.1				// proportional gain term
-//#define PID_Ki 				0.005			// integral gain term
-//#define PID_Kd 				0.01			// derivative gain term
-//#define PID_INITIAL_INTEGRAL 1				// initial integral value to speed things along
-
-// earlier attempt - wicked overshoot
-//#define PID_Kp 				5.00			// proportional gain term
-//#define PID_Ki 				0.1 			// integral gain term
-//#define PID_Kd 				0.5				// derivative gain term
-
-enum tcPIDState {							// PID state machine
-	PID_OFF = 0,							// PID is off
-	PID_ON
-};
 
 /******************************************************************************
  * STRUCTURES 
@@ -115,25 +87,8 @@ typedef struct HeaterStruct {
 	float overheat_temperature;// overheat temperature (cutoff temperature)
 } heater_t;
 
-typedef struct PIDstruct {		// PID controller itself
-	uint8_t state;				// PID state (actually very simple)
-	uint8_t code;				// PID code (more information about PID state)
-	float output;				// also used for anti-windup on integral term
-	float output_max;			// saturation filter max
-	float output_min;			// saturation filter min
-	float error;				// current error term
-	float prev_error;			// error term from previous pass
-	float integral;				// integral term
-	float derivative;			// derivative term
-//	float dt;					// pid time constant
-	float Kp;					// proportional gain
-	float Ki;					// integral gain 
-	float Kd;					// derivative gain
-} PID_t;
-
 // allocations
 heater_t heater;				// allocate one heater...
-PID_t pid;						// allocate one PID channel...
 
 /******************************************************************************
  * FUNCTION PROTOTYPES
@@ -143,10 +98,6 @@ void heater_init(void);
 void heater_on(float setpoint);
 void heater_off(uint8_t state, uint8_t code);
 stat_t heater_callback(void);
-
-void pid_init();
-void pid_reset();
-float pid_calculate(float setpoint,float temperature);
 
 #ifdef __TEXT_MODE
 
@@ -161,12 +112,6 @@ float pid_calculate(float setpoint,float temperature);
 	void h1_print_rto(cmdObj_t *cmd);
 	void h1_print_bad(cmdObj_t *cmd);
 
-	void p1_print_kp(cmdObj_t *cmd);
-	void p1_print_ki(cmdObj_t *cmd);
-	void p1_print_kd(cmdObj_t *cmd);
-	void p1_print_smx(cmdObj_t *cmd);
-	void p1_print_smn(cmdObj_t *cmd);
-
 #else
 
 	#define h1_print_st tx_print_stub
@@ -179,12 +124,6 @@ float pid_calculate(float setpoint,float temperature);
 	#define h1_print_reg tx_print_stub
 	#define h1_print_rto tx_print_stub
 	#define h1_print_bad tx_print_stub
-
-	#define p1_print_kp tx_print_stub
-	#define p1_print_ki tx_print_stub
-	#define p1_print_kd tx_print_stub
-	#define p1_print_smx tx_print_stub
-	#define p1_print_smn tx_print_stub
 
 #endif // __TEXT_MODE
 
