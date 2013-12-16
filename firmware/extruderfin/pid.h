@@ -86,7 +86,7 @@ typedef struct PIDstruct {		// PID controller itself
 } PID_t;
 
 // allocations
-PID_t pid;						// allocate one PID channel...
+extern PID_t pid;				// allocate one PID channel...
 
 /******************************************************************************
  * FUNCTION PROTOTYPES

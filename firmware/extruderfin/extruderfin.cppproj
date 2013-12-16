@@ -103,6 +103,7 @@
       <Value>F_CPU=32000000UL</Value>
     </ListValues>
   </avrgcc.compiler.symbols.DefSymbols>
+  <avrgcc.compiler.optimization.level>Optimize for size (-Os)</avrgcc.compiler.optimization.level>
   <avrgcc.compiler.optimization.PackStructureMembers>True</avrgcc.compiler.optimization.PackStructureMembers>
   <avrgcc.compiler.optimization.AllocateBytesNeededForEnum>True</avrgcc.compiler.optimization.AllocateBytesNeededForEnum>
   <avrgcc.compiler.optimization.DebugLevel>Default (-g2)</avrgcc.compiler.optimization.DebugLevel>
@@ -172,6 +173,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="persistence.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="pid.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="pid.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="report.c">

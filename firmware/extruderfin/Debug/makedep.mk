@@ -16,6 +16,8 @@ main.c
 
 persistence.c
 
+pid.c
+
 report.c
 
 hardware.c

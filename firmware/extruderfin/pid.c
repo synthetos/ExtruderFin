@@ -33,6 +33,9 @@
 #include "pid.h"
 #include "util.h"
 
+// memory allocations
+PID_t pid;						// allocate one PID channel...
+
 /**** PID Functions ****/
 /*
  * pid_init() - initialize PID with default values

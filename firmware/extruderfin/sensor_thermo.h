@@ -43,7 +43,6 @@
 #define SENSOR_READING_VARIANCE_MAX 	10		// reject entire reading if std_dev exceeds this amount
 #define SENSOR_NO_POWER_TEMPERATURE 	-2		// detect thermocouple amplifier disconnected if readings stay below this temp
 #define SENSOR_DISCONNECTED_TEMPERATURE 400		// sensor is DISCONNECTED if over this temp (works w/ both 5v and 3v refs)
-#define SENSOR_TICK_SECONDS 			0.01	// 10 ms
 
 #define SENSOR_SLOPE 		0.489616568			// derived from AD597 chart between 80 deg-C and 300 deg-C
 #define SENSOR_OFFSET 		-0.419325433		// derived from AD597 chart between 80 deg-C and 300 deg-C

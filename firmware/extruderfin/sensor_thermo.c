@@ -34,9 +34,6 @@
 #include "sensor_thermo.h"
 #include "util.h"
 
-//#include "report.h"
-//#include "xio.h"
-
 static inline float _sensor_sample();
 
 /**** Temperature Sensor and Functions ****/
@@ -44,10 +41,10 @@ static inline float _sensor_sample();
  * sensor_init()	 		- initialize temperature sensor
  * sensor_on()	 			- turn temperature sensor on
  * sensor_off()	 			- turn temperature sensor off
- * sensor_start_reading()	- start a temperature reading
- * sensor_get_temperature()	- return latest temperature reading or LESS _THAN_ZERO
  * sensor_get_state()		- return current sensor state
  * sensor_get_code()		- return latest sensor code
+ * sensor_start_reading()	- start a temperature reading
+ * sensor_get_temperature()	- return latest temperature reading or LESS _THAN_ZERO
  * sensor_callback() 		- perform sensor sampling / reading
  */
 void thermo_init()
@@ -61,24 +58,17 @@ void thermo_init()
 // note: there are no bits to set to outputs in this initialization
 }
 
-void sensor_on()
-{
-	sensor.state = SENSOR_NO_DATA;
-}
+void sensor_on() { sensor.state = SENSOR_NO_DATA;}
+void sensor_off() { sensor.state = SENSOR_OFF;}
 
-void sensor_off()
-{
-	sensor.state = SENSOR_OFF;
-}
+uint8_t sensor_get_state() { return (sensor.state);}
+uint8_t sensor_get_code() { return (sensor.code);}
 
 void sensor_start_reading() 
 { 
 	sensor.sample_idx = 0;
 	sensor.code = SENSOR_TAKING_READING;
 }
-
-uint8_t sensor_get_state() { return (sensor.state);}
-uint8_t sensor_get_code() { return (sensor.code);}
 
 float sensor_get_temperature() 
 { 
@@ -90,15 +80,43 @@ float sensor_get_temperature()
 }
 
 /*
- * sensor_callback() - perform tick-timer sensor functions
+ * sensor_callback() - perform sensor sample functions
  *
- *	Sensor_callback() reads in an array of sensor readings then processes the 
- *	array for a clean reading. The function uses the standard deviation of the 
- *	sample set to clean up the reading or to reject the reading as being flawed.
+ *	Sensor_callback() collects an array of sensor readings then processes the 
+ *	array for a clean temperature reading. The function uses the standard deviation 
+ *	of the sample set to clean up the reading or to reject the reading as being flawed.
  *
- *	It's set up to collect 9 samples at 10 ms intervals to serve a 100ms heater 
- *	loop. Each sampling interval must be requested explicitly by calling 
- *	sensor_start_sample(). It does not free-run.
+ *	It's set to collect 40 samples over 40 MS as the max the ADC can run is about 2x that. 
+ *	These values can be changed but the total sample collection time must be less than 
+ *	the heater sampling time. Each sampling sequence must be requested explicitly by 
+ *	calling sensor_start_sample() (from the heater). Sampling does not free-run.
+ *
+ *	Returns temperature sample if within variance bounds
+ *	Returns ABSOLUTE_ZERO if it cannot get a sample within variance
+ *	Retries sampling if variance is exceeded - reject spurious readings
+ *	To start a new sampling period set 'new_period' true
+ *
+ * Temperature calculation math
+ *
+ *	This setup is using B&K TP-29 K-type test probe (Mouser part #615-TP29, $9.50 ea) 
+ *	coupled to an Analog Devices AD597 (available from Digikey)
+ *
+ *	This combination is very linear between 100 - 300 deg-C outputting 7.4 mV per degree
+ *	The ADC uses a 3.3v reference (the 1st major source of error), and 10 bit conversion
+ *
+ *	The sample value returned by the ADC is computed by ADCvalue = (1024 / Vref)
+ *	The temperature derived from this is:
+ *
+ *		y = mx + b
+ *		temp = adc_value * slope + offset
+ *
+ *		slope = (adc2 - adc1) / (temp2 - temp1)
+ *		slope = 0.686645508							// from measurements
+ *
+ *		b = temp - (adc_value * slope)
+ *		b = -4.062500								// from measurements
+ *
+ *		temp = (adc_value * 1.456355556) - -120.7135972
  */
 stat_t sensor_callback()
 {
@@ -159,36 +177,10 @@ stat_t sensor_callback()
 /*
  * _sensor_sample() - take a sample and reject samples showing excessive variance
  *
- *	Returns temperature sample if within variance bounds
- *	Returns ABSOLUTE_ZERO if it cannot get a sample within variance
- *	Retries sampling if variance is exceeded - reject spurious readings
- *	To start a new sampling period set 'new_period' true
- *
- * Temperature calculation math
- *
- *	This setup is using B&K TP-29 K-type test probe (Mouser part #615-TP29, $9.50 ea) 
- *	coupled to an Analog Devices AD597 (available from Digikey)
- *
- *	This combination is very linear between 100 - 300 deg-C outputting 7.4 mV per degree
- *	The ADC uses a 5v reference (the 1st major source of error), and 10 bit conversion
- *
- *	The sample value returned by the ADC is computed by ADCvalue = (1024 / Vref)
- *	The temperature derived from this is:
- *
- *		y = mx + b
- *		temp = adc_value * slope + offset
- *
- *		slope = (adc2 - adc1) / (temp2 - temp1)
- *		slope = 0.686645508							// from measurements
- *
- *		b = temp - (adc_value * slope)
- *		b = -4.062500								// from measurements
- *
- *		temp = (adc_value * 1.456355556) - -120.7135972
  */
 static inline float _sensor_sample(void)
 {
-	return (((float)adc_read() * SENSOR_SLOPE) + SENSOR_OFFSET);
+	return (((float)adc_read() * SENSOR_SLOPE) + SENSOR_OFFSET);	// see hardware.c
 }
 
 /***** END OF SYSTEM FUNCTIONS *****/

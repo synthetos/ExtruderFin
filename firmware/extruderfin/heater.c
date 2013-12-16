@@ -36,6 +36,9 @@
 #include "pid.h"
 #include "report.h"
 
+// memory allocations
+heater_t heater;			// allocate one heater...
+
 /**** Heater Functions ****/
 /*
  * heater_init() 	- initialize heater with default values

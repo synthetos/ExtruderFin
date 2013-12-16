@@ -61,7 +61,6 @@ enum tcHeaterCode {
 	HEATER_SENSOR_ERROR						// heater encountered a fatal sensor error
 };
 
-
 /******************************************************************************
  * STRUCTURES 
  ******************************************************************************/
@@ -78,17 +77,17 @@ typedef struct HeaterStruct {
 	uint8_t bad_reading_max;	// sets number of successive bad readings before declaring an error
 	uint8_t bad_reading_count;	// count of successive bad readings
 	float temperature;			// current heater temperature
-	float setpoint;			// set point for regulation
-	float regulation_range;	// +/- range to consider heater in regulation
-	float regulation_timer;	// time taken so far in a HEATING cycle
+	float setpoint;				// set point for regulation
+	float regulation_range;		// +/- range to consider heater in regulation
+	float regulation_timer;		// time taken so far in a HEATING cycle
 	float ambient_timeout;		// timeout beyond which regulation has failed (seconds)
 	float regulation_timeout;	// timeout beyond which regulation has failed (seconds)
 	float ambient_temperature;	// temperature below which it's ambient temperature (heater failed)
-	float overheat_temperature;// overheat temperature (cutoff temperature)
+	float overheat_temperature;	// overheat temperature (cutoff temperature)
 } heater_t;
 
 // allocations
-heater_t heater;				// allocate one heater...
+extern heater_t heater;			// allocate one heater...
 
 /******************************************************************************
  * FUNCTION PROTOTYPES
