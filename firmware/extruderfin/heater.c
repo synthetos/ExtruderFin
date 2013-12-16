@@ -157,7 +157,11 @@ stat_t heater_callback()
 		if (--heater.hysteresis <= 0) {
 			heater.hysteresis = 0;
 			heater.regulation_timer = 0;			// reset timeouts
-			heater.state = HEATER_HEATING;
+			if (heater.temperature < heater.setpoint) {
+				heater.state = HEATER_HEATING;
+			} else {
+				heater.state = HEATER_COOLING;
+			}
 		}
 	}
 	if (heater.state == HEATER_REGULATED) {

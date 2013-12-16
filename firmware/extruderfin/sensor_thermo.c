@@ -126,14 +126,22 @@ stat_t sensor_callback()
 
 	// reject the outlier samples and re-compute the average
 	sensor.samples = 0;
-	sensor.temperature = 0;
+	float temperature = 0;
 	for (uint8_t i=0; i<SENSOR_SAMPLES; i++) {
 		if (fabs(sensor.sample[i] - mean) < (sensor.sample_variance_max * sensor.std_dev)) {
-			sensor.temperature += sensor.sample[i];
+			temperature += sensor.sample[i];
 			sensor.samples++;
 		}
 	}
-	sensor.temperature /= sensor.samples;// calculate mean temp w/o the outliers
+	// reject the sample set if too may failed
+	if (sensor.samples < SENSOR_SAMPLE_THRESHOLD) {	// too many samples rejected. reading failed. Nothing we can do about it
+		sensor.state = SENSOR_ERROR;
+		sensor.code = SENSOR_ERROR_BAD_READINGS;
+		return(STAT_OK);
+	}
+
+	// compute the resulting average temp w/o the outliers
+	sensor.temperature = temperature / sensor.samples;
 	sensor.state = SENSOR_HAS_DATA;
 	sensor.code = SENSOR_IDLE;			// we are done. Flip it back to idle
 

@@ -38,33 +38,34 @@
 
 #define SENSOR_SAMPLE_MS				1		// sample timer in ms
 #define SENSOR_SAMPLES 					20		// number of sensor samples to take for each reading period
+#define SENSOR_SAMPLE_THRESHOLD			4		// minimum number of sensor sample to declare an accurate reading
 #define SENSOR_SAMPLE_VARIANCE_MAX 		1.1		// number of standard deviations from mean to reject a sample
 #define SENSOR_READING_VARIANCE_MAX 	20		// reject entire reading if std_dev exceeds this amount
 #define SENSOR_NO_POWER_TEMPERATURE 	-2		// detect thermocouple amplifier disconnected if readings stay below this temp
 #define SENSOR_DISCONNECTED_TEMPERATURE 400		// sensor is DISCONNECTED if over this temp (works w/ both 5v and 3v refs)
 #define SENSOR_TICK_SECONDS 			0.01	// 10 ms
 
-#define SENSOR_SLOPE 		0.489616568		// derived from AD597 chart between 80 deg-C and 300 deg-C
-#define SENSOR_OFFSET 		-0.419325433	// derived from AD597 chart between 80 deg-C and 300 deg-C
+#define SENSOR_SLOPE 		0.489616568			// derived from AD597 chart between 80 deg-C and 300 deg-C
+#define SENSOR_OFFSET 		-0.419325433		// derived from AD597 chart between 80 deg-C and 300 deg-C
 
-#define SURFACE_OF_THE_SUN 	5505			// termperature at the surface of the sun in Celcius
-#define HOTTER_THAN_THE_SUN 10000			// a temperature that is hotter than the surface of the sun
-#define ABSOLUTE_ZERO 		-273.15			// Celcius
-#define LESS_THAN_ZERO 		-274			// Celcius - a value the thermocouple sensor cannot output
+#define SURFACE_OF_THE_SUN 	5505				// termperature at the surface of the sun in Celcius
+#define HOTTER_THAN_THE_SUN 10000				// a temperature that is hotter than the surface of the sun
+#define ABSOLUTE_ZERO 		-273.15				// Celcius
+#define LESS_THAN_ZERO 		-274				// Celcius - a value the thermocouple sensor cannot output
 
-enum tcSensorState {						// main state machine
-	SENSOR_OFF = 0,							// sensor is off or uninitialized
-	SENSOR_NO_DATA,							// interim state before first reading is complete
-	SENSOR_ERROR,							// a sensor error occurred. Don't use the data
-	SENSOR_HAS_DATA							// sensor has valid data
+enum tcSensorState {							// main state machine
+	SENSOR_OFF = 0,								// sensor is off or uninitialized
+	SENSOR_NO_DATA,								// interim state before first reading is complete
+	SENSOR_ERROR,								// a sensor error occurred. Don't use the data
+	SENSOR_HAS_DATA								// sensor has valid data
 };
 
-enum tcSensorCode {							// success and failure codes
-	SENSOR_IDLE = 0,						// sensor is idling
-	SENSOR_TAKING_READING,					// sensor is taking samples for a reading
-	SENSOR_ERROR_BAD_READINGS,				// ERROR: too many number of bad readings
-	SENSOR_ERROR_DISCONNECTED,				// ERROR: thermocouple detected as disconnected
-	SENSOR_ERROR_NO_POWER					// ERROR: detected lack of power to thermocouple amplifier
+enum tcSensorCode {								// success and failure codes
+	SENSOR_IDLE = 0,							// sensor is idling
+	SENSOR_TAKING_READING,						// sensor is taking samples for a reading
+	SENSOR_ERROR_BAD_READINGS,					// ERROR: too many number of bad readings
+	SENSOR_ERROR_DISCONNECTED,					// ERROR: thermocouple detected as disconnected
+	SENSOR_ERROR_NO_POWER						// ERROR: detected lack of power to thermocouple amplifier
 };
 
 /******************************************************************************

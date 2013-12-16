@@ -40,7 +40,7 @@
 #define HEATER_TICK_SECONDS 		0.1		// 100 ms
 #define HEATER_HYSTERESIS 			10		// number of successive readings before declaring heater at-temp or out of regulation
 #define HEATER_AMBIENT_TEMPERATURE	40		// detect heater not heating if readings stay below this temp
-#define HEATER_OVERHEAT_TEMPERATURE 300		// heater is above max temperature if over this temp. Should shut down
+#define HEATER_OVERHEAT_TEMPERATURE 260		// heater is above max temperature if over this temp. Should shut down
 #define HEATER_AMBIENT_TIMEOUT 		90		// time to allow heater to heat above ambinet temperature (seconds)
 #define HEATER_REGULATION_RANGE 	3		// +/- degrees to consider heater in regulation
 #define HEATER_REGULATION_TIMEOUT 	300		// time to allow heater to come to temp (seconds)
@@ -50,7 +50,8 @@ enum tcHeaterState {						// heater state machine
 	HEATER_OFF = 0,							// heater turned OFF or never turned on - transitions to HEATING
 	HEATER_SHUTDOWN,						// heater has been shut down - transitions to HEATING
 	HEATER_HEATING,							// heating up from OFF or SHUTDOWN - transitions to REGULATED or SHUTDOWN
-	HEATER_REGULATED						// heater is at setpoint and in regulation - transitions to OFF or SHUTDOWN
+	HEATER_REGULATED,						// heater is at setpoint and in regulation - transitions to OFF or SHUTDOWN
+	HEATER_COOLING							// heater is out of regulation, cooling off
 };
 
 enum tcHeaterCode {
@@ -68,15 +69,25 @@ enum tcHeaterCode {
 #define PID_MAX_OUTPUT 		100				// saturation filter max PWM percent
 #define PID_MIN_OUTPUT 		0				// saturation filter min PWM percent
 
+// some starting values from the example code
+//#define PID_Kp 				0.1				// proportional gain term
+//#define PID_Ki 				0.005			// integral gain term
+//#define PID_Kd 				0.01			// derivative gain term
+//#define PID_INITIAL_INTEGRAL 1				// initial integral value to speed things along
+
+
+#define PID_Kp 				1.00			// proportional gain term
+#define PID_Ki 				0.001 			// integral gain term
+#define PID_Kd 				0.2				// derivative gain term
+#define PID_INITIAL_INTEGRAL 200			// initial integral value to speed things along
+
+/*
 #define PID_Kp 				5.00			// proportional gain term
 #define PID_Ki 				0.1 			// integral gain term
 #define PID_Kd 				0.5				// derivative gain term
 #define PID_INITIAL_INTEGRAL 200			// initial integral value to speed things along
+*/
 
-// some starting values from the example code
-//#define PID_Kp 0.1						// proportional gain term
-//#define PID_Ki 0.005						// integral gain term
-//#define PID_Kd 0.01						// derivative gain term
 
 enum tcPIDState {							// PID state machine
 	PID_OFF = 0,							// PID is off
@@ -117,7 +128,7 @@ typedef struct PIDstruct {		// PID controller itself
 	float output_min;			// saturation filter min
 	float error;				// current error term
 	float prev_error;			// error term from previous pass
-	float integral;			// integral term
+	float integral;				// integral term
 	float derivative;			// derivative term
 //	float dt;					// pid time constant
 	float Kp;					// proportional gain

@@ -40,7 +40,7 @@
 
 /****** REVISIONS ******/
 
-#define FIRMWARE_BUILD 			012.06		// live temperature testing
+#define FIRMWARE_BUILD 			012.07		// tuning temperature regulation functions
 #define FIRMWARE_VERSION		0.2			// firmware major version
 #define HARDWARE_PLATFORM		1			// board style 
 #define HARDWARE_VERSION		1			// board revision number
