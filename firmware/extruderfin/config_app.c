@@ -155,8 +155,8 @@ static stat_t _do_all(cmdObj_t *cmd);
 const cfgItem_t cfgArray[] PROGMEM = {
 	// group token flags p, print_func,	 get_func,  set_func, target for get/set,   		default value
 //	{ "sys", "fb", _f07, 2, hw_print_fb, get_flt,   set_nul,  (uint32_t *)&cs.fw_build,		FIRMWARE_BUILD }, // MUST BE FIRST!
-	{ "sys", "fb", _f07, 2, hw_print_fb, get_flt,   set_nul,  &cs.fw_build,					FIRMWARE_BUILD }, // MUST BE FIRST!
-	{ "sys", "fv", _f07, 3, hw_print_fv, get_flt,   set_nul,  &cs.fw_version,				FIRMWARE_VERSION },
+	{ "sys", "fb", _f07, 2, hw_print_fb, get_flt,   set_nul,  (float *)&cs.fw_build,					FIRMWARE_BUILD }, // MUST BE FIRST!
+	{ "sys", "fv", _f07, 3, hw_print_fv, get_flt,   set_nul,  (float *)&cs.fw_version,				FIRMWARE_VERSION },
 	{ "sys", "hp", _f07, 0, hw_print_hp, get_flt,   set_flt,  &cs.hw_platform,				HARDWARE_PLATFORM },
 	{ "sys", "hv", _f07, 0, hw_print_hv, get_flt,   hw_set_hv,&cs.hw_version,				HARDWARE_VERSION },
 //	{ "sys", "id", _fns, 0, hw_print_id, hw_get_id, set_nul,  &cs.null, 0 },  // device ID (ASCII signature)

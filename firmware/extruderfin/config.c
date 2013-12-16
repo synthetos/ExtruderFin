@@ -135,8 +135,21 @@ stat_t set_defaults(cmdObj_t *cmd)
 		if (GET_TABLE_BYTE(flags) & F_INITIALIZE) {
 			cmd->value.i = GET_TABLE_DWORD(def_value);
 
-			strncpy_P(cmd->token, (char *)cfgArray[cmd->index].token, CMD_TOKEN_LEN);
+//#define GET_TOKEN_STRING(i,a) strcpy_P(a, (char *)&cfgArray[(index_t)i].token);
+
+			strcpy_P(cmd->token, cfgArray[cmd->index].token);
+
+//			char *token = cfgArray[cmd->index].token;
+//			char tok =  GET_TABLE_BYTE(token);
+//			strncpy_P(cmd->token, token, CMD_TOKEN_LEN);
+//			GET_TOKEN_STRING(cmd->index, cmd->token);
+//			strncpy_P(cmd->token, (const char *)&cfgArray[cmd->index].token, CMD_TOKEN_LEN);
+//			strncpy_P(cmd->token, (char *)cfgArray[cmd->index].token, CMD_TOKEN_LEN);
 //			strcpy(cmd->token, table2str(cfgArray[cmd->index].token));
+
+//			const char *token = (const char *)pgm_read_byte(&cfgArray[cmd->index].token);
+//			const char *token = (const char *)pgm_read_word(cfgArray[cmd->index].token);
+//			strcpy(cmd->token, token);
 
 			cmd_set(cmd);
 			nvm_persist(cmd);				// persist must occur when no other interrupts are firing

@@ -161,13 +161,13 @@ typedef struct cmdObject {				// depending on use, not all elements may be popul
 	int8_t depth;						// depth of object in the tree. 0 is root (-1 is invalid)
 	int8_t objtype;						// see cmdType
 	int8_t precision;					// decimal precision for reporting (JSON)
+	char token[CMD_TOKEN_LEN+1];		// full mnemonic token for lookup
+	char group[CMD_GROUP_LEN+1];		// group prefix or NUL if not in a group
+	char (*stringp)[];					// pointer to array of characters from shared character array
 	union {
 		uint32_t i;						// holds all integer values
 		float f;						// holds floats
 	} value;
-	char token[CMD_TOKEN_LEN+1];		// full mnemonic token for lookup
-	char group[CMD_GROUP_LEN+1];		// group prefix or NUL if not in a group
-	char (*stringp)[];					// pointer to array of characters from shared character array
 } cmdObj_t; 							// OK, so it's not REALLY an object
 
 typedef uint8_t (*fptrCmd)(cmdObj_t *cmd);// required for cmd table access
