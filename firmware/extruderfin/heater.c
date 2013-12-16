@@ -34,6 +34,7 @@
 #include "sensor_thermo.h"
 #include "heater.h"
 #include "report.h"
+#include "util.h"
 
 /**** Heater Functions ****/
 /*
@@ -127,7 +128,7 @@ stat_t heater_callback()
 
 	// handle HEATER exceptions
 	if (heater.state == HEATER_HEATING) {
-		heater.regulation_timer += HEATER_TICK_SECONDS;
+		heater.regulation_timer += (HEATER_SAMPLE_MS / 1000);
 
 		if ((heater.temperature < heater.ambient_temperature) &&
 			(heater.regulation_timer > heater.ambient_timeout)) {
@@ -187,8 +188,8 @@ void pid_init()
 	pid.Kp = PID_Kp;
 	pid.Ki = PID_Ki;
 	pid.Kd = PID_Kd;
-	pid.output_max = PID_MAX_OUTPUT;		// saturation filter max value
-	pid.output_min = PID_MIN_OUTPUT;		// saturation filter min value
+	pid.output_max = PID_OUTPUT_MAX;		// saturation filter max value
+	pid.output_min = PID_OUTPUT_MIN;		// saturation filter min value
 	pid.state = PID_ON;
 }
 
@@ -206,8 +207,9 @@ float pid_calculate(float setpoint,float temperature)
 	pid.error = setpoint - temperature;		// current error term
 
 	// perform integration only if error is GT epsilon, and with anti-windup
-	if ((fabs(pid.error) > PID_EPSILON) && (pid.output < pid.output_max)) {	
+	if ((fabs(pid.error) > PID_EPSILON) && (pid.output < pid.output_max)) {
 		pid.integral += (pid.error * PID_DT);
+		pid.integral = min(pid.integral, PID_INTEGRAL_MAX);
 	}
 	// compute derivative and output
 	pid.derivative = (pid.error - pid.prev_error) / PID_DT;

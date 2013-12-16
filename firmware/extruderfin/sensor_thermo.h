@@ -37,10 +37,10 @@
 /**** Sensor default parameters ***/
 
 #define SENSOR_SAMPLE_MS				1		// sample timer in ms
-#define SENSOR_SAMPLES 					20		// number of sensor samples to take for each reading period
-#define SENSOR_SAMPLE_THRESHOLD			4		// minimum number of sensor sample to declare an accurate reading
+#define SENSOR_SAMPLES 					40		// number of sensor samples to take for each reading period
+#define SENSOR_SAMPLE_THRESHOLD			8		// minimum number of sensor samples to declare an accurate reading
 #define SENSOR_SAMPLE_VARIANCE_MAX 		1.1		// number of standard deviations from mean to reject a sample
-#define SENSOR_READING_VARIANCE_MAX 	20		// reject entire reading if std_dev exceeds this amount
+#define SENSOR_READING_VARIANCE_MAX 	10		// reject entire reading if std_dev exceeds this amount
 #define SENSOR_NO_POWER_TEMPERATURE 	-2		// detect thermocouple amplifier disconnected if readings stay below this temp
 #define SENSOR_DISCONNECTED_TEMPERATURE 400		// sensor is DISCONNECTED if over this temp (works w/ both 5v and 3v refs)
 #define SENSOR_TICK_SECONDS 			0.01	// 10 ms

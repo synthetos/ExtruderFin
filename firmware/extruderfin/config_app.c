@@ -183,8 +183,8 @@ const cfgItem_t cfgArray[] PROGMEM = {
 	{ "p1", "p1kp",	 _f00, 0, p1_print_kp,  get_flt, set_flt, &pid.Kp, PID_Kp },
 	{ "p1", "p1ki",	 _f00, 0, p1_print_ki,  get_flt, set_flt, &pid.Ki, PID_Ki },
 	{ "p1", "p1kd",	 _f00, 0, p1_print_kd,  get_flt, set_flt, &pid.Kd, PID_Kd },
-	{ "p1", "p1smx", _f00, 0, p1_print_smx, get_flt, set_flt, &pid.output_max, PID_MAX_OUTPUT },
-	{ "p1", "p1smn", _f00, 0, p1_print_smn, get_flt, set_flt, &pid.output_min, PID_MIN_OUTPUT },
+	{ "p1", "p1smx", _f00, 0, p1_print_smx, get_flt, set_flt, &pid.output_max, PID_OUTPUT_MAX },
+	{ "p1", "p1smn", _f00, 0, p1_print_smn, get_flt, set_flt, &pid.output_min, PID_OUTPUT_MIN },
 
 	// Group lookups - must follow the single-valued entries for proper sub-string matching
 	// *** Must agree with CMD_COUNT_GROUPS below ****

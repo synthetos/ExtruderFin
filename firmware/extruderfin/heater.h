@@ -36,14 +36,13 @@
 
 /**** Heater default parameters ***/
 
-#define HEATER_SAMPLE_MS			100		// sample timer in ms
-#define HEATER_TICK_SECONDS 		0.1		// 100 ms
-#define HEATER_HYSTERESIS 			10		// number of successive readings before declaring heater at-temp or out of regulation
+#define HEATER_SAMPLE_MS			500		// sample timer in ms
+#define HEATER_REGULATION_RANGE 	2		// +/- degrees to consider heater in regulation
+#define HEATER_REGULATION_TIMEOUT 	300		// time to allow heater to come to temp (seconds)
+#define HEATER_HYSTERESIS 			30		// number of successive readings before declaring heater at-temp or out of regulation
 #define HEATER_AMBIENT_TEMPERATURE	40		// detect heater not heating if readings stay below this temp
 #define HEATER_OVERHEAT_TEMPERATURE 260		// heater is above max temperature if over this temp. Should shut down
 #define HEATER_AMBIENT_TIMEOUT 		90		// time to allow heater to heat above ambinet temperature (seconds)
-#define HEATER_REGULATION_RANGE 	3		// +/- degrees to consider heater in regulation
-#define HEATER_REGULATION_TIMEOUT 	300		// time to allow heater to come to temp (seconds)
 #define HEATER_BAD_READING_MAX 		5		// maximum successive bad readings before shutting down
 
 enum tcHeaterState {						// heater state machine
@@ -64,10 +63,16 @@ enum tcHeaterCode {
 
 /**** PID default parameters ***/
 
-#define PID_DT 				HEATER_TICK_SECONDS	// time constant for PID computation
+#define PID_DT 				((float)HEATER_SAMPLE_MS / (float)1000)	// PID time constant == heater sampling rate
 #define PID_EPSILON 		0.1				// error term precision
-#define PID_MAX_OUTPUT 		100				// saturation filter max PWM percent
-#define PID_MIN_OUTPUT 		0				// saturation filter min PWM percent
+#define PID_OUTPUT_MAX 		100				// saturation filter max PWM percent
+#define PID_OUTPUT_MIN 		0				// saturation filter min PWM percent
+#define PID_INTEGRAL_MAX	100
+#define PID_INITIAL_INTEGRAL 0				// initial integral value - set non-zero to speed things along
+
+#define PID_Kp 				2.00			// proportional gain term
+#define PID_Ki 				0.001 			// integral gain term
+#define PID_Kd 				0.4				// derivative gain term
 
 // some starting values from the example code
 //#define PID_Kp 				0.1				// proportional gain term
@@ -75,25 +80,15 @@ enum tcHeaterCode {
 //#define PID_Kd 				0.01			// derivative gain term
 //#define PID_INITIAL_INTEGRAL 1				// initial integral value to speed things along
 
-
-#define PID_Kp 				1.00			// proportional gain term
-#define PID_Ki 				0.001 			// integral gain term
-#define PID_Kd 				0.2				// derivative gain term
-#define PID_INITIAL_INTEGRAL 200			// initial integral value to speed things along
-
-/*
-#define PID_Kp 				5.00			// proportional gain term
-#define PID_Ki 				0.1 			// integral gain term
-#define PID_Kd 				0.5				// derivative gain term
-#define PID_INITIAL_INTEGRAL 200			// initial integral value to speed things along
-*/
-
+// earlier attempt - wicked overshoot
+//#define PID_Kp 				5.00			// proportional gain term
+//#define PID_Ki 				0.1 			// integral gain term
+//#define PID_Kd 				0.5				// derivative gain term
 
 enum tcPIDState {							// PID state machine
 	PID_OFF = 0,							// PID is off
 	PID_ON
 };
-
 
 /******************************************************************************
  * STRUCTURES 
