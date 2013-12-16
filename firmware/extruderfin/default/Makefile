@@ -15,7 +15,7 @@ COMMON = -mmcu=$(MCU)
 
 ## Compile options common for all C compilation units.
 CFLAGS = $(COMMON)
-CFLAGS += -Wall -gdwarf-2 -std=gnu99                          -DF_CPU=8000000UL -O0 -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
+CFLAGS += -Wall -gdwarf-2 -std=gnu99     -DF_CPU=16000000UL -Os -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 CFLAGS += -MD -MP -MT $(*F).o -MF dep/$(@F).d 
 
 ## Assembly specific flags
@@ -25,7 +25,7 @@ ASMFLAGS += -x assembler-with-cpp -Wa,-gdwarf2
 
 ## Linker flags
 LDFLAGS = $(COMMON)
-LDFLAGS += -Wl,-u,vfprintf  -lprintf_flt  -lm -Wl,-Map=extruderfin.map
+LDFLAGS +=  -Wl,-Map=extruderfin.map
 
 
 ## Intel Hex file production flags
@@ -40,7 +40,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 LIBS = -lm 
 
 ## Objects that must be built in order to link
-OBJECTS = util.o config.o config_app.o heater.o json_parser.o main.o report.o xio_usart.o xio_file.o xio_spi.o controller.o hardware.o xio.o text_parser.o persistence.o sensor_thermo.o test.o pid.o 
+OBJECTS = util.o config.o config_app.o heater.o json_parser.o main.o report.o xio_usart.o xio_file.o xio_spi.o controller.o hardware.o xio.o text_parser.o sensor_thermo.o test.o pid.o persistence.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
@@ -89,9 +89,6 @@ xio.o: ../xio.c
 text_parser.o: ../text_parser.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
-persistence.o: ../persistence.c
-	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
-
 sensor_thermo.o: ../sensor_thermo.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
@@ -99,6 +96,9 @@ test.o: ../test.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 pid.o: ../pid.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+persistence.o: ../persistence.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link

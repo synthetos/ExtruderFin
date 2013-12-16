@@ -40,7 +40,7 @@
 
 /****** REVISIONS ******/
 
-#define FIRMWARE_BUILD 			013.04		// trying to fix the strcpy_P bug (compiler bug?)
+#define FIRMWARE_BUILD 			013.04		// fixed the strcpy_P bug - simulation bug. Must select C:\Program Files\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.2.1002\avr8-gnu-toolchain\lib\gcc\avr\4.7.2\avr5 and C:\Program Files\Atmel\Atmel Toolchain\AVR8 GCC\Native\3.4.2.1002\avr8-gnu-toolchain\lib\gcc\avr\4.7.2\include when asked for locating files
 #define FIRMWARE_VERSION		0.2			// firmware major version
 #define HARDWARE_PLATFORM		1			// board style 
 #define HARDWARE_VERSION		1			// board revision number
